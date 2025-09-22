@@ -1,0 +1,131 @@
+----------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/amyqian/Documents/GitHub/ISEG_Advanced_Econometrics/Exercises/Exercise8.log
+  log type:  text
+ opened on:  22 Sep 2025, 20:20:00
+
+. 
+. import excel "/Users/amyqian/Documents/GitHub/ISEG_Advanced_Econometrics/Exercises/vietnam.xlsx", sheet("Sheet1") firstrow
+(9 vars, 5,999 obs)
+
+. 
+. kdensity lhhexp1, kernel(gaussian)
+
+. sum lhhexp1, d
+
+                           lhhexp1
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%     7.586134       6.543108
+ 5%     8.254869       6.818342
+10%     8.507335       6.892809       Obs               5,999
+25%     8.919547       6.965246       Sum of wgt.       5,999
+
+50%     9.311416                      Mean           9.341561
+                        Largest       Std. dev.      .6877458
+75%     9.759566       11.73528
+90%     10.22297       11.75362       Variance       .4729943
+95%     10.51927       12.03334       Skewness        .109243
+99%     11.11577       12.20242       Kurtosis       3.599002
+
+. display ((.6877458*0.9)/5999^(0.2))
+.10865624
+
+. display ((9.759566-8.919547)/1.34)*0.9/(5,999^(0.2))
+5,999 invalid name
+r(198);
+
+. display ((9.759566-8.919547)/1.34)*0.9/(5999^(0.2))
+.09904009
+
+. kdensity lhhexp1, kernel(rec)
+
+. kdensity lhhexp1, kernel(par)
+
+. kdensity lhhexp1, kernel(gaussian) bwidth(0.002)
+
+. kdensity lhhexp1, kernel(gaussian) bwidth(1)
+
+. kdensity lhhexp1, kernel(gaussian) bwidth(0.5)
+
+. lpoly lnrlfood lhhexp1
+
+. gen age2= age^2
+
+. reg lnrlfood lhhexp1 age age2, r
+
+Linear regression                               Number of obs     =      5,999
+                                                F(3, 5995)        =    5484.44
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8112
+                                                Root MSE          =      .2333
+
+------------------------------------------------------------------------------
+             |               Robust
+    lnrlfood | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     lhhexp1 |   .6942858    .005711   121.57   0.000     .6830901    .7054815
+         age |    .005095   .0016213     3.14   0.002     .0019168    .0082733
+        age2 |  -.0000716   .0000161    -4.45   0.000    -.0001031     -.00004
+       _cons |     2.1277   .0561216    37.91   0.000     2.017681    2.237718
+------------------------------------------------------------------------------
+
+. lpoly lnrlfood age, generate(foodage) at age
+at() must be specified for generate() to work with one variable
+r(198);
+
+. lpoly lnrlfood age, generate(foodage) at (age)
+
+. lpoly lhhexp1 age, generate(expage) at (age)
+
+. gen y= lnrlfood- foodage
+
+. gen y= lhhexp1- expage
+variable y already defined
+r(110);
+
+. gen x= lhhexp1- expage
+
+. reg y x, nonconstant
+option nonconstant not allowed
+r(198);
+
+. reg y x, noconstant
+
+      Source |       SS           df       MS      Number of obs   =     5,999
+-------------+----------------------------------   F(1, 5998)      =  23564.09
+       Model |  1274.81681         1  1274.81681   Prob > F        =    0.0000
+    Residual |  324.491644     5,998  .054099974   R-squared       =    0.7971
+-------------+----------------------------------   Adj R-squared   =    0.7971
+       Total |  1599.30845     5,999  .266595841   Root MSE        =    .23259
+
+------------------------------------------------------------------------------
+           y | Coefficient  Std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+           x |    .695743   .0045324   153.51   0.000      .686858    .7046281
+------------------------------------------------------------------------------
+
+. reg lnrlfood lhhexp1 age age2, r
+
+Linear regression                               Number of obs     =      5,999
+                                                F(3, 5995)        =    5484.44
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8112
+                                                Root MSE          =      .2333
+
+------------------------------------------------------------------------------
+             |               Robust
+    lnrlfood | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     lhhexp1 |   .6942858    .005711   121.57   0.000     .6830901    .7054815
+         age |    .005095   .0016213     3.14   0.002     .0019168    .0082733
+        age2 |  -.0000716   .0000161    -4.45   0.000    -.0001031     -.00004
+       _cons |     2.1277   .0561216    37.91   0.000     2.017681    2.237718
+------------------------------------------------------------------------------
+
+. log close
+      name:  <unnamed>
+       log:  /Users/amyqian/Documents/GitHub/ISEG_Advanced_Econometrics/Exercises/Exercise8.log
+  log type:  text
+ closed on:  22 Sep 2025, 21:01:08
+----------------------------------------------------------------------------------------------------------------------------------------------
