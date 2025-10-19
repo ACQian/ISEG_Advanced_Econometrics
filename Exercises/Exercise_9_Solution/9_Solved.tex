@@ -188,13 +188,36 @@
         2\hat{b} = 2\frac{1}{N}\sum_{i=1}^{N}Y_i\\
         \hat{b} = \frac{1}{N}\sum_{i=1}^{N}Y_i
     \end{gather*}
-    which is just the sample mean.\\
+    which is just the sample mean.
+    \textcolor{Magenta}{\begin{enumerate}
+        \item bootstrap "regress lhhexp1" \_b \_se, reps(499) saving(bsdata)\\
+            \includegraphics[scale=0.6]{Image_9/5.png}
+        \item regress lhhexp1\\
+            \includegraphics[scale=0.6]{Image_9/6.png}
+        \item Now use the saved boostrap dataset to continue, in this case, bsdata.dta
+    \end{enumerate}}
 
     The first method is the \textbf{non-symmetric test} with the critical values of 
-    $cv_{boot}(\frac{\alpha}{2})$ and $cv_{boot}(1-\frac{\alpha}{2})$ for $(\hat{t}_1,\ldots,\hat{t}_B)$.\\
+    $cv_{boot}(\frac{\alpha}{2})$ and $cv_{boot}(1-\frac{\alpha}{2})$ for $(\hat{t}_1,\ldots,\hat{t}_B)$.
+    \textcolor{Magenta}{
+        \begin{enumerate}
+            \item gen double t\_cons = ( b\_cons-\_b[\_cons])/ se\_cons
+            \item \_pctile t\_cons, percentiles(2.5 97.5)
+            \item display \_b[\_cons]-\_se[\_cons]*r(r2)
+            \item display \_b[\_cons]-\_se[\_cons]*r(r1)
+        \end{enumerate}}
+    The result gives the 95\% confidence interval of [9.3238664, 9.3603002].\\ 
 
     The second method is the \textbf{symmetric test} with the critical value of $cv_{boot}^a(1-\alpha)$
     for $(|\hat{t}_1|,\ldots,|\hat{t}_B|)$.
+    \textcolor{Magenta}{
+        \begin{enumerate}
+            \item gen double at\_cons=abs( t\_cons )
+            \item \_pctile at\_cons, percentiles(95)
+            \item display \_b[\_cons]-\_se[\_cons]*r(r1)
+            \item display \_b[\_cons]+\_se[\_cons]*r(r1)
+        \end{enumerate}}
+    The result gives the 95\% confidence interval of [9.3229329, 9.3601895].\\ 
 
 \end{homeworkProblem}
 
@@ -233,16 +256,33 @@
         \item Generate the sequence
         \item Find the mean of sequence
     \end{enumerate}
+    \textcolor{Magenta}{
+        \begin{enumerate}
+            \item \textcolor{Black}{Do not forget to clear the dataset first as in to reload the original dataset}
+            \item sum lhhexp1, d\\
+                \includegraphics[scale=0.7]{Image_9/7.png}
+            \item gen double a = normalden(( lhhexp1 -9.311416)/0.09904)/0.09904
+            \item mean a\\
+                \includegraphics[scale=0.7]{Image_9/8.png}
+            \item display (1/(2*.6392072*sqrt(5999))) \textcolor{Black}{to get $SE(M_N)$}
+            \item display 9.311416-1.96*0.01009925 \textcolor{Black}{to get lower bound of CI}
+            \item display 9.311416+1.96*0.01009925 \textcolor{Black}{to get upper bound of CI}
+        \end{enumerate}}
+    The 95\% confidence interval is [9.2916215, 9.3312105]\\
 
     \textbf{B. using standard asymptotic theory with the bootstrap mean and bootstrap standard error}\\
 
     \solution\\
 
+    \textcolor{Magenta}{bootstrap r(p50), reps(499): sum lhhexp1, d}\\
+    \includegraphics[scale=0.7]{Image_9/9.png}
+
     \textbf{C. using the boostrap percentile method}\\
 
     \solution\\
 
-
+    \textcolor{Magenta}{estat bootstrap, all}\\
+    \includegraphics[scale=0.7]{Image_9/10.png}
 
 \end{homeworkProblem}
 
