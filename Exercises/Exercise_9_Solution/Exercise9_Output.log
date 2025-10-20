@@ -1,0 +1,157 @@
+--------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\amyqi\Desktop\9_Solved.log
+  log type:  text
+ opened on:  20 Oct 2025, 20:09:39
+
+. import excel "C:\Users\amyqi\Github\ISEG_Advanced_Econometrics\Exercises\Exercise_9\vietnam.xlsx", she
+> et("Sheet1") firstrow
+(9 vars, 5,999 obs)
+
+. * exercise 1c)
+
+. * need to generate the squares first
+
+. gen age2= age^2
+
+. reg lnrlfood lhhexp1 age age2, r
+
+Linear regression                               Number of obs     =      5,999
+                                                F(3, 5995)        =    5484.44
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8112
+                                                Root MSE          =      .2333
+
+------------------------------------------------------------------------------
+             |               Robust
+    lnrlfood | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     lhhexp1 |   .6942858    .005711   121.57   0.000     .6830901    .7054815
+         age |    .005095   .0016213     3.14   0.002     .0019168    .0082733
+        age2 |  -.0000716   .0000161    -4.45   0.000    -.0001031     -.00004
+       _cons |     2.1277   .0561216    37.91   0.000     2.017681    2.237718
+------------------------------------------------------------------------------
+
+. * 95% CI robust with heteroskedasticity is [.6830901, .7054815]
+
+. * now need to use bootstrap of the pairs to answer the rest of the questions
+
+. bootstrap "reg lnrlfood lhhexp1 age age2, r" _b _se, reps(499) dots saving(bsdata2)
+
+Command:      reg lnrlfood lhhexp1 age age2 , r
+Statistics:   b_lhhexp1  = _b[lhhexp1]
+              b_age      = _b[age]
+              b_age2     = _b[age2]
+              b_cons     = _b[_cons]
+              se_lhhexp1 = _se[lhhexp1]
+              se_age     = _se[age]
+              se_age2    = _se[age2]
+              se_cons    = _se[_cons]
+........................................................................................................
+> ......................................................................................................
+> ......................................................................................................
+> ......................................................................................................
+> .........................................................................................
+
+
+Bootstrap statistics                              Number of obs    =      5999
+                                                  Replications     =       499
+
+------------------------------------------------------------------------------
+Variable     |  Reps  Observed      Bias  Std. err. [95% conf. interval]
+-------------+----------------------------------------------------------------
+   b_lhhexp1 |   499  .6942858 -.0004955  .0053684   .6837384   .7048333   (N)
+             |                                       .6831305   .7036634   (P)
+             |                                        .683369   .7041299  (BC)
+       b_age |   499   .005095  .0000197  .0015811   .0019886   .0082015   (N)
+             |                                       .0023521   .0084537   (P)
+             |                                       .0024497   .0084765  (BC)
+      b_age2 |   499 -.0000716 -1.85e-07  .0000156  -.0001021   -.000041   (N)
+             |                                      -.0001033  -.0000449   (P)
+             |                                      -.0001043  -.0000453  (BC)
+      b_cons |   499    2.1277  .0041315  .0544089   2.020801   2.234599   (N)
+             |                                       2.029453   2.243589   (P)
+             |                                        2.02276   2.238112  (BC)
+  se_lhhexp1 |   499   .005711 -7.84e-06  .0001904    .005337   .0060851   (N)
+             |                                       .0053448   .0060896   (P)
+             |                                       .0053509   .0061094  (BC)
+      se_age |   499  .0016213 -3.75e-06  .0000478   .0015274   .0017151   (N)
+             |                                       .0015204   .0017121   (P)
+             |                                       .0015343   .0017242  (BC)
+     se_age2 |   499  .0000161 -3.05e-08  5.17e-07   .0000151   .0000171   (N)
+             |                                        .000015   .0000171   (P)
+             |                                       .0000151   .0000171  (BC)
+     se_cons |   499  .0561216 -.0000916  .0015127   .0531495   .0590936   (N)
+             |                                       .0531055   .0587877   (P)
+             |                                       .0533647   .0588715  (BC)
+------------------------------------------------------------------------------
+Key:  N: Normal
+      P: Percentile
+     BC: Bias-corrected
+
+. * we are interested in the first variable b_lhhexp1 and its confidence intervals
+
+. * ii) the 95% CI is [.6837384, .7048333] using the boostrap mean and bootstrap se
+
+. * iii) the 95% CI is given by [.6831305, .7036634] using the boostrap percentile method
+
+. * now need to compute the bootstrap t-statistics using the saved database bsdata2
+
+. reg lnrlfood lhhexp1 age age2, r
+
+Linear regression                               Number of obs     =      5,999
+                                                F(3, 5995)        =    5484.44
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8112
+                                                Root MSE          =      .2333
+
+------------------------------------------------------------------------------
+             |               Robust
+    lnrlfood | Coefficient  std. err.      t    P>|t|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+     lhhexp1 |   .6942858    .005711   121.57   0.000     .6830901    .7054815
+         age |    .005095   .0016213     3.14   0.002     .0019168    .0082733
+        age2 |  -.0000716   .0000161    -4.45   0.000    -.0001031     -.00004
+       _cons |     2.1277   .0561216    37.91   0.000     2.017681    2.237718
+------------------------------------------------------------------------------
+
+. use "C:\Users\amyqi\Documents\bsdata2.dta", clear
+(bootstrap: reg lnrlfood lhhexp1 age age2 , r)
+
+. gen t_lhhexp1=( b_lhhexp1- _b[lhhexp1])/ se_lhhexp1
+
+. _pctile t_lhhexp1, p(2.5, 97.5)
+
+. dis _b[lhhexp1]-_se[lhhexp1]*r(r2)
+.68455932
+
+. dis _b[lhhexp1]-_se[lhhexp2]*r(r1)
+[lhhexp2] not found
+r(111);
+
+. dis _b[lhhexp1]-_se[lhhexp1]*r(r1)
+.70538
+
+. * the 95% CI using the bootstrap t-statistics with method 1 is given by [.68455932, .70538]
+
+. gen at_lhhexp1=abs( t_lhhexp1)
+
+. _pctile at_lhhexp1, p(95)
+
+. dis _b[lhhexp1]-_se[lhhexp1]*r(r1)
+.68374724
+
+. dis _b[lhhexp1]+_se[lhhexp1]*r(r1)
+.70482441
+
+. * the 95% CI using the bootstrap t-statistics with method 2 (absolute value) is given by [.68374724, .
+> 70482441]
+
+. * For question 2, all the codes are the same except replace reg with probit
+
+. log close
+      name:  <unnamed>
+       log:  C:\Users\amyqi\Desktop\9_Solved.log
+  log type:  text
+ closed on:  20 Oct 2025, 20:45:04
+--------------------------------------------------------------------------------------------------------
