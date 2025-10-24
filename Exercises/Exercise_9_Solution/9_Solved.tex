@@ -275,14 +275,88 @@
     \solution\\
 
     \textcolor{Magenta}{bootstrap r(p50), reps(499): sum lhhexp1, d}\\
-    \includegraphics[scale=0.7]{Image_9/9.png}
+    \includegraphics[scale=0.7]{Image_9/9.png}\\
+    The 95\% confidence interval is [9.289119, 9.333713]\\
 
     \textbf{C. using the boostrap percentile method}\\
 
     \solution\\
 
     \textcolor{Magenta}{estat bootstrap, all}\\
-    \includegraphics[scale=0.7]{Image_9/10.png}
+    \includegraphics[scale=0.7]{Image_9/10.png}\\
+    The 95\% confidence interval is [9.2868874, 9.333403]
+
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+    Obtain a 95\% confidence interval for $\beta_2$ using\\
+
+    \textbf{i. Standard asymptotic theory with robust standard errors}\\
+
+    \solution\\
+
+    We first need to generate the squares then run the regression using robust standard error. 
+    \textcolor{Magenta}{
+        \begin{itemize}
+            \item gen age2= age\^2
+            \item reg lnrlfood lhhexp1 age age2, r
+        \end{itemize}
+    }
+    \includegraphics[scale=0.7]{Image_9/11.png}\\
+    The 95\% confidence interval with robust standard error considering heteroskedasticity is [0.6830901, 0.7054815]\\
+
+    \textbf{ii. Standard asymptotic theory using bootstrap mean and boostrap standard errors}\\
+
+    \solution\\
+
+    Now we need to use bootstrap of the pairs to answer the rest of the questions.
+    \textcolor{Magenta}{
+        \begin{itemize}
+            \item bootstrap "reg lnrlfood lhhexp1 age age2, r" \_b \_se, reps(499) dots saving(bsdata2)
+        \end{itemize}
+    }
+    \includegraphics[scale=0.7]{Image_9/12.png}\\
+
+    We are interested in the first variable b\_lhhexp1 and its confidence intervals.
+    The 95\% confidence interval using the boostrap mean and bootstrap standard error is [0.6837384, 0.7048333].\\
+
+    \textbf{iii. The bootstrap percentile method based on the boostrap of the pairs}\\
+
+    \solution\\
+
+    Referring again to the previous bootstrap results.
+    The 95\% confidence interval using the boostrap percentile method is given by [0.6831305, 0.7036634].\\
+
+    \textbf{iv. The boostrap t-statistics based on the boostrap of the pairs with both methods}\\
+
+    \solution\\
+
+    We now need to compute the bootstrap t-statistics using the saved database bsdata2 done in step ii.\\
+
+    First using the non-symmetric method:
+    \textcolor{Magenta}{
+        \begin{itemize}
+            \item reg lnrlfood lhhexp1 age age2, r\\
+                \includegraphics[scale=0.7]{Image_9/13.png}
+            \item import saved database
+            \item gen t\_lhhexp1=( b\_lhhexp1- \_b[lhhexp1])/ se\_lhhexp1
+            \item \_pctile t\_lhhexp1, p(2.5, 97.5)
+            \item dis \_b[lhhexp1]-\_se[lhhexp1]*r(r2) \textcolor{Black}{Lower bound}
+            \item dis \_b[lhhexp1]-\_se[lhhexp1]*r(r1) \textcolor{Black}{Upper bound}
+        \end{itemize}
+    }
+    The 95\% confidence interval using the bootstrap t-statistics with non-symmetric method is given by [0.68455932, 0.70538].\\
+
+    Then using the symmetric method:
+    \textcolor{Magenta}{
+        \begin{itemize}
+            \item gen at\_lhhexp1=abs( t\_lhhexp1)
+            \item \_pctile at\_lhhexp1, p(95)
+            \item dis \_b[lhhexp1]-\_se[lhhexp1]*r(r1) \textcolor{Black}{Lower bound}
+            \item dis \_b[lhhexp1]+\_se[lhhexp1]*r(r1) \textcolor{Black}{Upper bound}
+        \end{itemize}
+    }
+    The 95\% confidence interval using the bootstrap t-statistics with symmetric method (absolute value) is given by [0.68374724, 0.70482441].
 
 \end{homeworkProblem}
 
