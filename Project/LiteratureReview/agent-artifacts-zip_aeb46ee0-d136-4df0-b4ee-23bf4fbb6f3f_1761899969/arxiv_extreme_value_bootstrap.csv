@@ -1,0 +1,311 @@
+"Paper Title","Paper Link","Publication Year","Publication Type","Publication Title","Author Names","DOI","PDF Link","Abstract"
+"Spectral Bootstrap for Non-Parametric Simulation of Multivariate Extreme
+  Events","https://scispace.com/paper/http://arxiv.org/abs/2509.26451v1","2025","Preprint","","Nisrine Madhar
+Juliette Legrand
+Maud Thomas","","http://arxiv.org/pdf/2509.26451v1","Inference in extreme value theory relies on a limited number of extreme
+observations, making estimation challenging. To address this limitation, we
+propose a non-parametric bootstrap procedure, the multivariate extreme spectral
+bootstrap procedure, relying on the spectral representation of multivariate
+generalized Paretodistributed random vectors. Unlike standard bootstrap
+methods, our approach preserves the joint tail behaviour of the data and
+generates additional synthetic extreme data, thereby improving the reliability
+of inference. We demonstrate the effectiveness of our procedure for the
+estimation of tail risk metrics, under both simulated and real data. The
+results highlight the potential of this method for enhancing risk assessment in
+high-dimensional extreme scenarios."
+"Extremal Quantile Regression: An Overview","https://scispace.com/paper/http://arxiv.org/abs/1612.06850v2","2016","Preprint","","Victor Chernozhukov
+Iván Fernández-Val
+Tetsuya Kaji","10.1201/9781315120256","http://arxiv.org/pdf/1612.06850v2","Extremal quantile regression, i.e. quantile regression applied to the tails
+of the conditional distribution, counts with an increasing number of economic
+and financial applications such as value-at-risk, production frontiers,
+determinants of low infant birth weights, and auction models. This chapter
+provides an overview of recent developments in the theory and empirics of
+extremal quantile regression. The advances in the theory have relied on the use
+of extreme value approximations to the law of the Koenker and Bassett (1978)
+quantile regression estimator. Extreme value laws not only have been shown to
+provide more accurate approximations than Gaussian laws at the tails, but also
+have served as the basis to develop bias corrected estimators and inference
+methods using simulation and suitable variations of bootstrap and subsampling.
+The applicability of these methods is illustrated with two empirical examples
+on conditional value-at-risk and financial contagion."
+"Propagation of Input Tail Uncertainty in Rare-Event Estimation: A Light
+  versus Heavy Tail Dichotomy","https://scispace.com/paper/http://arxiv.org/abs/2401.00172v1","2023","Preprint","","Zhiyuan Huang
+Henry Lam
+Zhenyuan Liu","","http://arxiv.org/pdf/2401.00172v1","We consider the estimation of small probabilities or other risk quantities
+associated with rare but catastrophic events. In the model-based literature,
+much of the focus has been devoted to efficient Monte Carlo computation or
+analytical approximation assuming the model is accurately specified. In this
+paper, we study a distinct direction on the propagation of model uncertainty
+and how it impacts the reliability of rare-event estimates. Specifically, we
+consider the basic setup of the exceedance of i.i.d. sum, and investigate how
+the lack of tail information of each input summand can affect the output
+probability. We argue that heavy-tailed problems are much more vulnerable to
+input uncertainty than light-tailed problems, reasoned through their large
+deviations behaviors and numerical evidence. We also investigate some
+approaches to quantify model errors in this problem using a combination of the
+bootstrap and extreme value theory, showing some positive outcomes but also
+uncovering some statistical challenges."
+"Bootstrapping Empirical Processes of Cluster Functionals with
+  Application to Extremograms","https://scispace.com/paper/http://arxiv.org/abs/1511.00420v1","2015","Preprint","","Holger Drees","","http://arxiv.org/pdf/1511.00420v1","In the extreme value analysis of time series, not only the tail behavior is
+of interest, but also the serial dependence plays a crucial role. Drees and
+Rootz\'en (2010) established limit theorems for a general class of empirical
+processes of so-called cluster functionals which can be used to analyse various
+aspects of the extreme value behavior of mixing time series. However, usually
+the limit distribution is too complex to enable a direct construction of
+confidence regions. Therefore, we suggest a multiplier block bootstrap analog
+to the empirical processes of cluster functionals. It is shown that under
+virtually the same conditions as used by Drees and Rootz\'en (2010),
+conditionally on the data, the bootstrap processes converge to the same limit
+distribution. These general results are applied to construct confidence regions
+for the empirical extremogram introduced by Davis and Mikosch (2009). In a
+simulation study, the confidence intervals constructed by our multiplier block
+bootstrap approach compare favorably to the stationary bootstrap proposed by
+Davis et al.\ (2012)."
+"Regression estimator for the tail index","https://scispace.com/paper/http://arxiv.org/abs/1708.04815v3","2017","Preprint","","László Németh
+András Zempléni","","http://arxiv.org/pdf/1708.04815v3","Estimating the tail index parameter is one of the primal objectives in
+extreme value theory. For heavy-tailed distributions the Hill estimator is the
+most popular way to estimate the tail index parameter. Improving the Hill
+estimator was aimed by recent works with different methods, for example by
+using bootstrap, or Kolmogorov-Smirnov metric. These methods are asymptotically
+consistent, but for tail index $\xi >1$ and smaller sample sizes the estimation
+fails to approach the theoretical value for realistic sample sizes. In this
+paper, we introduce a new empirical method, which can estimate high tail index
+parameters well and might also be useful for relatively small sample sizes."
+"Inference on the tail process with application to financial time series
+  modelling","https://scispace.com/paper/http://arxiv.org/abs/1604.00954v2","2016","Preprint","","R. A. Davis
+H. Drees
+J. Segers
+M. Warchoł","","http://arxiv.org/pdf/1604.00954v2","To draw inference on serial extremal dependence within heavy-tailed Markov
+chains, Drees, Segers and Warcho{\l} [Extremes (2015) 18, 369--402] proposed
+nonparametric estimators of the spectral tail process. The methodology can be
+extended to the more general setting of a stationary, regularly varying time
+series. The large-sample distribution of the estimators is derived via
+empirical process theory for cluster functionals. The finite-sample performance
+of these estimators is evaluated via Monte Carlo simulations. Moreover, two
+different bootstrap schemes are employed which yield confidence intervals for
+the pre-asymptotic spectral tail process: the stationary bootstrap and the
+multiplier block bootstrap. The estimators are applied to stock price data to
+study the persistence of positive and negative shocks."
+"Estimation of Extreme Quantiles for Functions of Dependent Random
+  Variables","https://scispace.com/paper/http://arxiv.org/abs/1311.5604v1","2013","Preprint","","Jinguo Gong
+Yadong Li
+Liang Peng
+Qiwei Yao","","http://arxiv.org/pdf/1311.5604v1","We propose a new method for estimating the extreme quantiles for a function
+of several dependent random variables. In contrast to the conventional approach
+based on extreme value theory, we do not impose the condition that the tail of
+the underlying distribution admits an approximate parametric form, and,
+furthermore, our estimation makes use of the full observed data. The proposed
+method is semiparametric as no parametric forms are assumed on all the marginal
+distributions. But we select appropriate bivariate copulas to model the joint
+dependence structure by taking the advantage of the recent development in
+constructing large dimensional vine copulas. Consequently a sample quantile
+resulted from a large bootstrap sample drawn from the fitted joint distribution
+is taken as the estimator for the extreme quantile. This estimator is proved to
+be consistent. The reliable and robust performance of the proposed method is
+further illustrated by simulation."
+"Relative errors for bootstrap approximations of the serial correlation
+  coefficient","https://scispace.com/paper/http://arxiv.org/abs/1306.1324v1","2013","Preprint","","Chris Field
+John Robinson","10.1214/13-AOS1111","http://arxiv.org/pdf/1306.1324v1","We consider the first serial correlation coefficient under an AR(1) model
+where errors are not assumed to be Gaussian. In this case it is necessary to
+consider bootstrap approximations for tests based on the statistic since the
+distribution of errors is unknown. We obtain saddle-point approximations for
+tail probabilities of the statistic and its bootstrap version and use these to
+show that the bootstrap tail probabilities approximate the true values with
+given relative errors, thus extending the classical results of Daniels
+[Biometrika 43 (1956) 169-185] for the Gaussian case. The methods require
+conditioning on the set of odd numbered observations and suggest a conditional
+bootstrap which we show has similar relative error properties."
+"An extreme value method to study decadal hurricane wind trends","https://scispace.com/paper/http://arxiv.org/abs/2505.08591v1","2025","Preprint","","Alexandre Payez
+Ad Stoffelen
+Cees de Valk
+Rianne Giesen","","http://arxiv.org/pdf/2505.08591v1","This paper presents a method developed using techniques from extreme value
+theory to estimate smooth wind-speed percentiles, allowing us to consider more
+extreme wind speeds while being less sensitive to the noise that stems from the
+scarcity of extreme data. A reliable characterisation of wind extremes is the
+first required step for studying decadal trends in tropical-cyclone and
+extra-tropical-cyclone winds. We develop a percentile-smoothing method using
+ASCAT-A Level-3 products, focusing on a number of tropical basins (Caribbean
+and Atlantic), estimate the uncertainty with the block-bootstrap technique to
+address the issue of dependency, and apply our method to both scatterometer
+winds (ASCAT-A at two different resolutions) and collocated ERA5 model data.
+The results obtained are very robust at basin level, without having to rely on
+a strong assumption for the distribution tail: they are very consistent whether
+we use exponential fits, generalised-Pareto fits, or even no fit at all, down
+to at least truly extreme wind percentiles such as 99.999th (main result), and
+remain quite consistent within uncertainties down to 99.9999th. As ensuring
+scientifically sound decadal-trend conclusions would require going back
+sufficiently in time, spanning the lifetimes of different instruments with
+different characteristics and extreme-wind statistics, a natural follow-on
+study would be to apply this method not only to ASCAT, but also to its
+predecessors on QuikSCAT and ERS - comparing each scatterometer individually
+against ERA5, and also to each other as partial overlaps exist between
+instruments."
+"A More Robust t-Test","https://scispace.com/paper/http://arxiv.org/abs/2007.07065v1","2020","Preprint","","Ulrich K. Mueller","","http://arxiv.org/pdf/2007.07065v1","Standard inference about a scalar parameter estimated via GMM amounts to
+applying a t-test to a particular set of observations. If the number of
+observations is not very large, then moderately heavy tails can lead to poor
+behavior of the t-test. This is a particular problem under clustering, since
+the number of observations then corresponds to the number of clusters, and
+heterogeneity in cluster sizes induces a form of heavy tails. This paper
+combines extreme value theory for the smallest and largest observations with a
+normal approximation for the average of the remaining observations to construct
+a more robust alternative to the t-test. The new test is found to control size
+much more successfully in small samples compared to existing methods.
+Analytical results in the canonical inference for the mean problem demonstrate
+that the new test provides a refinement over the full sample t-test under more
+than two but less than three moments, while the bootstrapped t-test does not."
+"A goodness-of-fit test for bivariate extreme-value copulas","https://scispace.com/paper/http://arxiv.org/abs/1102.2078v1","2011","Preprint","","Christian Genest
+Ivan Kojadinovic
+Johanna Nešlehová
+Jun Yan","10.3150/10-BEJ279","http://arxiv.org/pdf/1102.2078v1","It is often reasonable to assume that the dependence structure of a bivariate
+continuous distribution belongs to the class of extreme-value copulas. The
+latter are characterized by their Pickands dependence function. In this paper,
+a procedure is proposed for testing whether this function belongs to a given
+parametric family. The test is based on a Cram\'{e}r--von Mises statistic
+measuring the distance between an estimate of the parametric Pickands
+dependence function and either one of two nonparametric estimators thereof
+studied by Genest and Segers [Ann. Statist. 37 (2009) 2990--3022]. As the
+limiting distribution of the test statistic depends on unknown parameters, it
+must be estimated via a parametric bootstrap procedure, the validity of which
+is established. Monte Carlo simulations are used to assess the power of the
+test and an extension to dependence structures that are left-tail decreasing in
+both variables is considered."
+"Characterization of the frequency of extreme events by the Generalized
+  Pareto Distribution","https://scispace.com/paper/http://arxiv.org/abs/cond-mat/0011168v1","2000","Preprint","","V. F. Pisarenko
+D. Sornette","10.1007/s00024-003-2397-x","http://arxiv.org/pdf/cond-mat/0011168v1","Based on recent results in extreme value theory, we use a new technique for
+the statistical estimation of distribution tails. Specifically, we use the
+Gnedenko-Pickands-Balkema-de Haan theorem, which gives a natural limit law for
+peak-over-threshold values in the form of the Generalized Pareto Distribution
+(GPD). Useful in finance, insurance, hydrology, we investigate here the
+earthquake energy distribution described by the Gutenberg-Richter seismic
+moment-frequency law and analyze shallow earthquakes (depth h < 70 km) in the
+Harvard catalog over the period 1977-2000 in 18 seismic zones. The whole GPD is
+found to approximate the tails of the seismic moment distributions quite well
+above moment-magnitudes larger than mW=5.3 and no statistically significant
+regional difference is found for subduction and transform seismic zones. We
+confirm that the b-value is very different in mid-ocean ridges compared to
+other zones (b=1.50=B10.09 versus b=1.00=B10.05 corresponding to a power law
+exponent close to 1 versus 2/3) with a very high statistical confidence. We
+propose a physical mechanism for this, contrasting slow healing ruptures in
+mid-ocean ridges with fast healing ruptures in other zones. Deviations from the
+GPD at the very end of the tail are detected in the sample containing
+earthquakes from all major subduction zones (sample size of 4985 events). We
+propose a new statistical test of significance of such deviations based on the
+bootstrap method. The number of events deviating from the tails of GPD in the
+studied data sets (15-20 at most) is not sufficient for determining the
+functional form of those deviations. Thus, it is practically impossible to give
+preference to one of the previously suggested parametric families describing
+the ends of tails of seismic moment distributions."
+"Robust Inference of Risks of Large Portfolios","https://scispace.com/paper/http://arxiv.org/abs/1501.02382v1","2015","Preprint","","Jianqing Fan
+Fang Han
+Han Liu
+Byron Vickers","","http://arxiv.org/pdf/1501.02382v1","We propose a bootstrap-based robust high-confidence level upper bound (Robust
+H-CLUB) for assessing the risks of large portfolios. The proposed approach
+exploits rank-based and quantile-based estimators, and can be viewed as a
+robust extension of the H-CLUB method (Fan et al., 2015). Such an extension
+allows us to handle possibly misspecified models and heavy-tailed data. Under
+mixing conditions, we analyze the proposed approach and demonstrate its
+advantage over the H-CLUB. We further provide thorough numerical results to
+back up the developed theory. We also apply the proposed method to analyze a
+stock market dataset."
+"Consistency of full-sample bootstrap for estimating high-quantile, tail
+  probability, and tail index","https://scispace.com/paper/http://arxiv.org/abs/2004.12639v1","2020","Preprint","","Svetlana Litvinova
+Mervyn J. Silvapulle","","http://arxiv.org/pdf/2004.12639v1","We show that the full-sample bootstrap is asymptotically valid for
+constructing confidence intervals for high-quantiles, tail probabilities, and
+other tail parameters of a univariate distribution. This resolves the doubts
+that have been raised about the validity of such bootstrap methods. In our
+extensive simulation study, the overall performance of the bootstrap method was
+better than that of the standard asymptotic method, indicating that the
+bootstrap method is at least as good, if not better than, the asymptotic method
+for inference. This paper also lays the foundation for developing bootstrap
+methods for inference about tail events in multivariate statistics; this is
+particularly important because some of the non-bootstrap methods are complex."
+"Classification of Extremal Dependence in Financial Markets via Bootstrap
+  Inference","https://scispace.com/paper/http://arxiv.org/abs/2506.04656v1","2025","Preprint","","Qian Hui
+Sidney I. Resnick
+Tiandong Wang","","http://arxiv.org/pdf/2506.04656v1","Accurately identifying the extremal dependence structure in multivariate
+heavy-tailed data is a fundamental yet challenging task, particularly in
+financial applications. Following a recently proposed bootstrap-based testing
+procedure, we apply the methodology to absolute log returns of U.S. S&P 500 and
+Chinese A-share stocks over a time period well before the U.S. election in
+2024. The procedure reveals more isolated clustering of dependent assets in the
+U.S. economy compared with China which exhibits different characteristics and a
+more interconnected pattern of extremal dependence. Cross-market analysis
+identifies strong extremal linkages in sectors such as materials, consumer
+staples and consumer discretionary, highlighting the effectiveness of the
+testing procedure for large-scale empirical applications."
+"Multiplier bootstrap of tail copulas with applications","https://scispace.com/paper/http://arxiv.org/abs/1102.0110v3","2011","Preprint","","Axel Bücher
+Holger Dette","10.3150/12-BEJ425","http://arxiv.org/pdf/1102.0110v3","For the problem of estimating lower tail and upper tail copulas, we propose
+two bootstrap procedures for approximating the distribution of the
+corresponding empirical tail copulas. The first method uses a multiplier
+bootstrap of the empirical tail copula process and requires estimation of the
+partial derivatives of the tail copula. The second method avoids this
+estimation problem and uses multipliers in the two-dimensional empirical
+distribution function and in the estimates of the marginal distributions. For
+both multiplier bootstrap procedures, we prove consistency. For these
+investigations, we demonstrate that the common assumption of the existence of
+continuous partial derivatives in the the literature on tail copula estimation
+is so restrictive, such that the tail copula corresponding to tail independence
+is the only tail copula with this property. Moreover, we are able to solve this
+problem and prove weak convergence of the empirical tail copula process under
+nonrestrictive smoothness assumptions that are satisfied for many commonly used
+models. These results are applied in several statistical problems, including
+minimum distance estimation and goodness-of-fit testing."
+"Statistics for Heteroscedastic Time Series Extremes","https://scispace.com/paper/http://arxiv.org/abs/2204.09534v1","2022","Preprint","","Axel Bücher
+Tobias Jennessen","","http://arxiv.org/pdf/2204.09534v1","Einmahl, de Haan and Zhou (2016, Journal of the Royal Statistical Society:
+Series B, 78(1), 31-51) recently introduced a stochastic model that allows for
+heteroscedasticity of extremes. The model is extended to the situation where
+the observations are serially dependent, which is crucial for many practical
+applications. We prove a local limit theorem for a kernel estimator for the
+scedasis function, and a functional limit theorem for an estimator for the
+integrated scedasis function. We further prove consistency of a bootstrap
+scheme that allows to test for the null hypothesis that the extremes are
+homoscedastic. Finally, we propose an estimator for the extremal index
+governing the dynamics of the extremes and prove its consistency. All results
+are illustrated by Monte Carlo simulations. An important intermediate result
+concerns the sequential tail empirical process under serial dependence."
+"High-dimensional Simultaneous Inference on Non-Gaussian VAR Model via
+  De-biased Estimator","https://scispace.com/paper/http://arxiv.org/abs/2111.01382v1","2021","Preprint","","Linbo Liu
+Danna Zhang","","http://arxiv.org/pdf/2111.01382v1","Simultaneous inference for high-dimensional non-Gaussian time series is
+always considered to be a challenging problem. Such tasks require not only
+robust estimation of the coefficients in the random process, but also deriving
+limiting distribution for a sum of dependent variables. In this paper, we
+propose a multiplier bootstrap procedure to conduct simultaneous inference for
+the transition coefficients in high-dimensional non-Gaussian vector
+autoregressive (VAR) models. This bootstrap-assisted procedure allows the
+dimension of the time series to grow exponentially fast in the number of
+observations. As a test statistic, a de-biased estimator is constructed for
+simultaneous inference. Unlike the traditional de-biased/de-sparsifying Lasso
+estimator, robust convex loss function and normalizing weight function are
+exploited to avoid any unfavorable behavior at the tail of the distribution. We
+develop Gaussian approximation theory for VAR model to derive the asymptotic
+distribution of the de-biased estimator and propose a multiplier
+bootstrap-assisted procedure to obtain critical values under very mild moment
+conditions on the innovations. As an important tool in the convergence analysis
+of various estimators, we establish a Bernstein-type probabilistic
+concentration inequality for bounded VAR models. Numerical experiments verify
+the validity and efficiency of the proposed method."
+"Simultaneous confidence bands for the integrated hazard function","https://scispace.com/paper/http://arxiv.org/abs/math/0601346v1","2006","Preprint","","Anna Dudek
+Maciej Gocwin
+Jacek Leskow","","http://arxiv.org/pdf/math/0601346v1","The construction of the simultaneous confidence bands for the integrated
+hazard function is considered. The Nelson--Aalen estimator is used. The
+simultaneous confidence bands based on bootstrap methods are presented. Two
+methods of construction of such confidence bands are proposed. The weird
+bootstrap method is used for resampling. Simulations are made to compare the
+actual coverage probability of the bootstrap and the asymptotic simultaneous
+confidence bands. It is shown that the equal--tailed bootstrap confidence band
+has the coverage probability closest to the nominal one. We also present
+application of our confidence bands to the data regarding survival after heart
+transplant."
+"Eichler integrals and generalized second order Eisenstein series","https://scispace.com/paper/http://arxiv.org/abs/2203.15462v1","2022","Preprint","","Albin Ahlbäck
+Tobias Magnusson
+Martin Raum","","http://arxiv.org/pdf/2203.15462v1","We show that all Eichler integrals, and more generally all ""generalized
+second order modular forms"" can be expressed as linear combinations of
+corresponding generalized second order Eisenstein series with coefficients in
+classical modular forms. We determine the Fourier series expansions of
+generalized second order Eisenstein series in level one, and provide tail
+estimates via convexity bounds for additively twisted $\mathrm{L}$-functions.
+As an application, we illustrate a bootstrapping procedure that yields
+numerical evaluations of, for instance, Eichler integrals from merely the
+associated cocycle. The proof of our main results rests on a filtration
+argument that is largely rooted in previous work on vector-valued modular
+forms, which we here formulate in classical terms."
