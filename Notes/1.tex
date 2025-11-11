@@ -198,15 +198,86 @@ For an iid sample $\{(y_i,x_i)\}_{i=1}^{n}$,
 However, now $E[-H_i(\theta_0)] = \mcI(\theta_0)$.
 
 \section{Interpretation and inference in misspecified models}
+If the likelihood function is \Emph{misspecified}, 
+the MLE is generally \Emph{inconsistent} for the parameters of interest.
+However, under the general conditions, $plim\hat{\theta} = \theta^*$, 
+where the \Emph{pseudo-true value} $\theta^*$ minimizes the Kullback-Leibler divergence
+where $f_0(y)$ is the true distribution of data.
+\begin{definition}
+    \textbf{Kullback-Leibler divergence}, also called relative entropy, 
+    is a measure of how one probability distribution is different from a second,
+    reference probability distribution.
+\end{definition}
+This means that the MLE leads to the best approximation in the Kullback-Leibner sense
+to the true density. However, because Fisher's information matrix identity does not hold,
+the asymptotic covariance matrix is given by:
+\begin{equation}
+    A^{-1}BA{-1}\quad A = E[-H_i(\theta^*)]\quad B = E[s_i(\theta^*)s_i(\theta^*)']
+\end{equation}
+\Info{$f(y|\theta^*)$ is the best approximation given the wrong space but is still wrong.}
+
+\section{Hypothesis testing}
+Considering a general set of restrictions to be tested
+\begin{equation}
+    H_0 : h(\theta_0) = 0
+\end{equation}
+where 
+\begin{itemize}
+    \item $\theta$: vector of parameters in the model and the true value is given by $\theta_0$.
+    \item $h(\theta)$ is a $d\times 1$ vector of restrictions.
+    \item $\hat{\theta}$ is the unrestricted MLE where its value maximizes $L(\theta)$.
+    \item $\tilde{\theta}$ is the restricted MLE where its value maximizes $L(\theta)$ and satisfies $h(\theta) = 0$.
+\end{itemize}
+
+\subsection{The Wald Test}
+Compares $h(\hat{\theta})$ with $0$ since $h(\tilde{\theta}) = 0$.
+The test statistic is
+\begin{equation}
+    \mcW = n\times h(\hat{\theta})'\left[G(\hat{\theta})'[\hat{\mcI(\theta)}]^{-1}G(\hat{\theta})\right]^{-1}h(\hat{\theta})
+\end{equation}
+where $G(\theta) = \frac{\partial h(\theta)}{\partial\theta}$.\\
+
+Under the null hypothesis,
+\begin{equation}
+    \mcW \xrightarrow{d} \mcX^2(d)
+\end{equation}
+\KeyIdea{Wald test is not invariant to how restrictions are formulated.}
+Equivalent non-linear ($\beta_0/(1-\alpha_0)=1$) and linear ($\beta_0+\alpha_0-1 = 0$) restriction may lead to different values of $\mcW$.
+
+\subsection{The Likelihood Ratio Test}
+Compare $L(\hat{\theta})$ and $L(\tilde{\theta})$. 
+If $h(\theta_0) = 0$ then $L(\hat{\theta})$ should be close to $L(\tilde{\theta})$.
+The test is base on the likelihood ratio $\lambda = \frac{\mcL(\tilde{\theta})}{\mcL(\hat{\theta})}$ with the test statistic 
+\begin{equation}
+    \mcL\mcR = -2\log(\lambda) = 2\{\log\mcL(\hat{\theta}) - \log\mcL(\tilde{\theta})\}
+\end{equation}
+\Info{We may encounter convergence problem when maximizing.}\\
+
+Under the null hypothesis,
+\begin{equation}
+    \mcL\mcR \xrightarrow{d} \mcX^2(d)
+\end{equation}
+
+\subsection{The Langrage Multiplier or Score Test}
+Compare $S(\tilde{\theta})$ with $0$ since $S(\hat{\theta}) = 0$.
+The test statistic is 
+\begin{equation}
+    \mcL\mcM = S(\tilde{\theta})'[\hat{\mcI(\theta)}]^{-1}S(\tilde{\theta})\frac{1}{n}
+\end{equation}
+
+Under the null hypothesis, 
+\begin{equation}
+    \mcL\mcM\xrightarrow{d}\mcX^2(d)
+\end{equation}
+\Info{The LM test works best in real life application. 
+It is under weaker regulated conditions but it's still difficult to compute the $S(\theta)$ function.}
 
 
-
-
-% Definition
+% \begin{definition}
 % Theorem
 % Lemma
-% Example
-% Proof
+% \begin{Example}
+% \begin{proof}
 %\newcommand{\KeyIdea}[1]{\hltext[keybg]{\textbf{#1}}}            % 关键想法：浅绿底
 %\newcommand{\Term}[1]{\textcolor{termblue}{\textbf{#1}}}           % 专业名词：品牌深绿字
 %\newcommand{\Emph}[1]{\textcolor{accentD}{\textbf{#1}}}          % 强调词汇：红
