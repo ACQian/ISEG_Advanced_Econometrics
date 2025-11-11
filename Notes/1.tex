@@ -88,6 +88,59 @@ Under the assumed regularity conditions of MLE possesses the following propertie
     \item \Emph{Invariance} meaning that if $c(\theta)$ is a continuous and continuously differentiable one-to-one function,
     the MLE of $\gamma = c(\theta_0)$ is $c(\hat{\theta})$.
 \end{enumerate}
+\begin{Example}
+    In the Bernoulli case $\mcI(\theta_0)^{-1} = \theta_0(1-\theta_0)$,
+    therefore, $\sqrt{n}(\hat{\theta}-\theta)\xrightarrow{d}\mcN(0,\theta_0(1-\theta_0))$.
+    \begin{proof}
+        We begin by writing the log-likelihood function,
+        \begin{equation*}
+            \log f(y_i|\theta) = y_i\log (\theta) + (1-y_i)\log(1-\theta)
+        \end{equation*}
+        Now finding the score vector,
+        \begin{align*}
+            s_i(\theta) & = \frac{\partial\log f(y_i|\theta)}{\partial\theta}\\
+            & = \frac{y_i}{\theta} - \frac{(1-y_i)}{(1-\theta)}\\
+            & = \frac{y_i}{\theta} - \frac{1}{1-\theta} + \frac{y_i}{1-\theta}\\
+            & = y_i\left(\frac{1}{\theta}+\frac{1}{1-\theta}\right) - \frac{1}{\theta}\\
+            & = y_i\left(\frac{1-\theta+\theta}{\theta(1-\theta)}\right) - \frac{1}{1-\theta}\\
+            & = y_i\frac{1}{\theta(1-\theta)}-\frac{1}{1-\theta}\\
+            & = \frac{y_i}{\theta(1-\theta)}-\frac{1}{1-\theta}
+        \end{align*}
+        Now finding the Fisher's information matrix,
+        \begin{equation*}
+            Var(s_i(\theta_0)) = Var\left[\frac{y_i}{\theta_0(1-\theta_0)}-\underbrace{\frac{1}{1-\theta_0}}_{=0,\text{ constant}}\right]
+            = Var\left[\frac{y_i}{\underbrace{\theta_0(1-\theta_0)}_{\text{constant}}}\right]
+            = \frac{1}{\theta_0^2(1-\theta_0)^2}\underbrace{Var[y_i]}_{(1)}
+        \end{equation*}
+        (1):
+        \begin{equation*}
+            \Var[y_i] = \underbrace{E[y_i^2]}_{(2)} - \underbrace{E[y_i]^2}_{(3)} 
+            = \theta_0 - \theta_0^2 = \theta_0(1-\theta_0)
+        \end{equation*}
+        (2):
+        \begin{equation*}
+            E[y_i^2] = 1^2\underbrace{P(y_i=1|\theta_0)}_{=\theta_0} + 0^2\underbrace{p(y_i=0|\theta_0)}_{(1-\theta_0)}
+            = \theta_0
+        \end{equation*}
+        (3):
+        \begin{equation*}
+            E[y_i] = 1\underbrace{P(y_i=1|\theta_0)}_{=\theta_0} + 0\underbrace{p(y_i=0|\theta_0)}_{(1-\theta_0)}
+            = \theta_0
+        \end{equation*}
+        \begin{equation*}
+            \Var(s_i(\theta_0)) = \frac{1}{\theta_0^2(1-\theta_0)^2}\theta_0(1-\theta_0)
+            = \frac{1}{\theta_0(1-\theta_0)} = \mcI(\theta_0)
+        \end{equation*}
+        Now finding the inverse of the information matrix,
+        \begin{equation*}
+            \mcI(\theta_0)^{-1} = \theta_0(1-\theta_0)
+        \end{equation*}
+        We now conclude,
+        \begin{equation*}
+            \sqrt{n} (\hat{\theta}-\theta)\xrightarrow{d}\mcN(0, \theta_0(1-\theta_0))
+        \end{equation*}
+    \end{proof}
+\end{Example}
 
 Now, don't forget that $\theta_0$ is not known, so we want to estiamte the information matrix.
 
@@ -109,6 +162,7 @@ There are three commonly used estimators of $\mcI(\theta_0)$:
     \end{proof}
     \item \Emph{Outer Product of the Gradient (OPG)}: Because of the information matrix identity,
     we can also use $n^{-1}\sum_{i=1}^{n}s_i(\hat{\theta})s_i(\hat{\theta})'$.
+    \Info{The OPG is notorious for its poor performance with finite samples.}
     \begin{proof}
     \begin{align*}
         Var[s_i(\theta_0)] & = E[s_i(\theta_0)s_i(\theta)']\\
@@ -116,10 +170,36 @@ There are three commonly used estimators of $\mcI(\theta_0)$:
         & = \frac{1}{N}\sum_{i=1}^{N}s_i(\hat{\theta})s_i(\hat{\theta})'
     \end{align*}
     \end{proof}
-    \Info{The OPG is notorious for its poor performance with finite samples.}
 \end{itemize}
 
 \section{Regressors}
+Suppose the joint distribution of $y$ and $x$ depends on $\alpha_0$, giving
+\begin{gather}
+    f(y,x|\alpha_0) = f(y|x,\alpha_0)g(x|\alpha_0)\\
+    f(y|x,\alpha_0) = \frac{f(y,x,\alpha_0)}{g(x,\alpha_0)}\\
+    \underbrace{f(y,x,\alpha_0)}_{\text{joint}} = \underbrace{f(y|x,\alpha_0)}_{\text{conditional}}\underbrace{g(x,\alpha_0)}_{\text{marginal}}
+\end{gather}
+and suppose $\alpha_0$ can be divided into $\theta_0$ and $\delta_0$, so that with exogeneity of $x$, 
+$f(y,x|\alpha_0) = f(y_i|x_i,\theta_0)g(x_i|\delta_0)$.
+For an iid sample $\{(y_i,x_i)\}_{i=1}^{n}$,
+\begin{equation}
+    \log L(\theta,\delta|y_i,x_i) = \sum_{i=1}^{n}\log f(y_i,x_i|alpha) 
+    = \sum_{i=1}^{n}\log f(y_i|x_i,\theta) + \sum_{i=1}^{n}\log g(x_i|\delta)
+\end{equation}
+\Info{
+    We are under the assumption that we are only interested in $\theta_0$.
+    Now this assumption that we don't care about $\delta$ makes our lives easier because 
+    \begin{equation*}
+        \frac{\partial L(\theta,\delta|y_i,x_i)}{\partial\theta}|_{\hat{\theta}}=0 \Leftrightarrow
+        \frac{\partial \sum_{i=1}^{n}\log f(y_i|x_i,\theta_i)}{\partial\theta}|_{\hat{\theta}}=0
+    \end{equation*}
+    The part of $g(x,\delta)$ can be ignored now, only focus on the conditional density function.
+}
+However, now $E[-H_i(\theta_0)] = \mcI(\theta_0)$.
+
+\section{Interpretation and inference in misspecified models}
+
+
 
 
 % Definition
