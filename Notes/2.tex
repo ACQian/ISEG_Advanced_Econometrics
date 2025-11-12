@@ -10,11 +10,11 @@ In the \Term{linear probability model} we assume that
 \begin{equation}
     P(Y=1|X) = \beta_1 + \beta_2 X_2 + \cdots + \beta_k X_k
 \end{equation}
-thus the interpreation of $\beta_j$ is the \KeyIdea{change in the probability of success when $x_j$ changes}.
+thus the \Emph{interpreation of $\beta_j$} is the \KeyIdea{change in the probability of success when $x_j$ changes}.
 \begin{equation}
     \frac{\partial P(Y=1|X)}{\partial X_j} = \beta_j,\quad j=2,\ldots,k
 \end{equation}
-and the predicted $Y$ is the \KeyIdea{predicted probability of success}.\\
+and the \Emph{predicted $Y$} is the \KeyIdea{predicted probability of success}.\\
 
 The linear probability model is estimated using \Emph{OLS}.
 But there is the potential problem that the fitted values can be outside $[0,1]$.
