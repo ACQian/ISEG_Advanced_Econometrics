@@ -39,6 +39,254 @@ therefore we should use the Eicker-Huber-White \Emph{robust standard errors} to 
 \end{proof}
 
 \section{Index models for binary response}
+The alternative to the linear model is to assume that $E[Y|X] = P(Y=1|X) = G(X'\beta_0)$,
+where $G(\cdot)$ is bounded between 0 and 1. Thus, we have,
+\begin{equation}
+    Y = \begin{cases}
+        1 & \text{with probability }G(X'\beta_0)\\
+        0 & \text{with probability }1-G(X'\beta_0)
+    \end{cases}
+\end{equation}
+with the log-likelihood function of
+\begin{equation}
+    \log\{L(\beta)\} = \sum_{i=1}^{n} Y_i\log(G(X_i'\beta)) + \sum_{i=0}^{n}(1-Y_i)\log(1-G(X_i'\beta))
+\end{equation}
+The \Emph{MLE} should be used to find the estimators, $\hat{\beta}_{ML}$.\\
+
+Note that it is a system of non-linear equations to be solved to find $\hat{\beta}_{ML}$
+thus we have to resort to numerical methods. \Info{There is no closed form solution for this estimator.}
+\Emph{Consistency and asymptotic normality} follow the general results described for MLE under regulairty conditions.
+Essentially, the \Emph{main requirement for consistency} is $E[Y|X] = P(Y=1|X) = G(X'\beta_0)$.\\
+
+In a correctly specified model, $\hat{\beta}$ is consistent and asymptotically normally distributed
+with variance-covariance matrix $[\mcI(\beta_0)]^{-1}$,
+\begin{equation*}
+    \sqrt{n}(\hat{\beta}-\beta_0)\xrightarrow{d}\mcN(0,[\mcI(\beta_0)]^{-1})
+\end{equation*}
+\Emph{Inference} is done using the Wald, Likelihood Ratio, and Lagrange multiplier statistics as usual.
+
+\subsection{$G(X'\beta_0)$ Choices}
+The most popular choices are
+\begin{itemize}
+    \item The \Term{Logit Model}
+    \begin{equation}
+        G(X'\beta_0) = \frac{\exp(X'\beta_0)}{1+\exp(X'\beta_0)}
+    \end{equation}
+    \item The \Term{Probit Model}
+    \begin{equation}
+        G(X'\beta_0) = \Phi(X'\beta_0)
+    \end{equation}
+    where $\Phi(z)=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{z}\exp(-\frac{u^2}{2})\,du$ is the Standard Normal Distribution function.
+\end{itemize}
+Both models are non-linear and require \Emph{MLE}. Other possible models are
+\begin{itemize}
+    \item The \Term{Log-Weibull} Distribution
+    \begin{equation*}
+        G(X'\beta_0) = \exp(-\exp(X'\beta_0))
+    \end{equation*}
+    \item The \Term{Complementary log-log Model}, Gompertz Distribution
+    \begin{equation*}
+        G(X'\beta_0) = 1- \exp(-\exp(X'\beta_0))
+    \end{equation*}
+    \item \begin{equation*}
+        G(X'\beta_0) = \Phi(X'\beta_0)^{\tau}
+        \end{equation*}
+    where $\tau$ needs to be estimated.
+    \item \begin{equation*}
+        G(X'\beta_0) = 1- \exp(-\omega\exp(X'\beta_0))^{-\frac{1}{\omega}}
+    \end{equation*}
+    where $\omega$ needs to be estimated. 
+    Note that for $\omega = 1$ we have the Logit model, 
+    and $\lim_{\omega\to 0}G(X'\beta_0) = 1- \exp(-\exp(X'\beta_0))$.
+\end{itemize}
+\Info{Estimating additional parameters of the distribution allows the data to tell us the true model
+which is a major benefit.}\\
+
+In statistics, a more common interpretation of the coefficients 
+is in terms of \Term{marginal effects} on the odds ratio rather than on the probability.
+$\frac{P(Y=1|X)}{(1-P(Y=1|X))}$ measures the \KeyIdea{probability of yes relative to no}
+and is called the \Emph{odds ratio} or relative risk.
+For the logit model, the log-odds ratio is linear in the regressors.
+\begin{proof}
+    \begin{align*}
+        P(Y=1|X) & = \frac{\exp(X'\beta_0)}{1+\exp(X'\beta_0)} \Rightarrow\\
+        \frac{P(Y=1|X)}{1-P(Y=1|X)} & = \frac{\frac{\exp(X'\beta_0)}{1+\exp(X'\beta_0)}}{1-\frac{\exp(X'\beta_0)}{1+\exp(X'\beta_0)}} = \exp(X'\beta_0)\Rightarrow\\
+        \log\left(\frac{P(Y=1|X)}{1-P(Y=1|X)}\right) & = X'\beta_0
+    \end{align*}
+\end{proof}
+
+\subsection{Latent Variable Threshold (LVT) Model}
+Define a latent variable
+\begin{equation}
+    Y^* = X'\beta_0 + \epsilon_t
+\end{equation}
+where $Y^*$ is unobserved, thus a \Term{latent variable}.
+Further assume that $\epsilon$ independent of $X$, $E[\epsilon]=0$ and $\Var(\epsilon)=\sigma^2$ with a distribution function of $F(\cdot)$.
+The observation of $Y$ is given by
+\begin{equation}
+    Y =
+    \begin{cases}
+        1 & \text{if }Y^* > \lambda\\
+        0 & \text{if }Y^* \leq\lambda
+    \end{cases}
+\end{equation}
+where $\lambda$ is the threshold.\\
+
+The probability of choosing the option is thus given by,
+\begin{align*}
+    P(Y=1|X) & = P(Y^*>\lambda|X) = P(X'\beta_0+\epsilon>\lambda|X)\\
+    & = P(\epsilon > -X'\beta_0+\lambda|X)\\
+    & = 1 - P(\epsilon \leq -X'\beta_0+\lambda|X)\\
+    & \text{independence between }\epsilon, X\\
+    & = 1 - \underbrace{F(-X'\beta_0+\lambda)}_{\text{cumulative distribution function}}\\
+    & = G(X'\beta_0)
+\end{align*}
+with $G(z) = 1 - F(-z+\lambda)$.\\
+
+\Term{First identification problem}: 
+\begin{equation}
+    P(Y=1|X) = 1 - F(-X'\beta_0+\lambda)
+\end{equation}
+Notice that if $X_1 = 1$ meaning that \Emph{there is an intercept in the model}, 
+it is not possible to estimate $-\beta_1$ and $\lambda$ at the intercept separately. 
+Solution is to \KeyIdea{set $\lambda = 0$}. If $\lambda = 0$, and $\epsilon$ has a symmetric distribution around 0,
+then $G(z) = F(z)$ as in this case $1-F(-z) = F(z)$.\\
+
+\Term{Second identification problem}: 
+\begin{equation}
+    \frac{Y^*}{a} = X'\beta_0^*+\frac{\epsilon}{a}
+\end{equation}
+If we divide $Y^*$ from (24) by a constant $a$ and $a>0$, 
+notice that the definition of the observable variable $Y$ (25) does not change.
+\Info{Changing the scale $\to$ changing of variance but the $Y$ does not change $\Rightarrow$
+we cannot identify the scale of $Y^*$.} This implies that \Emph{we cannot identify the variance of $\epsilon$}.
+\Info{Error term variance not observed and cannot be identified and estimated.}
+For given $\beta_0^*$, value of $\beta_0$ depends on $a$, meaning $\beta_0$ is identified up to a scale factor.
+The solution is to \KeyIdea{normalize distribution of $\epsilon$} by fixing $\sigma^2$ at a given number $\Rightarrow$ assume $\sigma^2$ is known.
+\Info{Normally set to 1 in practice.}
+
+\subsection{Random Utility Models}
+Suppose an individual has to choose between alternatives $a$ and $b$ with utilities $U^a$ and $U^b$ which are unobservable.
+But the characteristics of the observations are observable thus we have,
+\begin{align*}
+    U^a & = X'\beta_a + u_a\\
+    U^b & = X'\beta_b + u_b
+\end{align*}
+We also observe the chosen alternative, say $a$, which we indicate this choice as $Y=1$.
+Then we know that,
+\begin{align*}
+    P(Y=1|X) & = P(U^a > U^b|X) = P(X'\beta_a+u_a > X'\beta_b+u_b)\\
+    & = P(u_a-u_b>X'(\beta_b-\beta_a)|X)\\
+    & = P(\epsilon > -X'\beta_0|X) = 1 - F(-X'\beta_0)
+\end{align*}
+with $\epsilon = u_a-u_b$ and $\beta_0=\beta_a-\beta_b$.
+
+\section{Marginal effects and average partial effects}
+
+It is important to note that the parameters of the model, like those of any nonlinear regression model,
+are not necessarily the marginal effects. In general,  the partial effect associated with variable $k$, $X_{ik}$ is given by,
+\begin{equation}
+    \Delta E[Y_i|X_i] \equiv \Delta P(Y_i = 1|X_i) \simeq \frac{\partial E[Y_i|X_i]}{\partial X_{ik}}\Delta X_{ik} = \frac{\partial G(X'_i\beta_0)}{\partial X_{ik}}\Delta X_{ik}
+\end{equation}
+Let $\omega = X'_i\beta_0 = \beta_1X_{i2}+\cdots+\beta_k X_{iK}$, then,
+\begin{equation}
+    \frac{\partial E[Y_i|X_i]}{\partial X_{ik}} = \frac{\partial G(\omega)}{\partial(\omega)}\frac{\partial(\omega)}{\partial X_{ik}}
+    = g(\omega)\beta_k = g(X'_i\beta_0)\beta_k
+\end{equation}
+where $g(\omega) = \frac{\partial G(\omega)}{\partial\omega}$. Thus, we need to evaluate
+\begin{equation}
+    \Delta e[Y_i | X'_i\beta_{0i}] \equiv \Delta P(Y_I=1|X_i) \simeq g(X'_i\beta_0)\beta_k\Delta X_{ik}
+\end{equation}
+
+Now, to \Emph{compute marginal effects} of variable $X_k$ assuming that \Emph{$X_{ik}$ is continuous}, we have options 
+\begin{itemize}
+    \item Marginal effect at a \KeyIdea{particular value $X_i = X_0$}
+    \begin{equation*}
+        g(X'_0\hat{\beta}_{ML})\hat{\beta}_{ML,i}\Delta X_{ik}
+    \end{equation*}
+    The most common choices of $X_0$ are the vector of sample means. This does not make sense if some of the regressors are dummy variables.
+    Or the vector of sample medians.
+    \item Alternative is to compute \KeyIdea{Average Partial Effects} which is the sampel average of the individual marginal effects,
+    \begin{equation*}
+        \frac{1}{n}\sum_{i=1}^{n}g(X_i'\hat{\beta}_{ML})\hat{\beta}_{ML,k}\Delta X_{ik}
+    \end{equation*}
+\end{itemize}
+The options to compute the marginal effects on a \Emph{dummy variable} $d$, we have the same options 
+\begin{itemize}
+    \item Marginal effect at a \KeyIdea{particular value $X_i = X_0$}
+    \begin{equation*}
+        P(\widehat{Y_i=1|X_0,d_i=1}) - \widehat{P(Y_i=1|X_0,d_i=0)}
+    \end{equation*}
+    Note that here $X_0$ denotes all variables in the model at the particular value $X_0$ except $d$.
+    \item Average partial effect is thus given by 
+    \begin{equation*}
+        \frac{1}{n}\sum_{i=1}^{n}P(\widehat{Y_i=1|X_i,d_i=1}) - \frac{1}{n}\sum_{i=1}^{n}\widehat{P(Y_i=1|X_i,d_i=0)}
+    \end{equation*}
+    Note that here $X_i$ denotes all variables in the model except $d$.
+\end{itemize}
+
+\section{Simple specification tests}
+\subsection{Misspecification}
+If $G(\cdot)$ is \Emph{misspecified}, then $\hat{\beta}_{ML}$ is \Emph{inconsistent}. 
+Perform \KeyIdea{RESET-type test} by testing \Emph{$H_0: \delta_1 = \delta_2 = 0$} in the model 
+\begin{equation*}
+    E[Y_i|X_i] = G(X'_i\beta_0+\delta_1(X'_i\hat{\beta}_{ML})^2+\delta_2(X'_i\hat{\beta}_{ML})^3),\quad i=1,\ldots,n
+\end{equation*}
+\Info{This is a normality test in the probit if $\epsilon_i\sim\mcN(0,1)\to f(\cdot)=\Phi(\cdot)$.
+$E[Y_i|X_i]=X'_i\beta$ estimated by OLS and the estimator $\hat{\beta}$ and 
+the model $Y_i = X'_i\beta + \delta_0(X'_i\beta)^2+\delta_1(X'_i\beta)^3$ and test $H_0: \delta_0 = 0$ and $\delta_1=0$, if we reject $H_0 \to$ model is misspecified.}\\
+
+The RESET test can be tested against mroe general parametric specifications which include additional shape parameters.
+Consider $G(\cdot) = \Phi(\cdot)^\tau$, use the score statistic to test $H_0: \tau=1$, Probit. Or, consider $G(\cdot) = 1-(1+\omega\exp(\cdot))^{-\frac{1}{\omega}}$,
+use the score statistic to test $H_0: \omega=1$, Logit.
+
+\subsection{Heteroskedasticity}
+In the LVT model, heteroskedasticity leads to misspecification of the conditional mean of $Y$.
+\begin{proof}
+    Proof of misspecification for LVT.\\
+    The goal is to show that $E[Y|X] \neq G(X'\beta_0)$. As previously shown, $G(a) = 1 - F(a)$.
+    \begin{align*}
+        P(Y=1|X) & = P(Y^* > 0|X) = P(X'\beta_0+k\,h(Z'\gamma_0)\epsilon > 0|X)\\
+        & = P\left(\epsilon > \frac{-X'\beta_0}{k\,h(Z'\gamma_0)}|X\right)\\
+        & \text{notice $X'$ and condition on $X$, we can drop the condition}\\
+        & = P\left(\epsilon > \frac{-X'\beta_0}{k\,h(Z'\gamma_0)}\right)\\
+        & = 1 - P\left(\epsilon \leq \frac{-X'\beta_0}{k\,h(Z'\gamma_0)}\right)\\
+        & = 1 - F\left(\epsilon \leq \frac{-X'\beta_0}{k\,h(Z'\gamma_0)}\right)\\
+        & = G\left(\epsilon \leq \frac{-X'\beta_0}{k\,h(Z'\gamma_0)}\right) \neq G(X'\beta_0)\to \text{misspecified}
+    \end{align*}
+\end{proof}
+Consider a latent variable, 
+\begin{equation}
+    Y^* = X'\beta_0 + k\times h(Z'\gamma_0)\epsilon
+\end{equation}
+under the assumptions of $\epsilon$ independent of $X$, $E[\epsilon]=0$ and $\Var(\epsilon)=1$ and distirbution function $F(\cdot)$, 
+$Z$ are a vector function of $X$ of size $d$ and $h$ any function with $h>0, h(0) = 1, h'(0)\neq0$.
+\begin{proof}
+    Proof of heteroskedasticity.\\
+    The idea is to prove that the variance of the error term is not constant but a function of $X$.
+    \begin{gather*}
+        u = k\times h(Z'\gamma_0)\epsilon\\
+        e[u|X] = E[k\times h(Z'\gamma_0)\epsilon|X] = k\times h(Z'\gamma_0) \underbrace{E[\epsilon|X]}_{=0} = 0\\
+        \Var(u|X) = \Var(k\times h(Z'\gamma_0)\epsilon|X) = k^2[h(Z'\gamma_0)]^2\underbrace{\Var(\epsilon|X)}_{=1} = k^2[h(Z'\gamma_0)]^2
+        \to \text{Heteroskedasticity}
+    \end{gather*}
+\end{proof}
+
+We can construct a \KeyIdea{LM test} based on the generalized residuals to test $H_0: \gamma_0=0$ which implies \Emph{homoskedasticity}.
+The LM test statistic is calculated as 
+\begin{equation*}
+    \xi_{LM} = \iota'S(S'S)^{-1}S'\iota\sim\chi^2(d)
+\end{equation*}
+This is asymptotically equivalent to a \KeyIdea{Wald test} with $H_0: \gamma_0=0$ in the model 
+\begin{equation*}
+    E[Y_i|X_i] = G(X'\beta_0 + (X'_i\hat{\beta}_{ML})Z'_i\gamma_0),\quad i=1,\ldots,n
+\end{equation*}
+
+\subsection{Goodness of fit}
+Unlike the linear probaility model, we cannot compute an $R^2$ to judge the goodness of fit.
+One possibility is to use the \KeyIdea{pseudo $R^2$} based on the log likelihood. We can also look at the percent correctly predicted.
+\Info{We can just use the percentage of correct predictions and we can adjust the threshold. This is more for machine learning when prediction matters.
+For econometrics, the interpretation of $\beta$ is more important, thus the specification test is more important.}
 
 
 % \begin{definition}
@@ -49,5 +297,5 @@ therefore we should use the Eicker-Huber-White \Emph{robust standard errors} to 
 %\newcommand{\KeyIdea}  % 关键想法：浅绿底
 %\newcommand{\Term}     % 专业名词：品牌深绿字
 %\newcommand{\Emph}     % 强调词汇：红
-%\newcommand{\Confus    % 不懂/存疑处
+%\newcommand{\Confuse}    % 不懂/存疑处
 %\newcommand{\Info}     % 说明或注解
