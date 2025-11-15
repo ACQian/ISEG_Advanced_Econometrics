@@ -88,59 +88,59 @@ Under the assumed regularity conditions of MLE possesses the following propertie
     \item \Emph{Invariance} meaning that if $c(\theta)$ is a continuous and continuously differentiable one-to-one function,
     the MLE of $\gamma = c(\theta_0)$ is $c(\hat{\theta})$.
 \end{enumerate}
-\begin{Example}
-    In the Bernoulli case $\mcI(\theta_0)^{-1} = \theta_0(1-\theta_0)$,
-    therefore, $\sqrt{n}(\hat{\theta}-\theta)\xrightarrow{d}\mcN(0,\theta_0(1-\theta_0))$.
-    \begin{proof}
-        We begin by writing the log-likelihood function,
-        \begin{equation*}
-            \log f(y_i|\theta) = y_i\log (\theta) + (1-y_i)\log(1-\theta)
-        \end{equation*}
-        Now finding the score vector,
-        \begin{align*}
-            s_i(\theta) & = \frac{\partial\log f(y_i|\theta)}{\partial\theta}\\
-            & = \frac{y_i}{\theta} - \frac{(1-y_i)}{(1-\theta)}\\
-            & = \frac{y_i}{\theta} - \frac{1}{1-\theta} + \frac{y_i}{1-\theta}\\
-            & = y_i\left(\frac{1}{\theta}+\frac{1}{1-\theta}\right) - \frac{1}{\theta}\\
-            & = y_i\left(\frac{1-\theta+\theta}{\theta(1-\theta)}\right) - \frac{1}{1-\theta}\\
-            & = y_i\frac{1}{\theta(1-\theta)}-\frac{1}{1-\theta}\\
-            & = \frac{y_i}{\theta(1-\theta)}-\frac{1}{1-\theta}
-        \end{align*}
-        Now finding the Fisher's information matrix,
-        \begin{equation*}
-            Var(s_i(\theta_0)) = Var\left[\frac{y_i}{\theta_0(1-\theta_0)}-\underbrace{\frac{1}{1-\theta_0}}_{=0,\text{ constant}}\right]
-            = Var\left[\frac{y_i}{\underbrace{\theta_0(1-\theta_0)}_{\text{constant}}}\right]
-            = \frac{1}{\theta_0^2(1-\theta_0)^2}\underbrace{Var[y_i]}_{(1)}
-        \end{equation*}
-        (1):
-        \begin{equation*}
-            \Var[y_i] = \underbrace{E[y_i^2]}_{(2)} - \underbrace{E[y_i]^2}_{(3)} 
-            = \theta_0 - \theta_0^2 = \theta_0(1-\theta_0)
-        \end{equation*}
-        (2):
-        \begin{equation*}
-            E[y_i^2] = 1^2\underbrace{P(y_i=1|\theta_0)}_{=\theta_0} + 0^2\underbrace{p(y_i=0|\theta_0)}_{(1-\theta_0)}
-            = \theta_0
-        \end{equation*}
-        (3):
-        \begin{equation*}
-            E[y_i] = 1\underbrace{P(y_i=1|\theta_0)}_{=\theta_0} + 0\underbrace{p(y_i=0|\theta_0)}_{(1-\theta_0)}
-            = \theta_0
-        \end{equation*}
-        \begin{equation*}
-            \Var(s_i(\theta_0)) = \frac{1}{\theta_0^2(1-\theta_0)^2}\theta_0(1-\theta_0)
-            = \frac{1}{\theta_0(1-\theta_0)} = \mcI(\theta_0)
-        \end{equation*}
-        Now finding the inverse of the information matrix,
-        \begin{equation*}
-            \mcI(\theta_0)^{-1} = \theta_0(1-\theta_0)
-        \end{equation*}
-        We now conclude,
-        \begin{equation*}
-            \sqrt{n} (\hat{\theta}-\theta)\xrightarrow{d}\mcN(0, \theta_0(1-\theta_0))
-        \end{equation*}
-    \end{proof}
-\end{Example}
+%\begin{Example}
+%    In the Bernoulli case $\mcI(\theta_0)^{-1} = \theta_0(1-\theta_0)$,
+%    therefore, $\sqrt{n}(\hat{\theta}-\theta)\xrightarrow{d}\mcN(0,\theta_0(1-\theta_0))$.
+%    \begin{proof}
+%        We begin by writing the log-likelihood function,
+%        \begin{equation*}
+%           \log f(y_i|\theta) = y_i\log (\theta) + (1-y_i)\log(1-\theta)
+%        \end{equation*}
+%        Now finding the score vector,
+%        \begin{align*}
+%            s_i(\theta) & = \frac{\partial\log f(y_i|\theta)}{\partial\theta}\\
+%            & = \frac{y_i}{\theta} - \frac{(1-y_i)}{(1-\theta)}\\
+%            & = \frac{y_i}{\theta} - \frac{1}{1-\theta} + \frac{y_i}{1-\theta}\\
+%            & = y_i\left(\frac{1}{\theta}+\frac{1}{1-\theta}\right) - \frac{1}{\theta}\\
+%            & = y_i\left(\frac{1-\theta+\theta}{\theta(1-\theta)}\right) - \frac{1}{1-\theta}\\
+%            & = y_i\frac{1}{\theta(1-\theta)}-\frac{1}{1-\theta}\\
+%            & = \frac{y_i}{\theta(1-\theta)}-\frac{1}{1-\theta}
+%        \end{align*}
+%        Now finding the Fisher's information matrix,
+%        \begin{equation*}
+%            Var(s_i(\theta_0)) = Var\left[\frac{y_i}{\theta_0(1-\theta_0)}-\underbrace{\frac{1}{1-\theta_0}}_{=0,\text{ constant}}\right]
+%            = Var\left[\frac{y_i}{\underbrace{\theta_0(1-\theta_0)}_{\text{constant}}}\right]
+%            = \frac{1}{\theta_0^2(1-\theta_0)^2}\underbrace{Var[y_i]}_{(1)}
+%        \end{equation*}
+%        (1):
+%        \begin{equation*}
+%            \Var[y_i] = \underbrace{E[y_i^2]}_{(2)} - \underbrace{E[y_i]^2}_{(3)} 
+%            = \theta_0 - \theta_0^2 = \theta_0(1-\theta_0)
+%        \end{equation*}
+%        (2):
+%        \begin{equation*}
+%            E[y_i^2] = 1^2\underbrace{P(y_i=1|\theta_0)}_{=\theta_0} + 0^2\underbrace{p(y_i=0|\theta_0)}_{(1-\theta_0)}
+%            = \theta_0
+%        \end{equation*}
+%        (3):
+%        \begin{equation*}
+%            E[y_i] = 1\underbrace{P(y_i=1|\theta_0)}_{=\theta_0} + 0\underbrace{p(y_i=0|\theta_0)}_{(1-\theta_0)}
+%            = \theta_0
+%        \end{equation*}
+%        \begin{equation*}
+%            \Var(s_i(\theta_0)) = \frac{1}{\theta_0^2(1-\theta_0)^2}\theta_0(1-\theta_0)
+%            = \frac{1}{\theta_0(1-\theta_0)} = \mcI(\theta_0)
+%        \end{equation*}
+%        Now finding the inverse of the information matrix,
+%        \begin{equation*}
+%            \mcI(\theta_0)^{-1} = \theta_0(1-\theta_0)
+%        \end{equation*}
+%        We now conclude,
+%        \begin{equation*}
+%            \sqrt{n} (\hat{\theta}-\theta)\xrightarrow{d}\mcN(0, \theta_0(1-\theta_0))
+%        \end{equation*}
+%    \end{proof}
+%\end{Example}
 
 Now, don't forget that $\theta_0$ is not known, so we want to estiamte the information matrix.
 
@@ -212,7 +212,7 @@ This means that the MLE leads to the best approximation in the Kullback-Leibner 
 to the true density. However, because Fisher's information matrix identity does not hold,
 the asymptotic covariance matrix is given by:
 \begin{equation}
-    A^{-1}BA{-1}\quad A = E[-H_i(\theta^*)]\quad B = E[s_i(\theta^*)s_i(\theta^*)']
+    A^{-1}BA^{-1}\quad A = E[-H_i(\theta^*)]\quad B = E[s_i(\theta^*)s_i(\theta^*)']
 \end{equation}
 \Info{$f(y|\theta^*)$ is the best approximation given the wrong space but is still wrong.}
 

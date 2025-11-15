@@ -2,7 +2,165 @@
 \ChapterHeading
 
 \section{Ordered data}
+In some problems, the variate of interest assumes more than two discrete outcomes, but these are inherently \Emph{orderded}.
+\Info{Ordered data is a generalization of the binary choice model but with an order.} 
+Zavoina and McElvey (1975) modeled ordered data using the following latent variable framework,
+\begin{equation}
+    Y^*_i = X'_i\beta_0+u_i, \quad Y_i = \begin{cases}
+        0 & Y_i^*\leq \mu_0\\
+        1 & \mu_0<Y_i^*\leq\mu_1\\
+        2 & \mu_1<Y_i^*\leq\mu_2\\
+        \vdots & \vdots\\
+        J-1 & \mu_{J-2}<Y_i^*\leq\mu_{J-1}\\
+        J & \mu_{J-1}<Y_i^*
+    \end{cases}
+\end{equation}
+where the threshold parameters are such that $0=\mu_0<\mu_1<\cdots<\mu_{J-1}$ and $Y_i^*$ is the latent variable.\\
 
+If \Emph{the distribution of $u_i$ is specified}, the \Emph{unknwon parameters} $\beta$ and $\mu_2,\ldots,\mu_{J-1}$ can be estimated by \Emph{ML}.
+Assume that $u_i$ has dsitribution function $F(\cdot)$ and is independent of $X_i$, notice that,
+\begin{gather*}
+    P_0(X_i,\beta_0) = P(Y_i=0|X_i) = F(-X_i'\beta_0)\\
+    P_1(X_i,\beta_0) = P(Y_i=1|X_i) = F(\mu_1-X_i'\beta_0) - F(-X_i'\beta_0)\\
+    \vdots\\
+    P_j(X_i,\beta_0) = P(Y_i=j|X_i) = F(\mu_j-X_i'\beta_0) - F(\mu_{j-1}-X_i'\beta_0)\\
+    \vdots\\
+    P_J(X_i,\beta_0) = P(Y_i=J|X_i) = 1 - F(\mu_{J-1}-X_i'\beta_0)
+\end{gather*}
+Therefore the log-likelihood function is,
+\begin{equation*}
+    \log L(\theta) = \sum_{i=1}^{n}\sum_{i=1}^{J}1(Y_i=j)\log(P_j(X_i,\beta))
+\end{equation*}
+As in all discrete choice models, \Emph{the variance of $u_i$ is not identified}.
+And the \KeyIdea{ordered-probit and ordered-logit} are the most used special cases of the model.\\
+
+Interpreting coefficients requires some care and is messy. But, the OP and OL models allow us to obtain the \Emph{sign of the partial effects} on $P(Y>j|X_i)$.
+For a continuous variable $x_h$ for the OP model,
+\begin{equation*}
+    \frac{\partial P(Y_i>j|X_i)}{\partial x_h} = \beta_h\Phi(\mu_j - X_i'\beta)
+\end{equation*}
+If \Emph{$\beta_h>0$, an increase in $x_h$ increases the probability that $Y_i$ is greater than any value j}. Of course, we can interpret the sign of the parameters in the latent variable model.
+\Info{It is actually easier to interpret the $\beta$'s of the latent equation to avoid the complications of finding the marginal effect.}\\
+
+A closely related model can be used for \KeyIdea{grouped data}. In this case, the threshold parameters are the limits of the intervals.
+The main difference is that for $J>0$, \Emph{the variance of $u_i$ is identified} because the thresholds give information on the scale of $u_i$.
+\Info{Only need to estimate the $\beta$'s becasue the $\mu$'s are known.}
+
+\section{Count data models}
+In many applications, the variate of interest is the count of the number of occurences of some event in a given period of time.
+These data have some very specific characteristics: discreteness, non-negative, and many zeros and a long right-hand tail.
+
+In those conditions, the \Emph{standard linear models are not appropriate} because:
+\begin{itemize}
+    \item The conditional expectation is necessarily non-negative. \Info{The mean is always positive.}
+    \item The data is intrinsically heteroskedastic.
+    \item Do not allow the computation of the probability of events of interest.
+\end{itemize}
+
+\subsection{The Poisson Regression Model}
+The \Term{Poisson regression model} is defined by,
+\begin{equation}
+    P(Y_i = j|X_i) = \frac{\exp\{-\lambda(X_i.\beta_0)\}\lambda(X_i,\beta_0)^j}{j!},\quad j=0,1,2,\ldots
+\end{equation}
+with
+\begin{gather*}
+    E[Y_i|X_i] = \Var(Y_i|X_i) = \lambda(X_i,\beta_0)\quad \textcolor{red}{\text{equidispersion assumption}}\\
+    \Var(Y_i) = E_x[\lambda(X_i,\beta_0)] + \Var[\lambda(X_i,\beta_0)]\geq E_x[\lambda(X_i,\beta_0)] = E[Y_i]
+\end{gather*}
+where in general the specification of $\lambda(X_i,\beta_0) = \exp(X'_i\beta_0)$ is adopted. 
+\Info{Because $\exp(X'_i\beta_0)>0$.}
+Therefore, 
+\begin{equation*}
+    \frac{\partial E[Y_i|X_i]}{\partial X_i} = \exp(X'_i\beta_0)\beta_0
+\end{equation*}
+and \Emph{ML} estimation of $\beta_0$ is straightforward.
+\begin{proof}
+    Proof of $\Var(Y_i)$
+    \begin{align*}
+        \Var(Y_i) & \quad\text{using law of total variance}\\
+        & = \overbrace{\Var_{X_i}(\underbrace{E[Y_i|X_i]}_{\lambda(\cdot)})}^{\geq 0}
+        + E_{X_i}[\underbrace{E[Y_i|X_i]}_{\lambda(\cdot)}]\Rightarrow\\
+        \Var(Y_i) & \geq E_{X_i}[\Var(Y_i|X_i)] = E_{X_i}[\lambda(X_i,\beta_0)]\\
+        & = E_{X_i}[E[Y_i|X_i]]\quad\text{using the law of interated expectations}\\
+        & = E[Y_i]
+    \end{align*}
+\end{proof}
+The log-likelihood function is given by,
+\begin{equation*}
+    \log L(\beta) = \sum_{i=1}^{n}[-\exp(X'_i\beta)+(X'_i\beta)Y_i-\log(Y_i!)]
+\end{equation*}
+The \Emph{Hessian is negative definite} for all $X$ and $\beta$ which facilitates the estimation and ensures the unqiueness of the maximum if it exists.
+The \Emph{MLE} has the usual properties,
+\begin{equation*}
+    \sqrt{n}(\hat{\beta}_{ML}-\beta_0)\xrightarrow{d}\to\mcN(0, E[\exp(X'_i\beta_0)X_i X'_i]^{-1})
+\end{equation*}
+And as usual, \Emph{inference} can be performed using the \KeyIdea{LR, W, and LM tests}.
+
+\subsection{Overdispersion}
+The Poisson model imposes equidispersion which is very restrictive.
+\begin{definition}
+    \textbf{Equidispersion} means the conditional expectation is equal to the variance.\\
+    $E[Y_i|X_i] = \Var(Y_i|X_i)$\\
+    While \textbf{overdispersion} means that the variance is bigger than the conditional mean.\\
+    $\Var(Y_i|X_i)>E[Y_i|X_i]$
+\end{definition}
+There are many causes for overdispersion: measurement error, misspecification of the condition mean, neglected heterogeneity (random parameter variation).
+Focusing on the neglected heterogeneity issue, assuming
+\begin{align*}
+    E[Y_i|X_i,\epsilon_i] = \exp(X'_i\beta_0+\epsilon_i)&\quad \textcolor{red}{\epsilon_i\text{ can be any possibilities of error}}\\
+    E[\exp(\epsilon_i)|X_i] = 1\\
+    \Var(\exp(\epsilon_i)|X_i) = \sigma^2
+\end{align*}
+In this case,
+\begin{equation*}
+    E[Y_i|X_i] = E[\lambda(X_i,\beta_0)|X_i] = E_{\epsilon}[\exp(X'_i\beta_0+\epsilon_i)|X_i] = \exp(X'_i\beta_0)
+\end{equation*}
+Therefore, this sort of neglected heterogeneity \Emph{does not change the form of the conditional expectation of $Y_i$}.
+\begin{theorem}
+    \textbf{Gourieroux, Monfort and Trognon (1984)}\\
+    If \Emph{$E[Y_i|X_i] = \lambda(X'_i,\beta_0)$ is correctly specified} and the likelihood function is constructed
+    using a probability distribution which does not necessarily correspond to the true distribution of the data,
+    but \Emph{belongs to the family of linear exponential distribution}, 
+    then the \KeyIdea{Quasi-Maximum Likelihood} estimator is \Emph{consistent} for $\beta_0$.
+\end{theorem}
+\Info{Wrong estimator $\to$ same exponential family $\to$ still consistent.}
+The family of linear exponential distribution includes
+\begin{itemize}
+    \item Poisson distribution
+    \item Normal distribution with fixed variance \Info{ $\to$ using contiuous distribution to describe a discrete distribution.}
+    \item Binomial distribution with fixed number of trials
+    \item Gamma distribution with fixed shape parameter
+\end{itemize}
+
+\Emph{Inference} is done using the results presented for the Quasi-Maximum Likelihood estimator.
+In particular, since the Poisson pseudo-MLE is consistent in presence of this sort of misspecification,
+valid inference can be based on
+\begin{equation*}
+    \sqrt{n}(\hat{\beta}-\beta_0)\xrightarrow{d}\mcN(0, A^{-1}BA^{-1})
+\end{equation*}
+where
+\begin{equation*}
+    A = E[\exp(X'_i\beta_0X_i X_i')]\quad B = E[(Y_i-\exp(X'_i\beta_0))^2X_i X'_i]
+\end{equation*}
+
+Notice that
+\begin{align*}
+    Var(Y_i|X_i) & = E_{\epsilon_i}[\Var(Y_i|X_i,\epsilon_i)] + \Var(E_{\epsilon_i}[Y_i|X_i,\epsilon_i])\quad \text{law of total variance}\\
+    & = \exp(X'_i\beta_0) + \sigma^2\exp(2X'_i\beta_0)\\
+    & \geq E[Y_i|X_i] = \exp(X'_i\beta_0)
+\end{align*}
+This means that the \Emph{presence of overdispersion or underdispersion} can be tested with \KeyIdea{LM test statistic} 
+\begin{flalign*}
+    & H_0: \sigma^2 = 0 \to \text{equidispersion}\\
+    & T = \sum_{i=1}^{n}\frac{(Y_i-\exp(X'_i\hat{\beta}))^2-Y_i}{\sqrt{2\sum_{i=1}^{n}\exp(2X_i'\hat{\beta})}}\xrightarrow{d}\mcN(0,1)
+\end{flalign*}
+Or a \KeyIdea{RESET test} to test if the specificiation $E[Y_i|X_i] = \exp(X'_i\beta_0)$ is correct.
+\begin{flalign*}
+    & H_o : \gamma_0 = 0 \to \text{correctly specified thus equidispersion}\\
+    & E[Y_i|X_i] = \exp(X'_i\beta_0 + \gamma_0(X'_i\beta_0)^2)
+\end{flalign*}
+
+\subsection{Heterogeneity and the Negative Binomial Regression Model}
 
 % \begin{definition}
 % Theorem
