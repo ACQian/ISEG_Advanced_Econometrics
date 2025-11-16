@@ -161,10 +161,147 @@ Or a \KeyIdea{RESET test} to test if the specificiation $E[Y_i|X_i] = \exp(X'_i\
 \end{flalign*}
 
 \subsection{Heterogeneity and the Negative Binomial Regression Model}
+The assumption that $Y_i$ has a Poisson distribution coniditonal of $X_i$ and $\epsilon_i$ with mean $\lambda_i = \exp(X'_i\beta_0+\epsilon_i)$ leads to the \Term{compound Poisson regression model}.
+\begin{flalign}
+    & P(Y_i=j|X_i,\epsilon_i) = \frac{\exp[-\exp(X'_i\beta_0+\epsilon_i)]\exp(X'_i\beta_0+\epsilon_i)^j}{j!}\\
+    & P(Y_i=j|X_i) = \int_{-\infty}^{+\infty}\frac{\exp[-\exp(X'_i\beta_0+\epsilon_i)]\exp(X'_i\beta_0+\epsilon_i)^j}{j!}g(\epsilon_i)\, d\epsilon_i
+\end{flalign}
+where $g(\epsilon_i)$ is the density function of $\epsilon_i$ and we assume that $X_i$ and $\epsilon_i$ are independent.
+This model can be made operational in different ways:
+\begin{itemize}
+    \item Pseudo maximum likelihood estimation \Info{$\to$ Refer to previous section.}
+    \item Parametric estimation for specified $g(\epsilon_i)$
+    \item Semiparametric estimation of $\beta_0$ and $g(\epsilon_i)$
+\end{itemize}
+
+Now focusing on the second method when \KeyIdea{$g(\epsilon_i)$ is specified}. \Emph{MLE} can be obtained, btu the estimator \Emph{may not be robust} to departures form the additional distributional assumptions.
+Assume that $\exp(\epsilon_i)\sim\Gamma(\sigma^{-2},\sigma^2)$, then $P(Y_i=j|X_i)$ is given by the \Term{Negative-Binomial model}, Cameron and Trivedi (1986).
+The Poisson model is obtained as a limiting case when $\sigma^2\to 0$, but $H_0:\sigma^2 = 0$ cannot be tested with a standard LR or Wald test.\\
+
+If the model is \Emph{misspecified} but $E[Y_i|X_i] = \exp(X'_i\beta_0)$ is correct and $\sigma^{-2}$ is fixed, the \Emph{negative-binomial Pseudo-MLE} estimator is \Emph{consistent} for $\beta_0$.
+This follows the result from \Term{Gourieroux, Monfort and Trognon (1984)} and the fact that the negative-binomial distribution with $\sigma^{-2}$ fixed is a member of the family of linear exponential distributions.
+\begin{lemma} Building on top of the original \textbf{Gourieroux, Monfort and Trognon (1984)}\\
+    If the model
+    \begin{itemize}
+        \item is correct $\xrightarrow{MLE}$ consistent
+        \item is incorrect but fix $\sigma^{-2}\xrightarrow{MLE} \hat{\beta}$ consistent
+        \item is incorrect $\xrightarrow{MLE} \hat{\beta}, \sigma^2$ inconsistent
+    \end{itemize}
+\end{lemma}
+The \KeyIdea{score test} for $H_0:\sigma^2=0$ is the overdispersion test discussed previously. Other parametric alternatives to the Poisson regression are available.\\
+
+Now focusing on the third method with \KeyIdea{semiparametric estimation} which assumes that $\epsilon$ has a discrete dsitribution with $Q$ support points 
+$\alpha_1,\ldots,\alpha_Q$ and corresponding possibilities $\pi_1,\ldots,\pi_Q$, leading to 
+\begin{equation}
+    P(Y_i=j|X_i) = \sum_{q=1}^{Q}\frac{\exp[-\exp(X'_i\beta_0+\alpha_q)]\exp(X'_i\beta_0+\alpha_q)^j}{j!}\pi_q
+\end{equation}
+For a given $Q$, estimation of $\beta, \alpha_1,\ldots,\alpha_Q,\pi_1,\ldots,\pi_{Q-1}$ can be performed by \Emph{ML}.
+This leads to a \Emph{consistent} estimator if $Q$ is allowed to increase at an appropriate rate.
+In practice, the value of $Q$ has to be chosen, for example using information criterion.
+But \Emph{inferece is complciated} by the fact that the number of parameters is not fixed.
+\Info{This method is nice because the big integral in (35) now becomes $\sum_{q=1}^{Q}\pi_q = 1$ since $\epsilon_i$ is discrete.}
+
+\subsection{Hurdle and Zero-Inflated Poisson Model}
+In some cases, the population may be contaminated by individuals for which $Y_i\equiv 0$. There are two ways to model this type of data 
+\begin{enumerate}
+    \item Zero-Inflated Poisson Model
+    \item Hurdle Model
+\end{enumerate}
+
+In the \Term{Zero-Inflated Poisson Model}, the zero outcomec can arise fomr one of two regimes. 
+In one regime, the outcome is always zero. In the other, the ususal Poisson process is at work.
+Let $Z_i$ be a Bernoulli random variable such that 
+\begin{equation*}
+    Z_i = \begin{cases}
+        0 & \text{with }P(Z_i=0|X_i) = p_1\\
+        1 & \text{with }P(Z_i=1|X_i) = 1-p_i
+    \end{cases}
+\end{equation*}
+Let $P(Y_i=j|X_i,Z_i=1) = \pi_i(j;\beta_0),\, j=0,1,\ldots$ be the Poisson probability function. And let $P(Y_i=0|X_i,Z_i=0) = 1$.
+Note that,
+\begin{align*}
+    P(Y_i=0|X_i) & \quad \text{law of total probability}\\
+    & = P(Z_i=0|X_i)P(Y_i=0|X_i,Z_i=0) + P(Z_i=1|X_i)P(Y_i=0|X_i,Z_i=1)\\
+    & = P(Z_i=0|X_i) + P(Z_i=1|X_i)P(Y_i=0|X_i,Z_i=1)\\
+    & = p_i + (1-p_i)\pi_i(0;\beta_0)
+\end{align*}
+For $j>0$,
+\begin{align*}
+    P(Y_i=j|X_i) & \quad \text{law of total probability}\\
+    & = \underbrace{P(Z_i=0|X_i)}_{=p_i}\underbrace{P(Y_i = j|X_i,Z_i = 0)}_{=0 \text{ because all the mass are at 0 so cannot be j}}
+    + \underbrace{P(Z_i=1|X_i)}_{=(1-p_i)}\underbrace{P(Y_i=j|X_i,Z_i=1)}_{\pi(j;\beta_0)}\\
+    & = (1-p_i)\pi(j;\beta_0)
+\end{align*}
+Also notice that,
+\begin{align*}
+    E[Y_i|X_i] & = \sum_{j=0}^{\infty}jP(Y_i=j|X_i) = 0\times P(Y_i=0|X_i) + \sum_{j=1}^{\infty}jP(Y_i=j|X_i)\\
+    & = \sum_{j=1}^{\infty}j(1-p_i)\pi(j;\beta_0)\\
+    & = (1-p_i)\underbrace{\sum_{j=1}^{\infty}j\pi(j;\beta_0)}_{\exp(X'_i\beta_0)\text{ mean of the Poisson random variable}}
+\end{align*}
+Therefore, the standard \Emph{pseudo maximum likelihood does not hold here if $p_i$ depends on $X_i$}.
+The log-likelihood function this model is written as 
+\begin{equation}
+    \log L(\beta) = \sum_{i=1}^{n}\log\{[p_i+(1-p_i)\pi_i(0;\beta)]^{1(Y_i=0)}\times[(1-p_i)\pi_i(Y_i;\beta)]^{1(Y_i>0)}\}
+\end{equation}
+
+The \Term{Hurdle Model} is a different extention of the basic count data model is obtained by letting the zero and positive observations be generated by different mechanisms.
+A binary probability model determines whether a zero or a nonzero outcome occurs, then in the latter case, we observe always a positive integer $1,2,\ldots$
+Consider a Bernoulli random variable 
+\begin{equation*}
+    W_i = \begin{cases}
+        1 & \text{with }P(W_i=1|X_i) = 1-q_i\\
+        0 & \text{with }P(Z_i=0|X_i) = q_i
+    \end{cases}
+\end{equation*}
+where \Emph{$q_i$ may depend on $X_i$}.
+\begin{flalign*}
+    & P(Y_i=0|X_i, W_i=0) = 1\\
+    & P(Y_i=0|X_i, W_i=1) = 0\\
+    & P(Y_i=j|X_i, W_i=1) = \pi^*(j;\beta_0)\quad j=1,2,\ldots
+\end{flalign*}
+\Info{As the model only takes strictly positive values, $\pi^*(j;\beta_0)$ cannot be Poisson.} In this case,
+\begin{align*}
+    P(Y_i=0|X_i) & = P(W_i=0|X_i)P(Y_i=0|X_i,W_i=0)+P(W_i=1|X_i)P(Y_i=0|X_i,W_i=1)\\
+    & = q_i\times 1 + (1-q_i)\times 0 = q_i
+\end{align*}
+For $j=1,2,\ldots$
+\begin{align*}
+    P(Y_i=j|X_i) & = P(W_i=0|X_i)P(Y_i=j|X_i,W_i=0)+P(W_i=1|X_i)P(Y_i=j|X_i,W_i=1)\\
+    & = P(W_i=1|X_i)P(Y_i=j|X_i,W_i=1)\\
+    & = q_i\times 0 + (1-q_i)\pi^*(j;\beta_0)
+\end{align*}
+In this case, we have 
+\begin{align*}
+    E[Y_i|X_i] & = \sum_{j=0}^{\infty}jP(Y_i=j|X_i) = 0\times P(Y_i=0|X_i) + \sum_{j=1}^{\infty}jP(Y_i=j|X_i)\\
+    & = \sum_{j=1}^{\infty}j(1-p_i)\pi^*(j;\beta_0)\\
+    & = (1-p_i)\underbrace{\sum_{j=1}^{\infty}j\pi^*(j;\beta_0)}_{\text{mean of } \pi^*(j;\beta_0)\text{ cannot be }\exp(X'_i\beta_0)}
+\end{align*}
+Again, the \Emph{standard pseudo maximun likelihood result does not hold here.} Then, the log-likelihood function has the form
+\begin{equation}
+    \log L(\beta) = \sum_{i=1}^{n}\{1(Y_i=0)(\log q_i)+1(Y_i>0)\log(1-q_i)+1(Y_i>0)\log[\pi^*(Y_i;\beta)]\}
+\end{equation}
+Notice that this function is separable meaning the \Emph{correlated unobserved heterogeneity can be allowed for} and integrated out numerically.
+\Info{Can model $q_i$'s separately, $q_i = \frac{\exp(X_i'\gamma_0)}{1+\exp(X'_i\gamma_0)}$ with this then we can estiamte the $\beta$'s.}\\
+
+Usually, $\pi^*(j;\beta_0)$ is specified as a truncated Poisson of the form
+\begin{equation*}
+    \pi^*(j;\beta_0) = \frac{\exp(-\lambda_i)\lambda_i^j}{(1-\exp(-\lambda_i))j!},\quad j>0
+\end{equation*}
+with $\lambda_i = \exp(X'_i\beta_0)$. However, there is no real truncation in this model, so an equally valid specification is 
+\begin{equation*}
+    \pi^*(j;\beta_0) = \frac{\exp(-\lambda_i)\lambda_i^{j-1}}{(j-1)!},\quad j>0
+\end{equation*}
+When the \Emph{truncated Poisson specification is used}, we can test the \KeyIdea{null of no hurdle} through
+\begin{flalign*}
+    & H_0: \beta_0 = \gamma_0\\
+    & q_i = \exp(-\exp(X'_i\gamma_0))
+\end{flalign*}
+In any case, \Emph{consistency depends on the distributional assumptions.}
+
 
 % \begin{definition}
 % Theorem
-% Lemma
+% \begin{lemma}
 % \begin{Example}
 % \begin{proof}
 %\newcommand{\KeyIdea}  % 关键想法：浅绿底
