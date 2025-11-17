@@ -1,0 +1,131 @@
+\setchapter{4}{Limited Dependent Variable Models}
+\ChapterHeading
+
+In some applications, the domain of the variate of interest is limited.
+In application, the bounds of the domain of $Y$ often have to be taken into account.
+Traditionally, there are three forms of limited dependent variable models:
+\begin{enumerate}
+    \item Truncated data
+    \item Censored data
+    \item Sample selection which is also called incidental truncation
+\end{enumerate}
+
+\section{Truncated data}
+
+\begin{definition}
+    A sample $Y$ is said to come from a \textbf{truncated distribution} when it is not possible to obtain observations from part of the domain of $Y$.
+\end{definition}
+
+If $Y$ is a \Emph{continuous random variable} with pdf $f(y)$ and $a$ is a constant, we have \Emph{left-truncation at $a$} if the sample is drawn from the conditional distribution 
+\begin{equation*}
+    f(y|Y>a) = \frac{f(y)}{P(Y>a)}
+\end{equation*}
+We have also truncation if the regressors are also not observed when $Y<a$.
+For a \Emph{discrete random variable} with support on $0,1,\ldots,\infty$, we have \Emph{left-truncation at $a$} if the sample is drawn from 
+\begin{equation*}
+    P(Y=j|Y>a) = \frac{P(Y=j)}{1-\sum_{k=0}^{\lfloor a \rfloor}P(Y=k)'}
+\end{equation*}
+
+Notice that truncation is only problematic if it depends on $Y$ or on another variable that is not independent of $Y$ and that is not used as a regressor.
+Under certain conditions, it is possible to perform inference about the entire population using truncated samples.
+The problem is that this inference tends to be \Emph{sensitive to distributional assumptions}.
+
+\begin{Example}
+    Normal distribution with mean $\mu$ and variance $\sigma^2$
+    \begin{equation*}
+        E[Y_i|Y_i>a] = \mu + \underbrace{\sigma\frac{\phi(\frac{1-\mu}{\sigma})}{1-\Phi(\frac{a-\mu}{\sigma})}}_{\text{extra term}}
+    \end{equation*}
+    If you try to make inference on $\mu$, it would be biased because of this extra term.\\
+
+    For the case of count data with $E[Y_i|X_i] = \exp(X'_i\beta_0)$
+    \begin{equation*}
+        E[Y_i|X_i,Y_i>a] = \frac{\exp(X'_i\beta_0)}{1 - \underbrace{\sum_{k=0}^{\lfloor a \rfloor}P(Y_i=k|X_i)}_{\text{notice here}}}
+    \end{equation*}
+    The result depends on the probability function of the data.
+\end{Example}
+In both of the examples, the expectation for the truncated data \Emph{depends on the shape of the conditional distribution}.
+Because of this, the estimation is often performed by \KeyIdea{maximum likelihood}.
+\Info{Assume we know the distribution of the data.}
+
+\subsection{Truncated normal regression model}
+The \Term{Truncated normal regression model} is defined by 
+\begin{align*}
+    Y_i^* & = X'_i\beta_0+u_i^*,\quad u_i^*\sim\mcN(0,\sigma^2)\\
+    (Y_i,X_i) & = \begin{cases}
+        (Y_i^*,X_i) & \text{if }Y_i^* > 0\\
+        \text{non-observable} & \text{if }Y_i^*\leq 0
+    \end{cases}
+\end{align*}
+This implies that 
+\begin{equation*}
+    E[Y_i|X_i, Y_i>0] = X'_i\beta_0 + \sigma\frac{\phi(\frac{-X'_i\beta_0}{\sigma})}{1-\Phi(\frac{-X'_i\beta_0}{\sigma})}
+\end{equation*}
+\Info{Again with the extra term, the OLS assumption of $E[Y_i|X_i]=X_i'\beta_0$ is violated $\to$ use MLE.}
+The parameters of interest can be estimated from the likelihood function 
+\begin{equation*}
+    L(\beta,\sigma) = \prod_{i=1}^{n}\frac{1}{\sigma}\frac{\phi(\frac{Y_i-X'_i\beta}{\sigma})}{1-\Phi(\frac{-X'_i\beta_0}{\sigma})}
+\end{equation*}
+
+\section{Censored data}
+
+Censoring is a problem of partial observability.
+For example, if $Y^*$ is a random variable and $a$ is a constant, we have \Emph{left-censoring at $a$} if we can only observe 
+\begin{equation*}
+    Y = \max\{Y^*,a\} = \begin{cases}
+        a & \text{if }Y^* \leq a\\
+        Y^* & \text{if }Y^* > a
+    \end{cases}
+\end{equation*}
+We can also have \Emph{right truncation}, in this case, $Y = \min\{Y^*,a\}$.\\
+
+Focusing on left-censored data.
+If $Y^*$ is a \Emph{discrete random variable} with support on $0,1,\ldots,\infty$, the probability function of $Y$ is given by 
+\begin{equation*}
+    P(Y=j) = \begin{cases}
+        0 & \text{if }j<a\\
+        P(Y^*\leq a) & \text{if }j=a\\
+        P(Y^* = j) & \text{if }j>a
+    \end{cases}
+\end{equation*}
+If $Y^*$ is a \Emph{continuous random variable} with pdf $f(y^*)$, then $Y$ has the \Emph{mixed distribution} 
+\begin{equation*}
+    P(Y\leq k) = \begin{cases}
+        0 & \text{if }k<a\\
+        P(Y^*\leq k) & \text{if }k\geq a
+    \end{cases}
+\end{equation*}
+It is assumed that the \Emph{regressors are fully observed}, even for cases with censored $Y^*$.
+
+\subsection{Tobit model}
+
+The standard regression model for continuous censored data is the \Term{Tobit} which was proposed by Tobin (1958).
+The model is defined by 
+\begin{align*}
+    Y^*_i & = X'_i\beta_0 + u_i^*,\quad u_i^*\sim\mcN(0,\sigma^2)\\
+    Y_i & = \begin{cases}
+        0 & \text{if }Y_i^* \leq 0\\
+        Y_i & \text{if }Y_i^*>0
+    \end{cases}
+\end{align*}
+The model is appropriate if we are interested in \Emph{making inference about $Y_i^*$ not $Y_i$}.
+In this case,
+\begin{equation*}
+    E[Y_i|X_i] = X'_i\beta_0\Phi(\frac{X'_i\beta_0}{\sigma})+\sigma\phi(\frac{X'_i\beta_0}{\sigma})
+\end{equation*}
+\KeyIdea{ML inference} is based on the likelihood function 
+\begin{equation*}
+    L(\beta,\sigma) = \prod_{i=1}^{n}\left[1-\Phi(\frac{X'_i\beta_0}{\sigma})\right]^{1(Y_i=0)}\left[\frac{1}{\sigma}\phi\left(\frac{y_i-X'_i\beta}{\sigma}\right)\right]^{1(Y_i>0)}
+\end{equation*}
+
+
+
+% \begin{definition}
+% Theorem
+% \begin{lemma}
+% \begin{Example}
+% \begin{proof}
+%\newcommand{\KeyIdea}  % 关键想法：浅绿底
+%\newcommand{\Term}     % 专业名词：品牌深绿字
+%\newcommand{\Emph}     % 强调词汇：红
+%\newcommand{\Confuse}    % 不懂/存疑处
+%\newcommand{\Info}     % 说明或注解
