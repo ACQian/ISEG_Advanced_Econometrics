@@ -113,10 +113,115 @@ In this case,
     E[Y_i|X_i] = X'_i\beta_0\Phi(\frac{X'_i\beta_0}{\sigma})+\sigma\phi(\frac{X'_i\beta_0}{\sigma})
 \end{equation*}
 \KeyIdea{ML inference} is based on the likelihood function 
-\begin{equation*}
+\begin{equation}
     L(\beta,\sigma) = \prod_{i=1}^{n}\left[1-\Phi(\frac{X'_i\beta_0}{\sigma})\right]^{1(Y_i=0)}\left[\frac{1}{\sigma}\phi\left(\frac{y_i-X'_i\beta}{\sigma}\right)\right]^{1(Y_i>0)}
-\end{equation*}
+\end{equation}
+\begin{proof}
+    Proof of (39)\\
+    Starting with $Y_i=0$,
+    \begin{align*}
+        P(Y_i=0|X_i) & = P(Y_i^*\leq 0|X_i) = P(X'_i\beta_0+u_i^*\leq 0|X_i)\\
+        & = P(u_i^*\leq -X'_i\beta_0|X_i) = P\left(\frac{u_i^*}{\sigma}\leq\frac{-X_i'\beta_0}{\sigma}|X_i\right) = \otimes \\
+        & u_i^*\sim\mcN(0,\sigma^2)\Rightarrow\frac{u_i^*}{\sigma}\sim\mcN(0,1)\\
+        \otimes & = \Phi\left(\frac{-X'_i\beta_0}{\sigma}\right) = 1-\Phi\left(\frac{X'_i\beta_0}{\sigma}\right)
+    \end{align*}
+    Discrete random variable, we can stop at the cumulative distribution function. Now focusing on $Y_i>0$
+    \begin{align*}
+        P(Y_i^*\leq y_i|X_i) & = P(X'_i\beta_0+u_i^*\leq 0|X_i) = P(u_i^*\leq y_i-X'_i\beta_0|X_i)\\
+        & = P\left(\frac{u_i^*}{\sigma}\leq\frac{y_i-X_i'\beta_0}{\sigma}|X_i\right) = \Phi\left(\frac{y_i-X'_i\beta_0}{\sigma}\right)
+    \end{align*}
+    For the continuous random variable, we need to find the culumative density function.
+    \begin{equation*}
+        \frac{\partial\Phi\left(\frac{y_i-X'_i\beta_0}{\sigma}\right)}{\partial y_i} = \underbrace{\phi\left(\frac{y_i-X'_i\beta_0}{\sigma}\right)}_{\text{density function of }\mcN(0,1)}\frac{1}{\sigma}
+    \end{equation*}
+\end{proof}
 
+By \KeyIdea{reparameterizing $L(\theta)$} with $\gamma = \frac{\beta}{\sigma}$ and $\omega = \frac{1}{\sigma}$, the HEssian is negative definite and estimation is easy,
+but in some situations the estimates may not exist.
+\Emph{Consistency depends on the distributional assumption} but independence is not required and appropriate specification tests are available.
+
+\section{Correcting OLS}
+
+There is a simpler estimator based on OLS.
+Using the sample with $Y_i>0$, from truncated data we know that 
+\begin{equation*}
+    E[Y_i|X_i, Y_i>0] = X'_i\beta_0 + \sigma\frac{\phi(\frac{-X'_i\beta_0}{\sigma})}{1-\Phi(\frac{-X'_i\beta_0}{\sigma})}
+    = X'_i\beta_0 + \sigma\underbrace{\frac{\phi(\frac{X'_i\beta_0}{\sigma})}{\Phi(\frac{X'_i\beta_0}{\sigma})}}_{\lambda(v)}
+\end{equation*}
+where $\lambda(v)$ is known as the \Term{inverse Mills ratio}. Now define a dummy variable $D_i$ as 
+\begin{equation*}
+    D_i = \begin{cases}
+        1 & \text{if } Y_i>0\\
+        0 & \text{if }Y_i=0
+    \end{cases}
+\end{equation*}
+Then,
+\begin{equation}
+    P[D_i=1|X_i] = P[Y_i>0|X_i] = P[Y_i^*>0|X_i] = P[u_i^*>-X'_i\beta_0|X_i] = \Phi\left(\frac{X_i'\beta_0}{\sigma}\right)
+\end{equation}
+\begin{proof}
+    Proof of (40)\\
+    Using the following properties: \begin{itemize}
+        \item $\Phi(-z) = 1-\Phi(z)$
+        \item $\phi(-z) = \phi(-z)$
+    \end{itemize}
+    \begin{align*}
+        P(Y_i^*>0|X_i) & = P(X'_i\beta_0+u_i^*>0|X_i) = P(u_i^*>-X'_i\beta_0|X_i) = 1-P(u_i^*\leq -X'_i\beta_0|X_i)\\
+        & = 1 - P\left(\frac{u_i^*}{\sigma}\leq\frac{-X_i'\beta_0}{\sigma}|X_i\right) = 1-\Phi\left(\frac{-X_i'\beta_0}{\sigma}\right)\\
+        & = 1-\left[1-\Phi\left(\frac{X_i'\beta_0}{\sigma}\right)\right] = \Phi\left(\frac{X_i'\beta_0}{\sigma}\right)
+    \end{align*}
+\end{proof}
+
+This motivates the \KeyIdea{2-step estimator}.
+\begin{enumerate}
+    \item Estimate $\frac{\beta_0}{\sigma}$ by using a \Emph{Probit model} for $P[D_i=1|X_i]$ on the \Emph{full sample}.
+    Construct consistent estimates of the \Emph{Mills ratio $\hat{\lambda}_i$} for each observation.
+    \item \Emph{OLS regression} of $Y_i$ on $X_i$ and $\hat{\lambda}_i$ using observations for which $Y_i>0$. 
+    This gives \Emph{consistent} estimates for $\beta_0$ and $\sigma$.
+\end{enumerate}
+
+\section{Sample selection}
+In many cases, the sample available depends on individual decisions. 
+\Info{Not random $\to$ subpopulation $\to$ bias introduced.}
+Heckman (1979) considered the following model. Suppose we are interested in the following model 
+\begin{equation*}
+    Y_i = X'_i\beta_0+\epsilon_i\quad E[\epsilon_i|X_i] = 0
+\end{equation*}
+but $Y_i$ is observable only when $Z_i = 1$ where 
+\begin{equation*}
+    Z_i = 1(X'_i\gamma_0+u_i>0)
+\end{equation*}
+If $\epsilon_i$ and $u_i$ are \Emph{not independent}, the OLS estimation based on the observation with $Z_i=1$ of $\beta_0$ is \Emph{inconsistent}
+because $E[\epsilon_i|X_i,u_i>-X'_i\gamma_0] = E[\epsilon_i|X_i,Z_i=1]\neq 0$.\\
+
+Heckman (1976) popularized an estimator of $\beta_0$ which is \Emph{consistent} under the assumption 
+\begin{equation*}
+    \left[\begin{array}{c}
+        u_i\\ \epsilon_i
+    \end{array}\right]\sim\mcN\left(\left[\begin{array}{c}
+        0\\0
+    \end{array}\right],\left[\begin{array}{cc}
+        1 & \rho\sigma\\ \rho\sigma & \sigma^2
+    \end{array}\right]\right)
+\end{equation*}
+\Info{Assume bivariate normal distribution for $u_i$ and $\epsilon_i\to$ now we have a closed form distribution.}
+Under this assumption, $\beta_0, \gamma_0, \rho$ and $\sigma$ can be estiamted by \KeyIdea{maximum likelihood}.\\
+
+Alternatively, Heckman (1976) used a \KeyIdea{two-step estimator Heckit} based on the result 
+\begin{align*}
+    E[\epsilon_i|X_i,u_i>-X'_i\gamma_0] & = \rho\sigma\lambda(v)\\
+    E[Y_i|X_i,Z_i=1] & = X'_i\beta_0+\rho\sigma\lambda(v)
+\end{align*}
+where $\lambda(v) = \frac{\phi(X'_i\gamma_0)}{\Phi(X'_i\gamma_0)}$.
+Therefore, 
+\begin{enumerate}
+    \item $X'_i\gamma_0$ can be estimated by a \Emph{probit}. Use and construct consistent estimates of $\lambda_i$ denoted by $\hat{\lambda}_i$ for each observation
+    \item $\beta$ and $\rho\sigma$ are estimated in the \Emph{OLS} regression of $Y_i$ on $X_i$ and $\hat{\lambda}_i$.
+\end{enumerate}
+
+A \KeyIdea{standard t-test} for the significance of \Emph{$\rho\sigma$} is a valid test for \Emph{correlation between $u_i$ and $\epsilon_i$}.
+In the case where they are correlated, the \Emph{covariance matrix} of the second step need to be corrected to account for the estimated regressor.
+Identification is easier if there are exclusion restrictions. \Info{Can drop some regressors in the second step.}
 
 
 % \begin{definition}
