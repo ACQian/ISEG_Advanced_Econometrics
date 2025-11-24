@@ -1,2 +1,173 @@
 \setchapter{7}{Nonparametric and Semiparametric Estimators}
 \ChapterHeading
+
+A \Term{parametric estimator} is used to estiamte \KeyIdea{finite-dimensional parameters} of a model where
+these parameter values uniquely identify the conditional probability of the dependent variables. 
+A \Term{nonparametric estimator} is use to estimate features of a model \Emph{without making any assumptions} on the population distribution.
+It is often used to \Emph{estimate functions}, such as the probability density function or a conditional mean without assumming strong conditions
+such as normality. These are denoted as \KeyIdea{infinite dimensional parameters}.
+A \Term{semiparametric estimator} is one sued to estimate \KeyIdea{finite-dimensional parameters} but these do not uniquely identify the conditional probabilty distribution of the dependent variables.\\
+
+The same estimator can be seen as parametric, nonparametric, and semiparametric depending on the context. Consider the linear regression model 
+\begin{equation*}
+    y = x'\beta_0+u
+\end{equation*}
+and the Ordinary Least Squares Estimator (OLS).
+\begin{itemize}
+    \item OLS is \Emph{parametric} if we assume $u|x\sim N(0,\sigma^2)$ and obtain the estimator via ML.
+    \item OLS is \Emph{semiparametric} if we assume $E[u|x] = 0$ thus $E[y|x] = x'\beta_0$. we do not assume normalty of the error term, but assume a specific form for the mean of $y$ conditional on $x$.
+    \item OLS is \Emph{nonparametric} if our objective is to estiamte the best linear predictor coefficients. That is, we want to estiamte the value of $\beta$ that minimizes $E[(y-x'\beta)^2]$.
+    \Info{We don't assume anything. Just finding the function to minimize $E[(y-x'\beta)^2]$ but no assumption on the distribution of the data.}
+\end{itemize}
+
+\section{Nonparametric estimation}
+
+Suppose $\{y_i\}_{i=1}^{n}$ are iid where $y_i$ is a random variable with a continuous distribution.
+Our objective is to \Emph{estimate the density function of $y\to f(y)$}.
+
+\subsection{Crude estimator}
+
+A \Term{crude estimator} of the density of $y$ is the histogram.
+The shape of the histogram depends on the \Emph{bin width}, on the \Emph{number of bins}, and on the chosen \Emph{origin}.
+Fixing these parameters, the density of $y$ at $y=y_0$ given by the histogram is
+\begin{equation*}
+    \hat{f}(y_0) = \frac{1}{n}\frac{\text{number of observations in the same bin as $y_0$}}{\text{width of the bin containg $y_0$}}
+\end{equation*}
+If we define $h$ as the bin width and let $y^*$ denote the midpoint of the interval containing $y_0$, the histogram estiamte is given by 
+\begin{equation*}
+    \hat{f}(y_0) = \frac{1}{nh}\sum_{j=1}^{n}1(-\frac{1}{2}\leq \frac{y_j-y^*}{h}<\frac{1}{2})
+\end{equation*}
+where $1(A) = \begin{cases}
+    1 & \text{if A is true}\\
+    0 & \text{if A is not true}
+\end{cases} \to $ Bernoulli distribution. Note the estiamtor is \Emph{not continuous at $y_0$}.
+
+\subsection{Naive density estimator}
+
+From the definition of a probability density, we have
+\begin{align*}
+    f(y_0) & = \lim_{h\to 0}\frac{F(y_0+\frac{h}{2}) - F(y_0-\frac{h}{2})}{h}\\
+    & = \lim_{h\to 0}\frac{1}{h} P(y_0-\frac{h}{2}<y<y_0+\frac{h}{2})\\
+    & = \lim_{h\to 0}\frac{1}{h} E\left[1\left(y_0-\frac{h}{2}<y<y_0+\frac{h}{2}\right)\to\text{ Bernoulli}\right]\\
+    & = 1\times P\left(y_0-\frac{h}{2}\leq y<y_0+\frac{h}{2}\right) + 0\times \left(1-P\left(y_0-\frac{h}{2}<y<y_0+\frac{h}{2}\right)\right)\\
+    & = P\left(y_0-\frac{h}{2}\leq y<y_0+\frac{h}{2}\right)
+\end{align*}
+\Info{Then use the averages to find the expected values.}
+Hence the estimator of $f(y_0)$ given by the \Emph{analogy principle} is the \Term{naive density estimator}
+\begin{align*}
+    \hat{f}(y_0) & = \frac{1}{nh}\sum_{j=1}^{n} 1\left(y_0-\frac{h}{2}\leq y<y_0+\frac{h}{2}\right)\\
+    & = \frac{1}{nh}\sum_{j=1}^{n} 1\left(-\frac{1}{2}\leq \frac{y_j-y_0}{h}<y_0+\frac{1}{2}\right)
+\end{align*}
+For the estimator to be \Emph{consistent and ensures convergence} in iid samples, we need \KeyIdea{$n\to\infty$, $nh\to\infty$ and $h\to 0$}.
+\begin{proof}
+    $h\to 0$
+    \begin{align*}
+        E{\hat{f}(y_0)} & = E\left[\frac{1}{nh}\sum_{j=1}^{n} 1\left(y_0-\frac{h}{2}\leq y_j<y_0+\frac{h}{2}\right)\right]\\
+        & = \frac{1}{nh}\sum_{j=1}^{n}E\left[1\left(y_0-\frac{h}{2}\leq y<y_0+\frac{h}{2}\right)\right] \text{($y_j\to y$ because iid)}\\
+        & = \frac{n}{nh} \underbrace{E\left[1\left(y_0-\frac{h}{2}\leq y<y_0+\frac{h}{2}\right)\right]}_{f(y_0)\text{ definition}}\\
+        & = \frac{1}{h}\left[F\left(y_0-\frac{h}{2}\right)-F(y_0-\frac{h}{2})\right]
+    \end{align*}
+    So, from $f(y_0)$ definition,
+    \begin{equation*}
+        \frac{1}{h}\left[F\left(y_0-\frac{h}{2}\right)-F(y_0-\frac{h}{2})\right] \to f(y_0) \;\text{ if } h\to 0
+    \end{equation*}
+\end{proof}
+\begin{proof}
+    $nh\to\infty$
+    \begin{align*}
+        Var(\hat{f}(y_0)) & = Var\left[\frac{1}{nh}\sum_{j=1}^{n} 1\left(y_0-\frac{h}{2}\leq y_j<y_0+\frac{h}{2}\right)\right]\\
+        & = \frac{1}{n^2h^2}\sum_{j=1}^{n}Var\left[1\left(y_0-\frac{h}{2}\leq y_j<y_0+\frac{h}{2}\right)\right] \text{(variance of sum = sum of variance)}\\
+        & = \frac{n}{n^2h^2}\underbrace{Var\left[1\left(y_0-\frac{h}{2}\leq y<y_0+\frac{h}{2}\right)\right]}_{\text{Var[Bernoulli] = $\theta(1-\theta)$}}\\
+        & = \frac{1}{nh^2} P\left(y_0-\frac{h}{2}\leq y<y_0+\frac{h}{2}\right) \times \underbrace{\left[1 - P\left(y_0-\frac{h}{2}\leq y<y_0+\frac{h}{2}\right)\right]}_{\leq 1}
+    \end{align*}
+    and because $0\leq Var(\hat{f}(y_0))$
+    \begin{equation*}
+        0\leq Var(\hat{f}(y_0))\leq \frac{1}{nh}\underbrace{\frac{P\left(y_0-\frac{h}{2}\leq y<y_0+\frac{h}{2}\right)}{h}}_{f(y_0)\to\text{constant if }h\to 0} 
+    \end{equation*}
+    Thus we conclude $\frac{1}{nh}\to 0 \Rightarrow nh\to\infty$
+\end{proof}
+Consequently, $\lim\hat{f}(y_0) \xrightarrow{p} f(y_0)$. 
+\Info{If $\lim E[\hat{\theta}] = \theta_0$ and $\lim Var[\hat{\theta}]=0$ then $\lim \hat{\theta}\xrightarrow{p}\theta_0$}.
+Like the histogram estimator, the naive estimator is \Emph{not continuous at $y_0$}.
+
+\subsection{Kernel estimator}
+
+A continuous and smooth estimator can be obtained by replacing the function $K[z] = 1\left(-\frac{1}{2}\leq z < \frac{1}{2}\right)$ by another \Emph{kernel function}.
+
+\begin{definition}
+    A \textbf{Kernel function} is any function $K(\cdot)$ such that 
+    \begin{equation*}
+        \int_{\bbR}K(u)\, du = 1
+    \end{equation*}
+    (Rosenblatt, 1956)
+\end{definition}
+
+We do not require $K(\cdot)\geq 0$ although this assumption ensures that the estimator is non-negative.
+Many kernels are available but a popular choice is to use \KeyIdea{$K[z] = \phi(z)$}, the density function of the standard normal distribution.
+In general, for a bandwidth $h>0$, the \Emph{kernel density function} is given by 
+\begin{equation*}
+    \hat{f}(y_0) = \frac{1}{nh}\sum_{j=1}^{n}K\left(\frac{y_i-y_0}{h}\right)
+\end{equation*}
+The choice of the kernel \Emph{affects the bias} $E[\hat{f}(y_0)] - f(y_0)$.
+\Emph{Consistency} requires \KeyIdea{$n\to\infty$, $nh\to\infty$, and $h\to 0$}.\\
+
+This can be generalized to d-dimensional data using the multivaraite kernel function $K_d(\cdot)$ such that $\int_{\bbR^d}K_d(u)\,du=1$.
+To ensure \Emph{consistency}, we need to assume \KeyIdea{$n\to\infty$, $h\to 0$, and $nh^d\to\infty$}.
+In this case the variance of the estimator goes to zero as $nh^d\to\infty$.
+Notice the \Emph{curse of dimensionality}, the larger the value of $d$, the slower the rate of convergence.
+\Info{The norm $||\hat{\beta}-\beta_0|| \leq \frac{c}{N^{1/2}}\to$ goes to zero much slower than parametric.}
+Under additional conditions it is also possible to ensure \Emph{asymptotically normaity} but the rate of convergence is slower than rate $n^{-1/2}$ and the estimator is \Emph{biased}.
+The rate of convergence depends on $K_d(\cdot)$ but other authors say this choice is relatively unimportant.
+The \Emph{bandwidth of $h$} affects the \Emph{bias and variance} of the estimator, as $h$ decreases, so does the bias; however, the variance increases.\\
+
+The choice of \Emph{bandwidth} is critical for the result.
+\Emph{Too large} means \KeyIdea{over-smoothing} and elimiates important features of the function being estimated.
+\Emph{Too small} means \KeyIdea{under-smoothing} and the important features of the function become obscured by noise.
+Choices of implementation rules include
+\begin{itemize}
+    \item Automatic rules
+    \item Graphically analyzing the effects of varying the bandwidth
+    \item Minimizing selection criterion
+    \item Silverman's rule of thumb $\to$ popular choice for the Gaussian kernel 
+    \begin{equation*}
+        h = \min\left\{\sigma,\frac{IQR}{1,34}\right\}\frac{0.9}{n^{1/5}}
+    \end{equation*}
+\end{itemize}
+
+\subsection{Kernel regression}
+
+The kernel density estimator can be used for \Term{kernel regression}.
+It is particularly useful for exploratory analysis of the data as it may be covenient not to assume a functional form for the relation between two variables.\\
+
+Let $\{(y_i,x_i)\}_{i=1}^{n}$ be iid where $y_i$ and $x_i$ are random variables with continuous distributions and suppose we want to estimate $E[y_i|x_i] = m(x_i)$.
+We can write this as 
+\begin{equation*}
+    y_i = m(x_i) + \epsilon_i
+\end{equation*}
+where $E[\epsilon_i|x_i] = 0$.
+\begin{proof}
+    $E[\epsilon_i|x_i] = 0\to y_i = m(x_i) + \epsilon_i$
+    \begin{align*}
+        \epsilon_i & = y_i - E[y_i|x_i]\\
+        E[\epsilon_i|x_i] & = E[y_i - E[y_i|x_i]|x_i]\\
+        & = E[y_i|x_i] - E[E[y_i|x_i]|x_i]\\
+        & = E[y_i|x_i] - E[y_i|x_i] = 0\\
+        \Rightarrow y_i & = \underbrace{E[y_i|x_i]}_{m_i} + \epsilon_i 
+    \end{align*}
+\end{proof}
+
+
+
+
+
+
+% \begin{definition}
+% Theorem
+% \begin{lemma}
+% \begin{Example}
+% \begin{proof}
+%\newcommand{\KeyIdea}  % 关键想法：浅绿底
+%\newcommand{\Term}     % 专业名词：品牌深绿字
+%\newcommand{\Emph}     % 强调词汇：红
+%\newcommand{\Confuse}    % 不懂/存疑处
+%\newcommand{\Info}     % 说明或注解
