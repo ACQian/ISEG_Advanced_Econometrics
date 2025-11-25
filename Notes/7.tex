@@ -134,7 +134,7 @@ Choices of implementation rules include
     \end{equation*}
 \end{itemize}
 
-\subsection{Kernel regression}
+\subsection{Kernel regression : discrete $x_i$}
 
 The kernel density estimator can be used for \Term{kernel regression}.
 It is particularly useful for exploratory analysis of the data as it may be covenient not to assume a functional form for the relation between two variables.\\
@@ -155,6 +155,89 @@ where $E[\epsilon_i|x_i] = 0$.
         \Rightarrow y_i & = \underbrace{E[y_i|x_i]}_{m_i} + \epsilon_i 
     \end{align*}
 \end{proof}
+
+If we are interested in estimating $m(x_j)$ at a particular value of $x$ and if \Emph{multiple observations of $y$} were available for that particular value of $x$,
+we could use
+\begin{align*}
+    \hat{m}(x_0) & = \frac{\sum_{j=1}^{n}1(x_j=x_0)y_j}{\sum_{j=1}^{n}1(x_j=x_0)} = \sum_{j=1}^{n}\frac{1(x_j=x_0)}{\sum_{j=1}^{n}1(x_j=x_0)}\\
+    & = m(x_0) + \frac{\sum_{j=1}^{n}1(x_j=x_0)\epsilon_j}{\sum_{j=1}^{n}1(x_j=x_0)}
+\end{align*}
+which under mild assumptions is \Emph{consistent} if \KeyIdea{$n\to\infty$} provided that $P(x_j=x_0)>0$. 
+\Info{Only assuming we have many observations at $x_0$.}
+Consequently, this estimator is \Emph{not valid} if $x_j$ is a continuous random variable.
+\Info{If data is continous, $P(x=x_0)=0$, integral at a point has no mass $\to 0 \to$ not valid.}\\
+
+\subsection{Kernel regression : continous $x_i$}
+
+For \Emph{continuous random variables} if $m(\cdot)$ is sufficiently smooth, we can estimate $m(x_0)$ using observations in a \KeyIdea{neighborhood of $x_0$}.
+A \Term{smoothing estimator} of $m(x_0)$ can be written as 
+\begin{equation*}
+    \hat{m}(x_0) = \sum_{j=1}^{n}\omega_h(x_0-x_j)y_j
+\end{equation*}
+where the weights $\omega_h(x_0-x_j)$ \Emph{decreases} with the distance between between $x_j$ and $x_0$.
+Frequently, the weights are defined as 
+\begin{equation*}
+    \omega_h(x_0-x_j) = \frac{K(\frac{x_0-x_j}{h})}{\sum_{k=1}^{n}K(\frac{x_0-x_j}{h})}
+\end{equation*}
+This is the \Term{Nadaraya-Watson estimator} of $m(x_0)$.
+Under the regularity conditions, $\hat{m}(x_0)$ is \Emph{consistent} when \KeyIdea{$\lim_{n\to\infty}h=0$}, but convergence is slow.\\
+
+The properties of the estimator depend on the choice of $K(\cdot)$ and $h$. 
+The choice of $K(\cdot)$ is not that import, often just use $\phi(\cdot)$.
+But the \Emph{choice for $h$ is critical}.
+If $h$ is too small, the estimates become too irregular. If $h$ is too large, the estimates appraoch $\bar{y}$.
+A popular method to choose $h$ is \KeyIdea{leave-one-out cross validation}.
+\begin{equation*}
+    h_{cv} = \text{arg }\min_{h}\frac{1}{n}\sum_{i=1}^{n}\delta(x_i)\left[y_i - \sum_{j\neq i}\omega_h(x_i-x_0)y_i\right]^2
+\end{equation*}
+where $\delta(x)$ is a \Emph{trimming function} to reduce boundary effects.
+\Info{$\delta(x)$ trimming to leave out the tails, 0 in the tail $\to$ indicator function.}
+This can be generalized for a vector of regressors. 
+However, for the multivariate case, not only do we have \Emph{curse of dimensionality} but also lose the ability to display results graphically.
+
+\section{Semiparametric estimation}
+
+Most non-ML estimators are semiparametric in the sense that they do not require the full specification of the conditional probability distribution of the dependent variable.
+
+\subsection{Partially linear model}
+
+Suppose $E[y_i|z,x] = z_i\beta + g(x_i)$ where \Emph{$g(\cdot)$ is left unspecified}, and 
+\begin{equation*}
+    y_i = z_i\beta + g(x_i) + \epsilon_i,\quad i=1,\ldots,n
+\end{equation*}
+\Term{Robinson (1988) and Speckman (1988)} have shown that under certain conditions it is possible to obtain $\sqrt{n}$-consistent estimators for $\beta$.
+Notice we can write 
+\begin{align*}
+    E[y_i|x] & = E[z_i|x]\beta + g(x_i)\\
+    y_i-E[y_i|x] & = [z_i-E[z_i|x]]\beta + \epsilon_i
+\end{align*}
+\begin{proof}
+    We begin with initial condition: $E[\epsilon_i|z_i,x_i] = 0$
+    \begin{align*}
+        E[y_i|x_i] & = E[z_i\beta+g(x_i)+\epsilon_i|x_i]\\
+        & = E[z_i\beta|x_i] + E[g(x_i)|x_i] + \underbrace{E[\epsilon_i|x_i]}_{(1)} = \boxtimes\\
+        (1) E[\epsilon_i|x_i] & = E[E[\epsilon_i|x_i,z_i]|x_i] = E[0|x_i] = 0\\
+        \boxtimes & = \beta E[z_i|x_i] + g(x_i)
+    \end{align*}
+    Now moving on to the second equation,
+    \begin{align*}
+        y_i - \underbrace{E[y_i|x_i]}_{\text{Nadaraya-Watson}} 
+        & = z_i\beta + g(x_i) + \epsilon_i - E[z_i|x_i]\beta - g(x_i)\\
+        & = [z_i - \underbrace{E[z_i|x_i]}_{\text{Nadaraya-Watson}}]\beta + \epsilon_i
+    \end{align*}
+    So we have,
+    \begin{equation*}
+        y_i - \widehat{E[y_i|x_i]} = [z_i - \widehat{E[z_i|x_i]}]\beta+\epsilon_i
+    \end{equation*}
+\end{proof}
+
+If $E[y_i|x]$ and $E[z_i|x]$ are \Emph{known}, $\beta$ can be estimated by \KeyIdea{OLS}. 
+However, if $E[y_i|x]$ and $E[z_i|x]$ are \Emph{replaced by kernel estimators} that converges sufficiently quickly,
+their use will not affect the rate of convergence of the \KeyIdea{OLS} estimator of $\beta$
+\begin{equation*}
+    \hat{\beta} = \left[(Z-\widehat{E[Z|x]})'(Z-\widehat{E[Z|x]})\right]^{-1}(Z-\widehat{E[Z|x]})'(Y-\widehat{E[Z|x]})
+\end{equation*}
+This estimator is \Emph{consistent and asymptotically normal}.
 
 
 
