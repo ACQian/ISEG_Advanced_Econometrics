@@ -1,2 +1,180 @@
 \setchapter{8}{The Bootstrap}
 \ChapterHeading
+
+The bootstrap is a method introduced by Efron (1979) to estimate the distribution of an estimator, its variance, or the distribution of a test statistic by resampling the data.
+Suppose we have a sample $(X_1,\ldots,X_n)$ and we would like to construct a confidence interval for a parameter $\theta$.
+We estiamte $\theta$ using a mathematical formula that depends on the sample $\hat{\theta} = T(X_1,\ldots,X_n)$, $T(\cdot)$ is a known function.
+Let us assume that $\hat{\theta}$ is root-n consistent and $\hat{\theta}$ is asymptotically normal. That is $\sqrt{n}(\hat{\theta}-\theta)\xrightarrow{d}N(0,\lambda^2)$.
+The \Emph{statistics of interest} are 
+\begin{itemize}
+    \item the estimator $\hat{\theta}$
+    \item the standard errors of $\hat{\theta}$: $s_{\hat{\theta}}$ a consistent estimator of $\frac{\lambda}{\sqrt{n}}$
+    \item the t-statistic $\hat{t} = \frac{(\hat{\theta}-\theta_{0})}{s_{\hat{\theta}}}$ where $H_0 : \theta = \theta_0$
+    \item the associated critical value or p-value for the test
+    \item confidence interval
+\end{itemize}
+
+\section{Basics on bootstrap}
+
+Let $(X_1^*,\ldots,X_n^*)$ be a bootstrap sample generated from the original sample and $\hat{\theta}^* = T(X_1^*,\ldots,X_n^*)$.
+Generate B different bootstrap samples and for each sample, $b=1,\ldots,B$, compute $\hat{\theta}^*=T(X_{1,b}^*,\ldots,X_{n,b}^*)$.
+
+\subsection{Bootstrap percentile method}
+We can use the empirical distribution of $\hat{\theta}^*$ to approximate the asymptotic distribution of $\hat{\theta}$.
+For instance, the \KeyIdea{$100\times(1-\alpha)\%$ confidence interval for $\theta$ based on $\left(\hat{\theta}_{\frac{\alpha}{2}}^*,\hat{\theta}^*_{1-\frac{\alpha}{2}}\right)$},
+where $\hat{\theta}^*_{\alpha}$ is the emprical percentile $\alpha\times 100$ of $\hat{\theta}^*_b$. This is called the \Term{bootstrap percentile method}.\\
+
+In the \Term{i.i.d. bootstrap method} proposed by Efron (1979), the bootstrap sample $(X_1^*,\ldots,X_n^*)$ is obtained by drawing \Emph{samples with replacement} from the original sample $(X_1,\ldots,X_n)$,
+where the probability of obtaining each $X_i$, $i=1,\ldots,n$, is $\frac{1}{n}$. \Emph{Denote $\bar{X}$ the average of the sample.}
+Bickel and Freedman (1981) and Singh (1981) proved that if the elements of the \Emph{original sample were i.i.d.}, the bootstrap distribution $\sqrt{n}(\bar{X}^*-\bar{X})$ is close to the asymptotic distribution of $\sqrt{n}(\bar{X}-\mu)$ for large $n$.
+This result justifies the validity of the bootstrap percentile method to construct a $100 \times (1-\alpha)\%$ confidence interval for the \Emph{mean}:
+\begin{equation*}
+    (\bar{X}^*_{\frac{\alpha}{2}},\bar{X}^*_{1-\frac{\alpha}{2}})
+\end{equation*}
+where $\bar{X}^*$ is the quantitle $100\times\alpha$ of $\bar{X}^*$.
+\Info{$\underbrace{(\hat{\theta}-Z_{\frac{\alpha}{2}}SE(\hat{\theta}),\hat{\theta}+Z_{\frac{\alpha}{2}}SE(\hat{\theta}))}_{\text{asymptotically derived}}\approx \underbrace{(\hat{\theta}_{\frac{\alpha}{2}},\hat{\theta}_{1-\frac{\alpha}{2}})}_{\text{bootstrapping}}$}.\\
+
+We can use it to test hypothesis \Emph{if the alternative is two-sided}: \KeyIdea{$H_0: \theta = \theta_0$ vs $H_1: \theta\neq\theta_0$} at $100\times\alpha\%$ level.
+\Emph{Rejection rule}: We reject $H_0$ in favor of $H_1$ if $\theta_0\notin (\hat{\theta}^*_{\frac{\alpha}{2}}, \hat{\theta}^*_{1-\frac{\alpha}{2}})$.
+There is no guarantee that the bootstrap percentile method performs better than the one obtained using asymptotic theory.
+
+\subsection{Boostrap standard-errors}
+
+The bootstrap estimator of $\theta$ is $\bar{\theta}^*_B = \frac{1}{B}\sum_{b=1}^{B}\hat{\theta}^*_b$. The $s^2_{\hat{\theta}}$ can be approximated using
+\begin{equation}
+    s^2_{boot}= \frac{1}{B-1}\sum_{b=1}^{B}\left(\hat{\theta}^*_b - \bar{\theta}^*_B\right)^2
+\end{equation}
+Although more straight forward to compute than $s^2_{\hat{\theta}}$, there is not much work showing \Emph{consistentency} of this in general setting.
+Even when consistent, there is no guarantee that this performs better than $s^2_{\hat{\theta}}$.
+Hahn and Liao (2021) showed that $n\times s^2_{boot}$ is \Emph{never smaller} than $\lambda^2$ as $n\to\infty$.
+Consequently, if one uses the statistic $\frac{(\hat{\theta}-\theta)}{s_{boot}}$ to make inference, it will \Emph{produce large confidence intervals and tests with size smaller than $\alpha$}$\to$ the tests will not reject $H_0$ very often.
+\Info{Inference will be incorrect and should avoid using $s_{boot}$.}
+
+\section{Boostrap with asymptotic refinement}
+
+\Term{Asymptotic refinement} refers to the ability of the boostrap to provide approximations to the distributions of statistics that are more accurate than the approximations of conventional asymptotic distribution theory.
+This implies that the actual size of the tests based on boostrap converges faster to $\alpha$ than the actual size of the tests based on the conventional asymptotic distribution theory.
+\Info{$P(N(0,1)>Z_{\alpha})=\alpha\Rightarrow P(|\hat{t}|>Z_{\frac{\alpha}{2}})=\alpha + \frac{C_N}{\sqrt{N}}$ using asymptotic theory, only approximates to $N(0,1)$, converges asymptotically in distribution.}
+We need to \Emph{assume} that the statistic of interest is a \KeyIdea{smooth function} of the data and that it is \KeyIdea{asymptotically pivotal}.
+\begin{definition}
+    An \textbf{asymptotically pivotal statistic} means that the limit distribution does not depend on unknown parameters.
+\end{definition}
+Most test statistics are asymptotically pivotal but most estimators are not.
+\begin{Example}
+    $H_0: \theta = \theta_0$, $\sqrt{n}(\hat{\theta} - \theta_0)\xrightarrow{d} N(0,\lambda^2)$. This is not asymptotically pivotal as the distribution depends on $\lambda$.\\
+    $H_0: \theta = \theta_0$, $t = \frac{(\hat{\theta} - \theta_0)}{s_{\hat{\theta}}}\xrightarrow{d} N(0,1)$. This is asymptotically pivotal.
+\end{Example}
+
+We first generate $B$ different bootstrap samples and for each sample, $b=1,\ldots,B$, compute $\hat{t}_b = \frac{(\hat{\theta}^*_{b}-\hat{\theta})}{s^*_{\hat{\theta}_b}}$.
+Note that we still need to obtain $s^*_{\hat{\theta}_b}$ which is the standard error computed with the bootstrap sample.
+
+\subsection{One sided test for t-statistic}
+
+Consider \Emph{$H_0: \theta = \theta_0$ vs $H_1: \theta > \theta_0$}.
+We define the bootstrap critical value $cv_{boot}(1-\alpha)$ as the percentile \KeyIdea{$100\times(1-\alpha)$ of $(\hat{t}_1,\ldots,\hat{t}_B)$}.
+\Emph{Rejection rule}: We reject $H_0$ in favor of $H_1$ if $\hat{t}_{obs}>cv_{boot}(1-\alpha)$, where $\hat{t}_{obs}$ is the observed value of the statistic in the sample.
+The actual size of the test is $\alpha + O(n^{-1})$ which is \Emph{better than $\alpha+O(n^{-1/2})$}.
+
+\subsection{Two sided test for t-statistic}
+
+Consider \Emph{$H_0: \theta = \theta_0$ vs $H_1: \theta \neq \theta_0$}. We have two ways to define the bootstrap critical values.
+\begin{enumerate}
+    \item \Term{non-symmetric test}: obtain the boostrap critical value \KeyIdea{$cv_{boot}(\frac{\alpha}{2})$ and $cv_{boot}(1-\frac{\alpha}{2})$} as the percentiles
+    $100 \times \frac{\alpha}{2}$ and $100\times(1-\frac{\alpha}{2})$ of $(\hat{t}_1,\ldots,\hat{t}_B)$ respectivlly. 
+    \Emph{Rejection rule}: We reject $H_0$ in favor of $H_1$ if $\hat{t}_{obs}\notin (cv_{boot}(\frac{\alpha}{2}),cv_{boot}(1-\frac{\alpha}{2}))$.
+    The actual size of the test is $\alpha+O(n^{-1})$. 
+    \Info{Bootstrap doesn't perform better than using asymptotic theory.}
+    \item \Term{symmetric test}: obtain the boostrap critical value \KeyIdea{$cv_{boot}(1-\alpha)$} as the percentile $100 \times (1-\alpha)$ of $(|\hat{t}_1|,\ldots,|\hat{t}_B|)$.
+    \Emph{Rejection rule}: We reject $H_0$ in favor of $H_1$ if $|\hat{t}_{obs}|>cv^a_{boot}(1-\alpha)$.
+    The actual size of the test is $\alpha+O(n^{-3/2})$ which is \Emph{better than asymptotic theory}.
+\end{enumerate}
+
+\subsection{p-values}
+
+Consider \Emph{$H_0: \theta = \theta_0$ vs $H_1: \theta > \theta_0$}. The p-value is defined as $p = \frac{\sum_{b=1}^{B}1(\hat{t}_b>\hat{t}_{obs})}{B}$.
+Consider \Emph{$H_0: \theta = \theta_0$ vs $H_1: \theta \neq \theta_0$}. The p-value is defined as $p = \frac{\sum_{b=1}^{B}1(|\hat{t}_b|>|\hat{t}_{obs}|)}{B}$.
+In both cases, \Emph{rejection rule} is we reject $H_0$ in favor of $H_1$ if $p < \alpha$.
+
+\subsection{confidence interval}
+
+We can construct \Emph{$100\times(1-\alpha)\%$ confidence interval} using bootstrap t-statistic
+\begin{itemize}
+    \item $(\hat{\theta}-s_{\hat{\theta}}cv_{boot}(1-\frac{\alpha}{2}),\hat{\theta}-s_{\hat{\theta}}cv_{boot}(\frac{\alpha}{2}))$
+    \item $(\hat{\theta}-s_{\hat{\theta}}cv_{boot}^a(1-\alpha),\hat{\theta}+s_{\hat{\theta}}cv_{boot}^a(1-\alpha))$ \Info{$\to$ better}
+\end{itemize}
+
+\section{Bootstrap in the linear regression model}
+
+Consider the linear regression model $y_i = x_i'\beta+u_i$, $E[u_i|x_i]=0$.
+Let $\hat{\beta}$ denote the \Emph{OLS} estiamte of $\beta$ and define the \Emph{residuals} as $\hat{u}_i = y_i - x'_i\hat{\beta}$.
+
+\subsection{Residual bootstrap}
+
+Denoting by $u^*_i$ the \Emph{bootstrap errors}, generate the dependent variable as $y^*_i = x'_i\hat{\beta}+u^*_i,\; i=1,\ldots,n$.
+\begin{itemize}
+    \item \Term{Parametric residual bootstrap}: if the distribution of the errors is known and independnet of the regressors,
+    bootstrap errors can be generated from it. 
+    \item \Term{Semiparametric residual bootstrap}: if the errors are iid and independent of the regressors,
+    bootstrap errors can be obtained as draws with replacement from the vector of estimation residuals $\hat{u}_i$.
+\end{itemize}
+\Info{Independence between $u_i$ and $x_i$ is a must condition.
+Heteroskedasticity arises when $Var(u_i|x_i)=f(x_i)$, then cannot apply either of the methods.}
+
+\subsection{Heteroskedasticity}
+
+\begin{itemize}
+    \item \Term{Bootstrap of the pairs}: The \KeyIdea{bootstrap observations $(y^*_i,x'^*_i)$} can be obtained as draws with replacement from the sample $\{(y_1,x'_1),\ldots,(y_n,x'_n)\}$.
+    We obtain $n$ such observations.
+    \Info{Draw the y's and x's together then can use maximum likelihood.}
+    \item \Term{Wild-bootstrap}: A variant of semiparametric residual bootstrap.
+    To preserve the link between the erros and the regressors, the bootstrap error for observation $i$ can be obtained as \KeyIdea{$u^*_i = f(\hat{u}_i)\epsilon^b_i$}, where 
+    \begin{itemize}
+        \item $f(u_i)$ is an appropriate function of the residuals, e.g. the identity function of $f(\hat{u}_i) = \hat{u}_i$.
+        \Info{Normally just use the residuals.}
+        \item $\epsilon_i^b$ is a random variable independent of $u$ and $x$ such that $E[\epsilon_i^b] = 0$ and $\Var(\epsilon_i^b)=1$.
+        We can use the \Term{Rademacher distribution} for $\epsilon_i^b$ where $F_1 : \epsilon_i^b = \begin{cases}
+            -1  &\text{with possibility } \frac{1}{2}\\
+            1  &\text{with possibility } \frac{1}{2}
+        \end{cases}$
+    \end{itemize}
+    \Info{For this method we can only use OLS estimation.}
+\end{itemize}
+
+\subsection{Heteroskedasticity and serial correlation}
+
+\Term{Moving blocks bootstrap}: In the case the data are serially correlated, we draw \KeyIdea{overlapping blocks} of $\ell$ consecutive observations from the sample $\{(y_1,x'_1),\ldots,(y_n,x'_n)\}$ with replacement until we have a sample of size $n$.
+\Info{When the observations are correlated, it doesn't make sense to draw individually, you want to keep the correlation. The issue is more with choosing the size of the block.}
+
+\section{Number of bootstraps}
+
+For iid bootstrap and a sample of size $n$ there are $n^n$ possible bootstrap samples of size $n$.
+For \Emph{standard error} computation, Efron and Tibsharan (1993) say \KeyIdea{$B=50$} is often enough, and $B=200$ is almost always enough.
+For hypothesis testing and confidence intervals at standard levels of statistical significance involve the tails of the distribution, 
+so more repetitions are needed. 
+For \Emph{hypothesis testing} at level choose $B$ so that \KeyIdea{$(B+1)\alpha$ is an integer}. Davidson and MacKinnon (1999, 2000) recommend $B\geq 399$ if $\alpha=0.05$ and $B=1499$ if $\alpha=0.01$.
+In the case of \Emph{inference} on means using \Emph{t-statistics} and iid sample, Babu and Singh (1983) suggest \KeyIdea{$B = n(\log n)^2$}.
+
+\section{Final remarks}
+
+Although the bootstrap is often accurate, it is not always valid.
+There are several examples where bootstrap leads to \Emph{invalid inferences}.
+\begin{Example}
+    \begin{itemize}
+        \item Distributions with heavy tails
+        \item Inference about a parameter that is on the boundary of the parameter set
+        \Info{$\to$ inference on $\sigma^2 in [0,\infty)$}
+        \item Inference about the maximum or minimum of random variables
+    \end{itemize}
+\end{Example}
+If the quantities involved are \Emph{not asymptotically pivotal}, the bootstrap procedures are not better than usual methods based on asymptotic theory but may be easier to implement.
+
+% \begin{definition}
+% Theorem
+% \begin{lemma}
+% \begin{Example}
+% \begin{proof}
+%\newcommand{\KeyIdea}  % 关键想法：浅绿底
+%\newcommand{\Term}     % 专业名词：品牌深绿字
+%\newcommand{\Emph}     % 强调词汇：红
+%\newcommand{\Confuse}    % 不懂/存疑处
+%\newcommand{\Info}     % 说明或注解

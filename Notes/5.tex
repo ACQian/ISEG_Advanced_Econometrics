@@ -1,11 +1,308 @@
 \setchapter{5}{Univariate Time Series Modelling}
 \ChapterHeading
 
+\section{Stochastic processes}
 
+\begin{definition}
+    A \textbf{stochastic process} $\{X_t\}^{+\infty}_{t=-\infty}$ is a sequence of random variables ordered by time.
+\end{definition}
+For each value of $t$, at each point in time, $x_t$ is drawn from a distribution of $X_t$'s.
+Note that the probability density function of $X_t\to f_{X_t}(x_t)$ depends on $t$ so that each element in the realization may be drawn from a different dsitribution.
+\begin{gather*}
+    E[X_t] = \int_{-\infty}^{+\infty} x_t f_{X_t}(x_t)dx_t = \mu_t\\
+    \Var(X_t) = E[(X_t-\mu_t)^2] = \int_{-\infty}^{+\infty} (x_t - \mu_t)^2 f_{X_t}(x_t)dx_t = \gamma_{0t}\\
+    Cov(X_t, X_{t-j}) = E[(X_t-\mu_t)(X_{t-j}-\mu_{t-j})] = \gamma_{jt} \to \text{ autocovariance}
+\end{gather*}
+
+To make inference, we need to impose some structure.
+
+\begin{definition}
+    A stochastic process is \textbf{strictly stationary} if for every collection of time indices $1\leq t_1<\ldots<t_m$ the joint distribution of $(X_{t_1},\ldots,X_{t_m})$ is the same as that of $(X_{t_1+h},\ldots,X_{t_m+h})$ for $h\geq 1$.
+\end{definition}
+\begin{definition}
+    A stochastic process is \textbf{weakly or covariance stationary} if
+    \begin{itemize}
+        \item $E[X_t] = \mu$ does not vary with $t$
+        \item $\Var(X_t) = \gamma_0$ is constant
+        \item for any $j\geq 1$, $cov(X_t,X_{t-j}) = cov(X_t,X_{t+j}) = \gamma_j$ depends only on $j$ and not on $t$
+    \end{itemize}
+\end{definition}
+\begin{itemize}
+    \item Strong stationary does not imply weak stationary
+    \item Strong stationary + $E[X^2_t]$ finite implies weak stationary
+    \item Multivariate normal + weak stationary implies strong stationary
+    \item $j$-th lag autocovariance is denoted as $\gamma_j$ and $j$-th lag autocorrelation is denoted as $\rho_j = \frac{\gamma_j}{\gamma_0}$
+\end{itemize}
+
+\begin{theorem}
+    \Term{Wold's Decomposition Theorem}: Any covariance stationary process with mean zero can be represented as
+    \begin{equation*}
+        X_t = \sum_{j=0}^{\infty}\theta_j \epsilon_{t-j} + v_t
+    \end{equation*}
+    where $\epsilon_t\sim WN(0, \sigma^2_{\epsilon})$, $\theta_0 = 1$ and $\sum_{j=0}^{\infty}\theta_j^2<\infty$, $E[v_t\epsilon_{t-j}] = 0\,\forall j$,
+    and there exists constants $\alpha_0, \alpha_1,\ldots$ such that $\Var(\sum_{j=0}^{\infty}\alpha_j v_{t-j}) = 0$.
+\end{theorem}
+$v_t$ is the \Term{deterministic} component of $X_t$. It means that it can be predicted arbitrarily well from a linear function of past values of $v_t$.
+The term $\sum_{j=0}^{\infty}\theta_j \epsilon_{t-j}$ is the \Term{indeterministic} component of $X_t$ which is what we want to estimate.
+
+
+\section{ARMA processes}
+
+Let $a(L)$ be a finite order polynomial in $L$, $a(L) = 1 - \sum_{i=1}^{p}a_i L^i$.
+\begin{gather*}
+    a(L)^{-1}a(L) = 1 \Leftrightarrow a(L)^{-1}a(L)X_t = X_t\\
+    \Downarrow\\
+    a(L)^{-1} = \sum_{i=1}^{\infty}b_i L^i\\
+    \text{Suppose }\Downarrow a(L) = 1-\rho L\\
+    a(L)^{-1} = \sum_{i=0}^{\infty}\rho^i L^i
+\end{gather*}
+The coefficients of this infinite-order polynomial are \Emph{absolutely summable} if \KeyIdea{$\sum_{i=0}^{\infty}|b_i|<\infty$}$\to$ necessary condition for a times series to be \Emph{stationary}.
+The necessary and sufficient condition for an inverse to meet the \Emph{absolutely summability condition} the characteristic roots of $a(z)$ lie \KeyIdea{outside the unit circle}.
+Find zeroes of the function $a(z)\to z^*$, to be outside the unit circle we must have \KeyIdea{$|z^*|>1$}.
+If $z = a = bi\to |z| = \sqrt{a^2+b^2}$. 
+
+\subsection{MA(q)}
+
+\begin{equation*}
+    X_t = \sum_{j=0}^{q}\theta_j\epsilon_{t-j},\; \epsilon_t\sim WN(0, \sigma^2_{\epsilon}),\; \theta_0 = 1 
+    \Leftrightarrow X_t = \Theta(L)\epsilon_t,\; \Theta(L) = \sum_{j=0}^{q}\theta_j L^i
+\end{equation*}
+By \Term{Wald decomposition theorem} the true model is a $MA(\infty)$. \Info{The goal is to truncate the true model to a finite order q.}
+
+\subsection{AR(p)}
+
+\begin{equation*}
+    X_t = \sum_{j=1}^{p}\phi_j X_{t-j}+\epsilon_t,\;\epsilon_t\sim WN(0,\sigma^2_{\epsilon}) 
+    \Leftrightarrow \Phi(L)X_t = \epsilon_t,\; \Phi(L) = 1 - \sum_{j=1}^{p}\phi_j L^i
+\end{equation*}
+$AR(p)$ is \Emph{stationary} if the roots of $\Phi(z)$ are \KeyIdea{outside the unit circle}.
+This model corresponds to a $MA(\infty)$ process.
+\begin{proof}
+    \begin{equation*}
+        \Phi(L)X_t = \epsilon_t \Leftrightarrow \Phi(L)^{-1}\Phi(L)X_t = \Phi(L)^{-1}\epsilon_t\Leftrightarrow X_t = (1 + \phi_1L + \phi_1^2 L^2 +\ldots)\epsilon_t
+    \end{equation*}
+\end{proof}
+
+\subsection{ARMA(p,q)}
+
+\begin{equation*}
+    X_t = \sum_{j=1}^{p}\phi_jX_{t-j} + \sum_{j=1}^{q}\theta_j\epsilon_{t-j},\; \epsilon_t\sim WN(0,\sigma^2_{\epsilon})
+    \Leftrightarrow \Phi(L)X_t = \Theta(L)\epsilon_t
+\end{equation*}
+$ARMA(p,q)$ is \Emph{stationary} if the roots of $\Phi(z)$ are \KeyIdea{outside the unit circle}.
+This model also corresponds to a $MA(\infty)$ process.
+\begin{proof}
+    Using \Term{method of undetermined coefficients}
+    \begin{gather*}
+        X_t = \phi_1 X_{t-1} + \epsilon_t + \theta_1\epsilon_{t-1}\\
+        \Downarrow\text{ stationary}\\
+        X_t = \sum_{i=0}^{\infty}\alpha_i\epsilon_{t-i} \Rightarrow X_{t-1} = \sum_{i=0}^{\infty}\alpha_i\epsilon_{t-i-1}\\
+        \Downarrow \text{ replacing back to ARMA(1,1) model}\\
+        \sum_{i=0}^{\infty}\alpha_i\epsilon_{t-i} = \phi_1(\sum_{i=0}^{\infty}\alpha_i\epsilon_{t-i-1})+ \epsilon_t + \theta_1\epsilon_{t-1}
+    \end{gather*}
+\end{proof}
+$ARMA(p,q)$ is \Emph{invertible} if the roots of $\Theta(z)$ are \KeyIdea{outside the unit circle}.
+This model corresponds to a $AR(\infty)$ process.
+\begin{proof}
+    \begin{gather*}
+        \Theta(L)^{-1}\Phi(L)X_t = \epsilon_t \Leftrightarrow (1-\sum_{j=1}^{\infty}\alpha_j L^j)X_t = \epsilon_t \Leftrightarrow X_t - \sum_{j=1}^{\infty}\alpha_j L^j X_t = \epsilon_t\\
+        \Leftrightarrow X_t  - \sum_{j=1}^{\infty}\alpha_j X_{t-i} = \epsilon_t \Leftrightarrow X_t = \sum_{j=1}^{\infty}\alpha_j X_{t-i} + \epsilon_t \to AR(\infty)
+    \end{gather*}
+\end{proof}
+If $\theta_1 = -\phi_1 \Rightarrow \rho_l = 0$, ARMA(1,1) \Emph{reduces to white noise}. 
+Same occurs in ARMA(p,q) processes, \Emph{if $z^*$ is a zero of $\Phi(z)$ and $-z^*$ is a zero of $\Theta(z)$}.
+To avoid \Emph{identification problem}, \KeyIdea{reduce the model} to $ARMA(p-1,q-1)$.
+\Info{Choose simpler models.}
+
+\subsection{Charaterizations}
+
+\begin{definition}
+    The \Term{autocorrelation function (ACF)} is defined as $\rho_j = \frac{\gamma_j}{\gamma_0},\; j = 1,2,\ldots$
+\end{definition}
+
+\begin{definition}
+    The \Term{partial autocorrelation} between $X_t$ aand $X_{t-j}$ is defined as the coefficient of the variable $X_{t-j}$ in the linear projection of $X_t$ on $X_{t-1},\ldots,X_{t-j}$.
+    Informally, it is defined as a measure of the association between $X_t$ and $X_{t-j}$ whilst taking away the effects of the variables $X_{t-1},\ldots,X_{t-j+1}$ on this relationship for $j\geq 1$.
+\end{definition}
+The linear projection of $X_t$ on $X_{t-1},\ldots,X_{t-j}$ is given by 
+\begin{gather*}
+    P(X_t|X_{t-1},\ldots,X_{t-j}) = \alpha^*_j + \beta^*_{j,1}X_{t-1} + \cdots + \beta^*_{j,j}X_{t-j}\\
+    \text{minimizing } E[(X_t - \alpha^*_j - \beta^*_{j,1}X_{t-1} - \cdots - \beta^*_{j,j}X_{t-j})^2]
+\end{gather*}
+So the partial autocorrelation of order $j$ is $\beta^*_{j,j}$.
+\Info{The goal is to minimize the mean of the square of the difference.}
+The \Term{Euler Walker equations} give us the easy way to calcualte PACF for any stochastic process 
+\begin{flalign*}
+    & \beta^*_{1,1} = \rho_1\\
+    & \beta^*_{2,2} = \frac{(\rho_2-\rho_1^2)}{(1-\rho_1^2)}\\
+    & \beta^*_{j,j} = \frac{\rho_j - \sum_{i=1}^{j-1}\beta^*_{j-1,1}\rho_{j-1}}{1-\sum_{i=1}^{j-1}\beta^*_{j-1,1}\rho_j},\; j=3,4,\ldots\\
+    & \beta^*_{j,i} = \beta^*_{j-1,i} - \beta^*_{j,j}\beta^*_{j-i,j-i},\; i=1,2,\ldots,j-1
+\end{flalign*}
+\begin{itemize}
+    \item For \Emph{MA(q) processes}, \KeyIdea{ACF significant} up to its lag, PACF shows direct decay if $\theta<0$ or exponential decay if $\theta>0$.
+    \item For \Emph{AR(p) processes}, ACF shows direct decay if $\phi>0$ and exponential decay if $\phi<0$, \KeyIdea{PACF significant} up to its lag.
+    \item For \Emph{ARMA(p,q) processes}, both \KeyIdea{ACF and PACF exponentially decay}.
+\end{itemize}
+
+\subsection{ARIMA(p,d,q)}
+
+\begin{definition}
+    If a stochastic process $X_t$ must be differentiated exactly $d$ times to admit auto-regressive and moving-average representations that are both absolutely summable,
+    then the series is $I(d)$ and we write $X_t\sim I(d)$. The process $X_t$ is said to be \Term{integrated} of order $d$.
+\end{definition}
+
+If $\Delta^dX_t$ follows an $ARMA(p,q)$ model 
+\begin{equation*}
+    \Phi(L)\Delta^d X_t = x + \Theta(L)\epsilon_t
+\end{equation*}
+with all roots of $\Phi(L)$ and $\Theta(L)$ outside the unit circle, then $X_t$ follows an autoregressive integrated moving average model of order (p,d,q).
+The $ARIMA(p,d,q)$ is non-stationary $ARMA(p+d, q)$ where the autoregressive polynomial $\Phi^*(L) = \Phi(L)(1-L)^d$ has $d$ unit roots.
+Therefore testing procedures to \Emph{determine d} focus on the \KeyIdea{number of autoregressive unit roots}.
+\begin{itemize}
+    \item If \Emph{$X_t\sim I(0)$}, shock $\epsilon_t$ has a transient decaying effect on $X_{t+k}$ as $k\to\infty$. 
+    $X_t$ fluctuates around the mean and \KeyIdea{ACF has a cut-off point} or \KeyIdea{decays exponentially}.
+    \item If \Emph{$X_t\sim I(1)$}, shock $\epsilon_t$ has a permanent effect on $X_{t+k}$ as $k\to\infty$. 
+    $X_t$ is not mean-reversion and deplays a time-varying trend.
+    \KeyIdea{ACF is not defined} but \KeyIdea{sample ACF decays slowly}, approximately linear.
+\end{itemize}
+
+\subsection{Box Jenkins Methodology}
+
+\begin{enumerate}
+    \item Tranform the data so that the assumption of covariance stationarity is reasonable 
+    \item Make an initial guess of the propose $ARMA(p,q)$ model 
+    \item Estiamte the parameters of the proposed model 
+    \item Perform diagnostic analysis to confirm that the proposed model adequately describes the data
+\end{enumerate}
+
+\subsubsection{Identification of model : sample autocorrelation}
+\begin{equation*}
+    \hat{\gamma}_j = \frac{1}{T}\sum_{t=j+1}^{T}(X_t - \bar{X})(X_{t-j}-\bar{X}),\; j\geq 0
+    \Rightarrow \hat{\rho}_j = \frac{\hat{\gamma}_j}{\hat{\gamma}_0},\; j= 1,2,\ldots
+\end{equation*}
+
+If \Emph{$X_t$ is i.i.d. for all $t$} then $\rho_j$ = 0 and we have \KeyIdea{$\sqrt{T}\hat{\rho}_j \xrightarrow{d} N(0,1)\; \forall j=1,\ldots,k$}
+\begin{gather*}
+    H_0: \rho_j = 0 \qquad H_1: \rho_j \neq 0\\
+    \left|\sqrt{T}\hat{\rho}_j\right|>z_{\frac{\alpha}{2}} \to \text{ reject } H_0
+\end{gather*}
+
+We can also use the \Term{Box-Pierce Portmonteau statistic} where \KeyIdea{$Q_k = T\sum_{j=1}^{k}\hat{\rho}_j^2 \xrightarrow{d} \chi^2(k)$}
+\begin{gather*}
+    H_0: \rho_j = 0,\; j=1,\ldots,k \qquad H_1: \text{there is at least one }\rho_j \neq 0\\
+    Q_k > c_{\alpha} \to \text{ reject } H_0
+\end{gather*}
+
+Another option is the \Term{Ljung and Box} where \KeyIdea{$Q^*_k = T(T+2)\sum_{j=1}^{k}\frac{\hat{\rho}^2_j}{T-j}\xrightarrow{d}\chi^2(k)$}
+\begin{gather*}
+    H_0: \rho_j = 0,\; j=1,\ldots,k \qquad H_1: \text{there is at least one }\rho_j \neq 0\\
+    Q^*_k > c_{\alpha} \to \text{ reject } H_0
+\end{gather*} 
+
+\subsubsection{Identification of model : sample partial autocorrelation}
+
+If \Emph{$X_t$ is i.i.d. for all $t$} then $\beta_{jj}$ = 0 and we have \KeyIdea{$\sqrt{T}\hat{\beta}_{jj} \xrightarrow{d} N(0,1)\; \forall j=1,\ldots,k$}
+\begin{gather*}
+    H_0: \beta_{jj} = 0 \qquad H_1: \beta_{jj} \neq 0\\
+    \left|\sqrt{T}\hat{\beta}_{jj}\right|>z_{\frac{\alpha}{2}} \to \text{ reject } H_0
+\end{gather*}
+
+\subsubsection{Maximum Likelihood Estimation}
+
+In time series, $f(x_1,\ldots,x_T;\gamma) \neq \prod_{t=1}^{T}f(x_t;\gamma)$ because the random variables in sample $(X_1,\ldots,X_T)$ are \Emph{not iid}.
+One possible solution is the \KeyIdea{conditional factorization of the density function}.
+\begin{equation*}
+    f(x_T,\ldots,x_1;\gamma) = (\prod_{t=2}^{T}f(x_T|F_{t-1;\gamma}))f(x_1;\gamma)
+\end{equation*}
+where $F_t = (x_t,\ldots,x_1)$ denotes information available at time $t$.
+We then have
+\begin{flalign*}
+    & \log \mcL(\gamma|X_1,\ldots,X_T) = \left(\sum_{t=2}^{T}\log f(X_t|F_{t-1};\gamma)\right) + \log f(X_1;\gamma)\to \text{ exact log-likelihood function}\\
+    & \log \mcL^*(\gamma|X_1,\ldots,X_T) = \sum_{t=2}^{T}\log f(X_t|F_{t-1};\gamma)\to \text{ conditional log-likelihood function}
+\end{flalign*}
+The assumption of \Emph{normality} is imposed.
+\begin{itemize}
+    \item We get the \Emph{exact likelihood estimator} (EML) if we \KeyIdea{maximize the exact log-likelihood function}.
+    We get the \Emph{conditional maximum likelihood estimator} (CML) $\hat{\gamma}_{CML}$ if we \KeyIdea{maximize the conditional}\\\KeyIdea{log-likelihood function}.
+    \item Both estimators are \Emph{consistent and asymptotically normal} under regulairty conditions
+    \begin{equation*}
+        \sqrt{T}(\hat{\gamma}_{CML}-\gamma_0)\xrightarrow{d}N(0,A_0^{-1})\quad A_0 = E[-\frac{\partial^2 l_t(\gamma_0)}{\partial\gamma\partial\gamma'}]
+    \end{equation*}
+    but they will not yield the same estimates in finite samples.
+\end{itemize}
+
+\subsubsection{Diagnostic testing}
+
+To check if \Emph{residuals $\hat{\epsilon}_t$ have white noise properties}.
+\begin{itemize}
+    \item Check the \KeyIdea{sample ACF and sample PACF} of the residuals
+    \item Use \KeyIdea{Box-Pierce and Ljung-Box} statistics applied to the residuals 
+\end{itemize}
+Test for \Emph{serial correlation} using the \KeyIdea{Breusch Godfrey} Lagrange multiplier statistic.
+To test for white nosie against $r$-th order autocorrelation in the residuals in a $AR(p)$ model amounts to test $\beta_1 = \cdots = \beta_r = 0$ in auxiliary regression 
+\begin{equation*}
+    \hat{\epsilon}_t = \alpha_0 + \alpha_1 X_{t-1} + \cdots + \alpha_p X_{t-p} + \beta_1\hat{\epsilon}_{t-1}+\cdots+\beta_r\hat{\epsilon}_{t-r}+e_t
+\end{equation*}
+$LM = T\times R^2\xrightarrow{d}\chi^2(r)$.\\
+
+The less arbitrary way to test for the \Emph{goodness of fit} of the model is to use the \KeyIdea{information criterion} such as the Akaike information criterion (AIC) or the Bayesian (Swirartz)information criterion (BIC).
+Given several models, we should choose the one with the \KeyIdea{lowest information criteria}.
+
+\section{Forecasting}
+
+$F_s = \{X_s,X_{s-1},\ldots\}$ information on process $X_t$ up to $s$. The \Emph{conditional expectation} $E[X_t|F_s], s<t$, is best under squared error loss predictor of $X_t$ given $F_s$ is
+\begin{equation*}
+    E[(X_t-E[X_t|F_s])^2] \leq E[(X_t-g(F_s))^2]
+\end{equation*}
+for all functions $g(F_s)$. \Info{The $g(\cdot)$ function might not be linear.}
+The \Emph{best linear predictor} $P(X_t|F_s), s<t$ is 
+\begin{equation*}
+    E[(X_t-P(X_t|F_s))^2] \leq E[(X_t-g(F_s))^2]
+\end{equation*}
+for all linear functions $g(F_s)$.
+
+\begin{definition}
+    The process $X_t$ is \Term{martingale} if $E[X_{t+1}|F_t] = X_t$ for all $t$.
+\end{definition}
+\begin{definition}
+    The process $X_t$ is a \Term{martingale difference sequence} if $E[Y_{t+1}|F_t] = 0$ for all $t$.
+\end{definition}
+If $X_t$ is a martingle, then $Z_t = X_t - X_{t-1}$ is a martingle difference sequence.\\
+
+If we assume \Emph{errors are iid} or a martingle difference sequence,$E[\epsilon_{t+1}|F_t]=0\;\forall t$, we are able to estimate $E[X_t|F_s]$.
+And we are able to show that the estimator for best forecast is given by 
+\begin{gather*}
+    E[X_{t+l}] = c + \sum_{j=1}^{p}\phi_j E[X_{t+l-j}] + \sum_{j=1}^{q}\theta_j \epsilon_t(l-j)\\
+    E[X_{t+l-j}] = X_{t+l-j},\; j\geq l\qquad \epsilon_t(l-j)=\begin{cases}
+        \epsilon_{t+l-j} &  j\geq l\\
+        0 &  j<l
+    \end{cases}
+\end{gather*}
+The \Emph{variance of the prediction errors} $e_t(l) = X_{t+l} - E_t[X_{t+l}]$ is obtained from the $MA(\infty)$ representaion of the $ARMA(p,q)$ process $X_t = E[X_t] - \sum_{j=0}^{\infty}\phi_j\epsilon_{t-j}$.
+Assuming $\Var(\epsilon_t) = \sigma^2_{\epsilon}$ for all $t$,
+\begin{equation*}
+    \Var(e_t(l)) = \sigma^2_{\epsilon}\sum_{j=0}^{l-1} \phi^2_j
+\end{equation*} 
+for stationary process as $l\to\infty$ we have 
+\begin{equation*}
+    E[X_{t+l}] \to E[X_t]\quad \Var(e_t(l)) \to \Var(X_t)
+\end{equation*}
+
+For $I(1)$ processes, the above methods are applied to $\Delta X_t$, yielding $E[\Delta X_{t+l}|F_t]$. The forecasts are given by 
+\begin{equation*}
+    E_t[X_{t+l}] = X_t + \sum_{i=1}^{l} E_t[\Delta X_{t+i}]
+\end{equation*}
+
+To \Emph{compare the forecasts} among different ARMA/ARIMA models
+\begin{enumerate}
+    \item leave the last observations of the time series out of the estimation of the models
+    \item produce forecasts for these observations for each model 
+    \item choose the model that yields the \KeyIdea{minimum value of the sample mean square prediction error} among the estimated models
+\end{enumerate}
 
 
 % \begin{definition}
-% Theorem
+% \begin{theorem}
 % \begin{lemma}
 % \begin{Example}
 % \begin{proof}

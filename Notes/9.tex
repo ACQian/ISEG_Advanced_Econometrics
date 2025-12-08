@@ -1,2 +1,258 @@
 \setchapter{9}{Panel Data Models}
 \ChapterHeading
+
+We can follow the same random individual observations over time, known as \Term{panel data} or logitudinal data.
+In general, we have $n$ units each of whom we follow for $T_i$ consecutive time periods, for each unit $i=1,\ldots,n$.
+The size of the sample that matters here for asymptotic thoery to work is $n$, not $T$ or $n\times T$.\\
+
+Advantages include 1) controlling for individual unobserved heterogeneity and 2) identify individual-specific and time effects.
+Limitations include 1) design and data collection problems and 2) usually short time-series dimension.
+
+\section{Models}
+
+\subsection{Pooled regression}
+
+This is the \Emph{most restrictive model} that specifies constant coefficients
+\begin{equation}
+    y_{it} = x'_{it}\beta + \epsilon_{it}
+\end{equation}
+where $\epsilon_{it}\sim IID(0, \sigma^2_{\epsilon})$.\\
+
+\Emph{OLS} gives \Emph{unbiased, consistent and most efficient} estimates of $\beta$ if $x_{it}$ is independent of $\epsilon_{it}$ \Info{$\to$ Gauss-Maukov Theorem.}
+The model \Emph{does not allow} explicitly for \Emph{individual heterogeneity}.
+
+\subsection{Fixed effects model}
+
+The model is defined as
+\begin{equation}
+    y_{it} = \alpha_i + x'_{it}\beta + \epsilon_{it}
+\end{equation}
+where $\epsilon_{it}\sim IID(0, \sigma^2_{\epsilon})$ and $\alpha_i$ capture unobserved individual heterogeneity.
+\Info{If we ignore $\alpha_i \to$ correlation between $x_{it}$ and $\epsilon_{it}\to$ inconsistency with the OLS estimator as $u_{it} = \alpha_{i}+\epsilon_{it}$.}
+The estimator for $\beta$ is \Emph{consistent and unbiased} even if we consider the variables \KeyIdea{$\alpha_i$ either as fixed parameters or as random variables} and \KeyIdea{correlated with $x_{it}$ but independent of $\epsilon_{it}$}.
+We require \Emph{the regressors to vary with $t$}. The coefficients of the non-varying regressors are not identified.
+
+\subsection{Random effects model}
+
+The model is defined as 
+\begin{equation}
+    y_{it} = \alpha_i + x'_{it}\beta + \epsilon_{it}
+\end{equation}
+where 
+\begin{equation*}
+    \epsilon_{it}\sim IID(0,\sigma^2_{\epsilon})\qquad \alpha_i\sim IID(0, \sigma^2_{\alpha})
+\end{equation*}
+where $\alpha_i$ capsures individual unobserved heterogeneity but are \Emph{not correlated with $x_{it}$}.
+$\alpha_i + \epsilon_{it}$ are treated as an error consisting of two components.
+\Info{This has a stronger assumption than FE but estimators are more efficient than FE.}
+
+\subsection{FE vs. RE}
+
+\begin{itemize}
+    \item If there are \Emph{no omitted variables} or \Emph{omitted uncorrelated with explanatory} $\to$ use \KeyIdea{RE}.
+    \item If there \Emph{are omitted} and probability \Emph{correlated with explanatory} $\to$ use \KeyIdea{FE}.
+    But the omitted must have time-invariant values with time-invariant effects.
+    \item If key explanatory is \Emph{time invariant} $\to$ must use \KeyIdea{RE}.
+\end{itemize}
+
+\section{FE estimators}
+
+\subsection{Within estimator / fixed effects estimator}
+Relies on \Term{within transformation} by defining the averages over $t$ for $y_{it}$, $x_{it}$ and $\epsilon_{it}$ and we get 
+\begin{gather*}
+    y_{it} - \bar{y}_{i} = (x_{it} - \bar{x}_i)'\beta + (\epsilon_{it} - \bar{\epsilon}_i)\\
+    \Downarrow\\
+    \ddot{y}_i = \ddot{X}_i\beta + (\epsilon_{it} - \bar{\epsilon}_i)
+\end{gather*}
+then use \Emph{OLS} on the transformed model with 
+\begin{equation*}
+    \hat{\beta}_{within} = \left[\sum_{i=1}^{n}\ddot{X}'_i\ddot{X}_i\right]^{-1}\times\left[\sum_{i=1}^{n}\ddot{X}'_i\ddot{y}_i\right]
+    = [W_{xx}]^{-1}W_{xy}
+\end{equation*}
+
+\begin{itemize}
+    \item \Emph{Unbiased}: $\epsilon_{it}$ independent of $x_{is}$ for all $t$ and $s$.
+    \Info{$E[\hat{\beta}_{within}] = \beta\to$ independence.}
+    \item \Emph{Consistent}: as $n\to\infty$, $E[(x_{it-\bar{x}_i})\epsilon_{it}] = 0$. Sufficient to have $E[x_{it}\epsilon_{it}] = 0$ and $E[\bar{x}_i\epsilon_{it}] = 0$
+    which is implied by the unbiasedness condition. In this case we call \KeyIdea{$x_{is}$ strictly exogenous}. 
+    \begin{definition}
+        \textbf{Strictly exogenos} variables are not allowed to depend upon current, future, and past values of the error term.
+        Strict exogeneity excludes inclusion of past values of $y_{it}$ in $x_{it}$.
+    \end{definition}
+    \item \Emph{Asymptotically efficient}: $\epsilon_{it}$ is homoskedastic with variance $\sigma^2_{\epsilon}$
+    \begin{itemize}
+        \item $\sqrt{n}(\hat{\beta}_{within}-\beta_0)\xrightarrow{d}\mcN(0,avar(\hat{\beta}_{within}))$
+        \item if under heteroskedasticity and serial correlation by clustors then use \KeyIdea{robust SE} proposed by Arellano (1987)
+        which is good for small $\frac{T}{n}$.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Least square dummy variable estimator (LSDV)}
+
+Assume \Emph{$\alpha_i$ are parameters} to be estimated. Rewrite the model as 
+\begin{equation*}
+    y_{it} = \sum_{j=1}^{n} \alpha_j d_{ij} + x'_{it}\beta + \epsilon_{it}
+\end{equation*}
+where $d_{ij} = 1$ if $i=j$, $0$ otherwise. The parameters $\{\alpha_1,\ldots,\alpha_n,\beta\}$ are estimated using \Emph{OLS}.
+The estimator obtained for $\beta$ using this approach is the same as $\hat{\beta}_{within}$.\\
+
+Considering $\hat{\alpha}_i = \bar{y}_i - \bar{x}'_i\hat{\beta}_{within}\quad i=1,\ldots,n$
+\begin{itemize}
+    \item \Emph{Consistent}: requires $T\to\infty$. As $n\to\infty$ while $T$ fixed, $\hat{\alpha}_i$ does not converge.
+    \Info{If we want $\hat{\alpha}_i$ to be consistent as well, then we need both $n$ and $T$ to go to infinity.}
+\end{itemize}
+
+\subsection{First difference estimator (FD)}
+
+By subtracting one period from the other, we obtain the \Term{first difference equation}
+\begin{equation*}
+    \Delta y_{i,t} = \beta'\Delta x_{i,t} + \Delta\epsilon_{i}
+\end{equation*}
+where $\Delta a_{i,t} = a_{it} - a_{i, t-1}$.
+Then use \Emph{OLS} to get
+\begin{equation*}
+    \hat{\beta}_{FD} = \left[\sum_{i=1}^{n}\sum_{t=1}^{T}(\Delta x_{it})(\Delta x_{it})'\right]^{-1}\times\left[\sum_{i=1}^{n}\sum_{t=1}^{T}(\Delta x_{it})(\Delta y_{it})\right]
+\end{equation*}
+
+\subsection{FE vs. FD}
+
+\begin{itemize}
+    \item When \Emph{$T=2$}, FE and FD are identical $\to$ use \KeyIdea{FD} because it's more straightfroward and easier to compute heteroskedasticity-robust statistics.
+    \item When \Emph{$T\geq 3$}, both unbiased and consistent for large n and small T, depends on the relative efficiency which depends on heteroskedasticity and serial correlation in the idosyncratic errors.
+    \begin{itemize}
+        \item if $\epsilon_{it}$ \Emph{uncorrelated and homoskedastic} $\to$ \KeyIdea{within}
+        \item if $\epsilon_{it}$ \Emph{substantically autocorrelated}, e.g. RW, $\Delta \epsilon_{it}$ uncorrelated $\to$ \KeyIdea{FD}
+        \item if $\epsilon_{it}$ has \Emph{some serial autocorrelation} but not as much as RW, then \KeyIdea{cannot easily compare}.
+    \end{itemize}
+\end{itemize}
+
+\section{RE estimators}
+
+\subsection{Pooled OLS}
+
+Treats individual-specific effects $\alpha_i$ as random factors iid over individuals.
+This estimator is \Emph{consistent but inefficient} because it ignores the correlation among the $\omega_{it} = \alpha_{i}+\epsilon_{it}$.
+All valid inference requires the \KeyIdea{robsut covariance estimator}.\\
+
+$\alpha_i$ and $\epsilon_{it}$ are assumed to be \Emph{mutuallly independent} and \Emph{independent} of $x_{js}$ for all $j$ and $s$.
+For each individual, define $\iota_T = (1,\ldots,1)'$ of dimension $T\times 1$.
+The model can be written as
+\begin{equation*}
+    y_i = X_i\beta + \omega_i\quad i=1,\ldots,n
+\end{equation*}
+where $\omega_i = \alpha_i\iota_T+\epsilon_i$ and $y_i$ and $X_i$ are matrix of $T\times 1$ dimension.
+For each individual, we have 
+\begin{equation*}
+    \Var(\omega_i) = \Sigma = \sigma^2_{\alpha}\iota_T\iota'_{T} + \sigma^2_{\epsilon}I_T
+\end{equation*}
+The model can once again be rewritten as 
+\begin{equation*}
+    Y = X\beta + \omega
+\end{equation*}
+where all three variables are $N\times 1$ dimension matrix and we have $E[\omega] = 0$ and $\Var(\omega) = \Psi = I_{n}\otimes\Omega$.
+
+\subsection{Between estimator}
+
+This alternative estimator is \Emph{unbiased and consistent but not efficient}. Run the regression on 
+\begin{gather*}
+    \bar{y}_i = \bar{x}'_{i}\beta + \alpha_i + \bar{\epsilon}_i\\
+    \Downarrow\\
+    \hat{\beta}_B = \left[\sum_{i=1}^{n}\bar{x}_{i}\bar{x}'_{i}\right]^{-1}\sum_{i=1}^{n}\bar{x}_{i}\bar{y}_{i} = [B_{xx}]^{-1}B_{xy}
+\end{gather*}
+
+\subsection{Generalized least squares (GLS)}
+
+The model in \Term{Pooled OLS} does not satisfy the Gauss-Markov assumptions. 
+Thus we can transform the model into one that satisfies the model by finding a nonsingualr $P$ such that $\Psi^{-1} = P'P$.
+\begin{gather*}
+    Y = X\beta + \omega\\
+    E[\epsilon|X] = 0\quad \Var[\epsilon|X] = \Psi\\
+    \Downarrow\\
+    PY = PX\beta + P\epsilon\\
+    E[P\epsilon|X] =PE[\epsilon|X]= 0\quad \Var(P\epsilon|X) = P\Psi P' = I\\
+    \Downarrow\\
+    Y^* = X^*\beta + \epsilon^*
+\end{gather*}
+The model can be estimated by \Emph{OLS} to give the \Emph{BLUE}, best linear unbiased estiamtor, for $\beta\to\hat{\beta}_{GLS}$
+\begin{equation*}
+    \hat{\beta}_{GLS} = (X'^* X^*)^{-1}X'^*Y^* = (X'\Psi^{-1}X)^{-1}X'\Psi^{-1}Y
+\end{equation*}
+Typically $\Psi$ is unknown and need to be estimated in the first step.\\
+
+To \Emph{find the expression for $P$}, one can show that $P = I_n\otimes\Sigma$ where $\Sigma = \left[I_T - \frac{\theta}{T}\iota_T\iota'_T/\sigma_{\epsilon}\right]$
+where $\theta = 1 - \frac{\sigma_{\epsilon}}{\sqrt{\sigma^2_{\epsilon} + T\sigma^2_{\alpha}}}$. Thus we have 
+\begin{gather*}
+    \hat{\beta}_{GLS} = (\sum_{i=1}^{n}X'_i\Omega^{-1}X_i)^{-1}\sum_{i=1}^{n}X'_i\Omega^{-1}Y_i\\
+    \text{run regression on }\Updownarrow y_{it} - \theta \bar{y}_i = (x_{it}-\theta\bar{x}_i)'\beta + (\eta_{it} - \theta\bar{\eta}_i)\\
+    \hat{\beta}_{GLS} = \left[\sum_{i=1}^{n}\sum_{t=1}^{T}(x_{it}-\theta\bar{x}_i)(x_{it}-\theta\bar{x}_i)'\right]^{-1}\times \left[\sum_{i=1}^{n}\sum_{t=1}^{T}(x_{it}-\theta\bar{x}_i)(y_{it}-\theta\bar{y}_i)\right]
+\end{gather*}
+
+Combining the \Term{FE within estimator} and the \Term{RE between estimator}, we can rewrite the GLS estimator as 
+\begin{gather*}
+    \hat{\beta}_{GLS} = [W_{xx}+\lambda B_{xx}]^{-1}[W_{xx}\hat{\beta}_{within}+\lambda\beta_{xx}\hat{\beta}_{B}]\\
+    \lambda = \frac{\sigma^2_{\epsilon}}{\sigma^2_{\epsilon}+T\sigma^2_{\alpha}}\\
+    \Downarrow\\
+    \theta = 1 - \lambda^{1/2}
+\end{gather*}
+\begin{itemize}
+    \item if \Emph{$\lambda = 0$} $\to$ fixed effect estimator $\hat{\beta}_{within}$.
+    \Info{The GLS estimator is a linear combination of the within and between estimator.}
+    \item if \Emph{$\lambda = 1$} $\to$ no individual specific effects $\alpha_i \to$ pooled OLS estimator.
+    \Info{Homoskedasticity but no autocorrelation.}
+\end{itemize}
+
+\subsection{Feasible GLS}
+
+Considering the \Emph{transformed model}
+\begin{gather*}
+    (y_{it} - \theta \bar{y}_i) = (x_{it}-\theta\bar{x}_i)'\beta + \underbrace{(\eta_{it} - \theta\bar{\eta}_i)}_{u_{it}}\quad u_{it} \sim IID
+\end{gather*}
+We need to estimate $\theta$ and therefore $\lambda$.
+
+\begin{gather*}
+    \hat{\sigma}^2_{\epsilon} = \frac{1}{n(T-1)}\sum_{i=1}^{n}\sum_{t=1}^{T}\left[y_{it}-\bar{y}_i-(x_{it}-\bar{x}_i)'\hat{\beta}_{within}\right]^2\to\text{ within group residuals}\\
+    \hat{\sigma}^2_B = \frac{1}{n}\sum_{i=1}^{n}(\bar{y}_i-\bar{x}'_i\hat{\beta}_B)^2\to\text{ error variance from between}\\
+    \hat{\sigma}^2_{\alpha} = \hat{\sigma}^2_{B} - \frac{1}{T}\hat{\sigma}^2_{\epsilon}\\
+    \Downarrow\\
+    \hat{\theta} = 1 - \sqrt{\hat{\lambda}}\quad \hat{\lambda} = \frac{\hat{\sigma}^2_{\epsilon}}{\hat{\sigma}^2_{\epsilon}+T\hat{\sigma}^2_{\alpha}}\\
+    \text{Run regression }\Downarrow (y_{it} - \hat{\theta} \bar{y}_i) = (x_{it}-\hat{\theta}\bar{x}_i)'\beta + u_{it}\\
+    \hat{\beta}_{RE} = \left[\sum_{i=1}^{n}\sum_{t=1}^{T}(x_{it}-\hat{\theta}\bar{x}_i)(x_{it}-\hat{\theta}\bar{x}_i)'\right]^{-1}\times \left[\sum_{i=1}^{n}\sum_{t=1}^{T}(x_{it}-\hat{\theta}\bar{x}_i)(y_{it}-\hat{\theta}\bar{y}_i)\right]
+\end{gather*}
+\begin{itemize}
+    \item if \Emph{$\theta = 1$} $\to$ $\hat{\beta}_{within}$
+    \item if \Emph{$\theta = 0$} $\to$ $\hat{\beta}$ the Pooled OLS estimator
+\end{itemize}
+
+\subsection{Choosing estimator in the RE set up}
+
+Given \Term{Random Effect model}, which estimation method should we use? With \Emph{strict exogeneity of $x_{it}$}
+\begin{itemize}
+    \item the \Emph{within estimator} is \KeyIdea{consistent but not efficient} because it ignores the structure of the covariance matrix $\Omega$.
+    \item the \Emph{first difference estimator} is also \KeyIdea{consistent but not efficient}
+    \item the \Emph{between estimator} is \KeyIdea{consistent but not efficient} because it does not take into account information from within dimension
+    \item the \Emph{RE estimator} is \KeyIdea{consistent and asymptotically efficient} under \Emph{strict exogeneity} assumption and \Emph{uncorrelated with $\alpha_i$}.
+\end{itemize}
+\Info{All estimators are consistent but only the RE estimator is efficient, i.e., has the smallest variance.}\\
+
+The choice of estimator really depends on testing \Emph{whether $\alpha_i$ are correlated with the regressors or not}$\to$ \Term{Hausman Test}
+\begin{gather*}
+    H_0: x_{it}, \alpha_i\text{ uncorrelated}\qquad H_1: x_{it}, \alpha_i\text{ correlated}\\
+    \Downarrow\\
+    H_0: \hat{\beta}_{within}\text{ consistent}\quad \hat{\beta}_{RE}\text{ consistent and efficient}\\
+    H_1: \hat{\beta}_{within}\text{ consistent}\quad \hat{\beta}_{RE}\text{ inconsistent}
+\end{gather*}
+Test statistic $\zeta_{H}$ is based on the difference $(\hat{\beta}_{within}-\hat{\beta}_{RE})$.
+Under $H_0$, $\lim(\hat{\beta}_{within}-\hat{\beta}_{RE})\xrightarrow{p}0$ since both estimators are consistent.
+Under $H_0$, $\zeta_{H}\xrightarrow{d}\chi^2(k)$ where $k$ is the dimension of $\beta$.
+If the inverse of the varaince matrix of the within and the RE estimator \Emph{cannot be computed}, just \KeyIdea{use the same $\sigma^2_{\epsilon}$} both within and RE estimator.  
+
+% \begin{definition}
+% Theorem
+% \begin{lemma}
+% \begin{Example}
+% \begin{proof}
+%\newcommand{\KeyIdea}  % 关键想法：浅绿底
+%\newcommand{\Term}     % 专业名词：品牌深绿字
+%\newcommand{\Emph}     % 强调词汇：红
+%\newcommand{\Confuse}    % 不懂/存疑处
+%\newcommand{\Info}     % 说明或注解
