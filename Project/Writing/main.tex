@@ -46,10 +46,11 @@ both traditional statistical methods relying on EVT as well as optimized bootstr
 A persistent challenge across the literature is the scarcity of data in the tails, which complicates the estimation of the Extreme Value Index, high quantiles, and rare-event probabilities.
 The reviewed literature addresses these challenges through advanced resampling techniques with bootstrapping, bias-reduction strategies, and dynamic modeling for dependent time series.
 The main issues addressed in the papers can be categorized into four main areas: 
-1) bias-variance tradeoff and optimal order statistic selection \cite{gomes2012adaptive,gomes2016bootstrap,qi2008bootstrap,nemeth2020regression} (Gomes et al., 2010; Gomes et al., 2014; Qi, 2007; Németh et al., 2020), 
+1) bias-variance tradeoff and optimal order statistic selection\cite{gomes2012adaptive}(Gomes et al., 2010; Gomes et al., 2014; Qi, 2007; Németh et al., 2020), 
 2) serial dependence and heteroscedasticity in time series data due to volatility clustering thus violating the iid assumption (McNeil et al., 2000; Bee et al., 2018; Davis et al., 2018),
 3) data scarcity especially in the multivariate setting when joint extreme observations are rare (Madhar et al., 2025), 
-and 4) the uncertainty in estimates due to the lack of tail information in the input model (Huang et al., 2023).
+and 4) the uncertainty in estimates due to the lack of tail infor
+mation in the input model (Huang et al., 2023).
 
 For bias correction, Gomes et al. (2010) and Gomes et al. (2014) focused on using second order parameters to reduce asymptotic bias without increasing the variance for the Classical-Variance Reduced-Biase estimators (CVRB).
 Németh et al. (2020) proposed to use boostrap samples and fitting a Generalized Extreme Value (GEV) distribution to the estimates then using linear regression to correct the bias of the Hill estimator.
@@ -71,9 +72,6 @@ Standard bootstrap fails to quantify uncertainty in heavy-tailed inputs. However
 The goal of this project is to extend the work done by Madhar et al. (2025) by applying the Multivariate Extreme Spectral Bootstrapping (SB) procedure to a more extreme case of the financial market, cryptocurrencies.
 Currently, Madhar et al. (2025) has demonstrated the consistency of their approach through simulated data and with market data with traditional bank stocks which are more stable.
 With the tail index $\xi$ being between 0.4 to 0.6 for cryptocurrencies while traditional bank stocks with $\xi \approx 0.2$, the robustness of the SB procedure is tested. 
-
-
-% 3. Methodology/Design Procedures
 
 \section{Methodology}
 
@@ -132,6 +130,7 @@ More formally, these assets are selected to represent distinct risk factors with
 xx
 
 \newpage
+
 
 \bibliographystyle{plain}
 \bibliography{reference}
