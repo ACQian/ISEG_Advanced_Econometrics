@@ -1,6 +1,8 @@
 \documentclass[a4paper,11pt]{article}
 \input{letterfonts_report}
 \input{format_report}
+\usepackage[backend=biber,style=authoryear]{biblatex}
+\addbibresource{reference.bib}
 
 \begin{document}
 
@@ -17,7 +19,7 @@
 \section{Introduction}
 
 Throughout the years, cryptocurrencies have continued to gain traction from not only experienced investors but also inexperienced investors that are only there for the hype.
-The massive trade volume of cryptocurrencies has introduced a new asset class characterized by extreme volatility and frequent "black swan" events.
+The massive trade volume of cryptocurrencies has introduced a new asset class characterized by extreme volatility and frequent black swan events.
 For risk management purposes, the modeling of extreme events, espeically extreme losses is critical.
 Traditional statistical methods, which rely on Gaussain assumptions, fail to capture the heavy-tail aspect of the financial returns, leading to underestimation of risk during crashes.
 This is even more true for financial assets such as cryptocurrencies which exhibits even heavier tail behavior compared to traditional financial assets.
@@ -46,31 +48,31 @@ both traditional statistical methods relying on EVT as well as optimized bootstr
 A persistent challenge across the literature is the scarcity of data in the tails, which complicates the estimation of the Extreme Value Index, high quantiles, and rare-event probabilities.
 The reviewed literature addresses these challenges through advanced resampling techniques with bootstrapping, bias-reduction strategies, and dynamic modeling for dependent time series.
 The main issues addressed in the papers can be categorized into four main areas: 
-1) bias-variance tradeoff and optimal order statistic selection\cite{gomes2012adaptive}(Gomes et al., 2010; Gomes et al., 2014; Qi, 2007; Németh et al., 2020), 
-2) serial dependence and heteroscedasticity in time series data due to volatility clustering thus violating the iid assumption (McNeil et al., 2000; Bee et al., 2018; Davis et al., 2018),
-3) data scarcity especially in the multivariate setting when joint extreme observations are rare (Madhar et al., 2025), 
+1) bias-variance tradeoff and optimal order statistic selection\parencite{gomes2012adaptive,gomes2016bootstrap,qi2008bootstrap,nemeth2020regression}, 
+2) serial dependence and heteroscedasticity in time series data due to volatility clustering thus violating the iid assumption \parencite{mcneil2000estimation,bee2018estimating,davis2018inference},
+3) data scarcity especially in the multivariate setting when joint extreme observations are rare \parencite{madhar2025spectral}, 
 and 4) the uncertainty in estimates due to the lack of tail infor
-mation in the input model (Huang et al., 2023).
+mation in the input model \parencite{huang2023propagation}.
 
-For bias correction, Gomes et al. (2010) and Gomes et al. (2014) focused on using second order parameters to reduce asymptotic bias without increasing the variance for the Classical-Variance Reduced-Biase estimators (CVRB).
-Németh et al. (2020) proposed to use boostrap samples and fitting a Generalized Extreme Value (GEV) distribution to the estimates then using linear regression to correct the bias of the Hill estimator.
-Qi (2007) studied how emperical likelihood and data tilting methods can be used to construct confidence intervals for tail indices and high quantiles.
+For bias correction, \textcite{gomes2012adaptive} and \textcite{gomes2016bootstrap} focused on using second order parameters to reduce asymptotic bias without increasing the variance for the Classical-Variance Reduced-Biase estimators (CVRB).
+\textcite{nemeth2020regression} proposed to use boostrap samples and fitting a Generalized Extreme Value (GEV) distribution to the estimates then using linear regression to correct the bias of the Hill estimator.
+\textcite{qi2008bootstrap} studied how emperical likelihood and data tilting methods can be used to construct confidence intervals for tail indices and high quantiles.
 
 On the topic of volatility clustering, methodologies focus mainly on data transformation and conditional modeling.
-McNeil et al. (2000) proposed a two-stage approach by first fitting a GARCH model then applying EVT specifically the Generalized Pareto Distribution (GPD) on the tails of the residuals.
-Bee et al. (2018) reviewed several approaches including using quantile regression or allowing Peaks over Threshold parameters to vary over time based on autoregressive structures.
+\textcite{mcneil2000estimation} proposed a two-stage approach by first fitting a GARCH model then applying EVT specifically the Generalized Pareto Distribution (GPD) on the tails of the residuals.
+\textcite{bee2018estimating} reviewed several approaches including using quantile regression or allowing Peaks over Threshold parameters to vary over time based on autoregressive structures.
 
 Although the approaches mentioned above address the difficulties in estimations and modeling of financial data in the extremes,
 the main issue of data scarcity in the tails that can be leveraged for model fitting and inference cannot be solved with the traditional statistical approaches alone.
 Bootstrapping is the main methodology used for addressing the lack of extreme data and the selection of optimal parameters.
-Both Qi (2007) and Gomes et al. (2010) focused on using double bootstrapping method for threshold selection to minimize the Asymptotic Mean Square Error (AMSE) of the Hill estimator.
-Davis et al. (2018) focused on block boostrapping for time series with serial dependence to construct confidence intervals for the spectral tail process.
-Madhar et al. (2025) proposed a nonparametric spectral bootstrap procedure to create synthetic extreme data that preserves the asymptotic dependence structure of the underlying data in a multivariate case.
-Huang et al. (2023) discusses how heavy-tailed distributions are more vulnerable to truncation of the tails which would result in severe underestimation of rate-event probabilities.
+Both \textcite{qi2008bootstrap} and \textcite{gomes2012adaptive} focused on using double bootstrapping method for threshold selection to minimize the Asymptotic Mean Square Error (AMSE) of the Hill estimator.
+\textcite{davis2018inference} focused on block boostrapping for time series with serial dependence to construct confidence intervals for the spectral tail process.
+\textcite{madhar2025spectral} proposed a nonparametric spectral bootstrap procedure to create synthetic extreme data that preserves the asymptotic dependence structure of the underlying data in a multivariate case.
+\textcite{huang2023propagation} discusses how heavy-tailed distributions are more vulnerable to truncation of the tails which would result in severe underestimation of rate-event probabilities.
 Standard bootstrap fails to quantify uncertainty in heavy-tailed inputs. However, bootstrapping assisted by GPD improves coverage.
 
 The goal of this project is to extend the work done by Madhar et al. (2025) by applying the Multivariate Extreme Spectral Bootstrapping (SB) procedure to a more extreme case of the financial market, cryptocurrencies.
-Currently, Madhar et al. (2025) has demonstrated the consistency of their approach through simulated data and with market data with traditional bank stocks which are more stable.
+Currently, \textcite{madhar2025spectral} has demonstrated the consistency of their approach through simulated data and with market data with traditional bank stocks which are more stable.
 With the tail index $\xi$ being between 0.4 to 0.6 for cryptocurrencies while traditional bank stocks with $\xi \approx 0.2$, the robustness of the SB procedure is tested. 
 
 \section{Methodology}
@@ -108,7 +110,7 @@ However, the SB procedure requires the standardization of the historical data to
 This is done under the assumption of a student-t distribution for the data.
 This assumption could be violated under the crypto context due to the fact that cryptocurrencies often exhibit skewed tails as crashes are often more severe than rallies.
 This could lead to a biased transformed data which would then lead to high error in the simulation.
-The underlying assumption of tail dependence, though theoretically true for cryptocurrencies, may still be violated as volatility of cryptocurrencies are also highly dependent on the "hype" of the coin itself.
+The underlying assumption of tail dependence, though theoretically true for cryptocurrencies, may still be violated as volatility of cryptocurrencies are also highly dependent on the hype of the coin itself.
 This is especially true if meme-coins are included in the investment portfolio.
 
 \subsection{Data Used}
@@ -124,15 +126,124 @@ More formally, these assets are selected to represent distinct risk factors with
 
 \section{Simulation Results}
 
+The performance of the SB procedure is evaluated by comparing its estimated TRM including Expected Shortfall (ES), Multivariate Marginal Expected Shortfall (MMES), and Dependent Conditional Tail Expectation (DCTE) against empirical estimates derived directly from historical returns.
+The analysis is conducted on a three-asset portfolio consisting of Bitcoin (BIT), Binance Coin (BNB), and Dogecoin (DOG), using an extreme Value-at-Risk (VaR) confidence level of $\alpha = 0.9975$.
 
+Raw data of weekly price is first transformed into returns and plotted as shown in Figure~\ref{fig:WeeklyReturns}.
+BIT and BNB shows a distinct positive linear relationship.
+The data points cluster along a diagonal, indicating that these two assets tend to move in the same direction.
+When one experiences positive returns, the other generally does as well, and they tend to decline together.
+But looking at DOG with both BIT and BNB, the positive correlation still exists, but with much heavier noise and less clustered than the BIT and BNB pair.
+DOG tends to follow the broader market trend but with significant deviations.
+
+It is necessary to highlight the extreme volatility in DOG.
+The most prominent feature is the extreme downside volatility.
+In both the BIT vs. DOG and BNB vs. DOG plots, there are outlier points extending vertically downwards to approximately -3.0 on the DOG axis.
+These vertical drops correspond to weeks where DOG experienced massive losses while BIT and BNB saw only moderate declines.
+This suggests that DOG carries significant idiosyncratic risk and heavier tails, particularly on the downside compared to the other two assets.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{Image/1_returns.png}
+    \caption{Weekly Returns}
+    \label{fig:WeeklyReturns}
+\end{figure}
+
+The marginal fit of the returns are plotted against the Student-t distribution as shown in Figure~\ref{fig:MarginalFit}.
+BIT demonstrates an excellent fit as the data points follow the diagonal red line almost perfectly, staying well within the confidence interval.
+BNB also shows a good fit as the data points generally follow the diagonal, but there is noticeable deviation at the extremes, particularly in the lower left quadrant.
+The fit is still strong with an $R^2 = 0.91$, although the model struggles with the asset's heavier tail compared to BIT.
+For the case of DOG, the lower left tail for extreme losses, the observed data points drop vertically away from the red line.
+This indicates that DOG experiences severe crashes far more frequently than the theoretical Student-t distribution accounts for.
+The $R^2 = 0.67$ confirms the poor statistical fit.
+This is aligned with the characteristics mentioned earlier with its high idiosyncratic risk and extreme heavy tail behavior.
+This could potentially lead to underestimation of downside risk for DOG.
+
+\begin{figure}[htbp]
+    \centering
+
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Image/2_marginal_BIT.png}
+        \caption{BIT}
+    \end{subfigure}
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Image/3_marginal_BNB.png}
+        \caption{BNB}
+    \end{subfigure}
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Image/4_marginal_DOG.png}
+        \caption{DOG}
+    \end{subfigure}
+
+    \caption{Marginal Fit}
+    \label{fig:MarginalFit}
+\end{figure}
+
+The return are then transformed into the exponential scale as shown in Figure~\ref{fig:ExpReturns} using the probability integral transform.
+For each $j = 1,\ldots,d$, $X_j^{E} = \log(1-F_j(X_j))$, where $F_j$ is the $j$-th marginal of $X$.
+The values range from 0 to roughly 6.
+The fact that data points significantly populate the upper-right corners in all three plots validates the use of the SB procedure.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{Image/5_exponential.png}
+    \caption{Exponential Returns}
+    \label{fig:ExpReturns}
+\end{figure}
+
+The excess is calculated by $Z = X^E - u^E \,|\, X^E \not\leq u^E$ and plotted as shown in Figure~\ref{fig:ExcessReturns}.
+The threshold $u^E = 0.83$ is chosen through visual inspections.
+The plot shows clustering around the threshold, suggesting it to be a suitable choice.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{Image/6_excess.png}
+    \caption{Excess Returns}
+    \label{fig:ExcessReturns}
+\end{figure}
+
+The excess are then simulated for 10000 samples in exponential scale. 
+The QQ-plot compare the distribution of the simulated data $\tilde{X}$ against the underlying data $X$ as shown in Figure~\ref{fig:CompareReturns}.
+For BIT, the points follow the diagonal line tightly, indicating that the simulation replicates BIT's risk distribution with high precision.
+For BNB, the points track the diagonal up to the extreme tail. 
+There is a slight upward deviation at the very top, suggesting the simulation allows for slightly more severe extreme events than the historical sample alone.
+For DOG, the simulation captures the massive scale of DOG's tail risk. 
+While BIT extends to 7, DOG extends to 20. 
+The model is correctly simulating the fat tails specific to meme coins.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{Image/7_sim_exp.png}
+    \caption{Simulated vs. Underlying Returns}
+    \label{fig:CompareReturns}
+\end{figure}
+
+The simulated data are transformed back to its original scale using the inverse transformation $X^*_j = F_j^{-1}\left(1 - \exp(Z^*_j + u^E_j)\right)$, for $j = 1,\ldots,d$.
+Figure~\ref{fig:SimulatedReturns} shows the simulated returns after the inverse transformation against the historical returns from the sample.
+In all three scatter plots, the red simulated points overlap heavily with the black historical crosses in the center of the distribution. 
+This indicates that the simulation correctly models typical market conditions where returns are small.
+The simulated data extend significantly further into the negative quadrants than the positive ones, particularly for DOG. 
+This correctly reflects the asymmetric nature of crypto risk where crashes are more severe than rallies.
+The red simulated points for DOG extend down to nearly -1.5, showing that the model is generating potential crash scenarios far worse than anything in the historical record.
+In conclusion, the back-transformed simulation data provides a realistic and robust set of scenarios that capture both the day-to-day behavior of the market and the joint tail risks that are statistically possible but historically unobserved.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\linewidth]{Image/8_sim_original.png}
+    \caption{Simulated Returns}
+    \label{fig:SimulatedReturns}
+\end{figure}
 
 \section{Discussion}
 xx
 
 \newpage
 
-
-\bibliographystyle{plain}
-\bibliography{reference}
+\printbibliography
+%\bibliographystyle{plain}
+%\bibliography{reference}
 
 \end{document}

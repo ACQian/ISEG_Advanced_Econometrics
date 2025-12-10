@@ -1,0 +1,402 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nyt/global//global/global/global}
+    \entry{bee2018estimating}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=a44f91d26266fad54019dd263542115c}{%
+           family={Bee},
+           familyi={B\bibinitperiod},
+           given={Marco},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=6ea2c8fd3b17c58a1301aaa7171b79e7}{%
+           family={Trapin},
+           familyi={T\bibinitperiod},
+           given={Luca},
+           giveni={L\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {MDPI}%
+      }
+      \strng{namehash}{d71b4208cee38c81963a91f8a0c2b27b}
+      \strng{fullhash}{d71b4208cee38c81963a91f8a0c2b27b}
+      \strng{fullhashraw}{d71b4208cee38c81963a91f8a0c2b27b}
+      \strng{bibnamehash}{d71b4208cee38c81963a91f8a0c2b27b}
+      \strng{authorbibnamehash}{d71b4208cee38c81963a91f8a0c2b27b}
+      \strng{authornamehash}{d71b4208cee38c81963a91f8a0c2b27b}
+      \strng{authorfullhash}{d71b4208cee38c81963a91f8a0c2b27b}
+      \strng{authorfullhashraw}{d71b4208cee38c81963a91f8a0c2b27b}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Risks}
+      \field{number}{2}
+      \field{title}{Estimating and forecasting conditional risk measures with extreme value theory: a review}
+      \field{volume}{6}
+      \field{year}{2018}
+      \field{pages}{45}
+      \range{pages}{1}
+    \endentry
+    \entry{davis2018inference}{article}{}{}
+      \name{author}{4}{}{%
+        {{un=0,uniquepart=base,hash=8a2bb053c938a3254c68ec9fb886a907}{%
+           family={Davis},
+           familyi={D\bibinitperiod},
+           given={Richard\bibnamedelima A},
+           giveni={R\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=8aa6f1a1c52cd4a126503b85cc94727e}{%
+           family={Drees},
+           familyi={D\bibinitperiod},
+           given={Holger},
+           giveni={H\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=6ce9806762119d51310ed0b9c460207b}{%
+           family={Segers},
+           familyi={S\bibinitperiod},
+           given={Johan},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=5aa6dd095545019ddedba518f6a1d171}{%
+           family={Warcho{ł}},
+           familyi={W\bibinitperiod},
+           given={Micha{ł}},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{2e9116fc2ac130b91e44943c6ee2f35a}
+      \strng{fullhash}{41bd999da8b4b8c53c79cbcf31c2067b}
+      \strng{fullhashraw}{41bd999da8b4b8c53c79cbcf31c2067b}
+      \strng{bibnamehash}{2e9116fc2ac130b91e44943c6ee2f35a}
+      \strng{authorbibnamehash}{2e9116fc2ac130b91e44943c6ee2f35a}
+      \strng{authornamehash}{2e9116fc2ac130b91e44943c6ee2f35a}
+      \strng{authorfullhash}{41bd999da8b4b8c53c79cbcf31c2067b}
+      \strng{authorfullhashraw}{41bd999da8b4b8c53c79cbcf31c2067b}
+      \field{sortinit}{D}
+      \field{sortinithash}{6f385f66841fb5e82009dc833c761848}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Econometrics}
+      \field{number}{2}
+      \field{title}{Inference on the tail process with application to financial time series modeling}
+      \field{volume}{205}
+      \field{year}{2018}
+      \field{pages}{508\bibrangedash 525}
+      \range{pages}{18}
+    \endentry
+    \entry{gomes2016bootstrap}{article}{}{}
+      \name{author}{4}{ul=2}{%
+        {{un=0,uniquepart=base,hash=9cd5a143bf0bccbb5f20e7370f789c5e}{%
+           family={Gomes},
+           familyi={G\bibinitperiod},
+           given={M\bibnamedelima Ivette},
+           giveni={M\bibinitperiod\bibinitdelim I\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=b2b6658c50443f4207bbc82ead3a7b26}{%
+           family={Caeiro},
+           familyi={C\bibinitperiod},
+           given={Frederico},
+           giveni={F\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=29cc73e30799dc5821f62f7fcf7d73a7}{%
+           family={Henriques-Rodrigues},
+           familyi={H\bibinithyphendelim R\bibinitperiod},
+           given={Lígia},
+           giveni={L\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=6292ddba4a04ec62c296d68ad3657d5e}{%
+           family={Manjunath},
+           familyi={M\bibinitperiod},
+           given={BG},
+           giveni={B\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Wiley Online Library}%
+      }
+      \strng{namehash}{51bfc701f7d96e445821617e8bd5d3de}
+      \strng{fullhash}{641c180d2039d96d25b46c8f94fc5129}
+      \strng{fullhashraw}{641c180d2039d96d25b46c8f94fc5129}
+      \strng{bibnamehash}{51bfc701f7d96e445821617e8bd5d3de}
+      \strng{authorbibnamehash}{51bfc701f7d96e445821617e8bd5d3de}
+      \strng{authornamehash}{51bfc701f7d96e445821617e8bd5d3de}
+      \strng{authorfullhash}{641c180d2039d96d25b46c8f94fc5129}
+      \strng{authorfullhashraw}{641c180d2039d96d25b46c8f94fc5129}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Extreme Events in Finance: A Handbook of Extreme Value Theory and its Applications}
+      \field{title}{Bootstrap methods in statistics of extremes}
+      \field{year}{2016}
+      \field{pages}{117\bibrangedash 138}
+      \range{pages}{22}
+    \endentry
+    \entry{gomes2012adaptive}{article}{}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=9cd5a143bf0bccbb5f20e7370f789c5e}{%
+           family={Gomes},
+           familyi={G\bibinitperiod},
+           given={M\bibnamedelima Ivette},
+           giveni={M\bibinitperiod\bibinitdelim I\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=29ef841c48dc396cb191208d53fa69ff}{%
+           family={Figueiredo},
+           familyi={F\bibinitperiod},
+           given={Fernanda},
+           giveni={F\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=6fef54b24ff309ad317c3621729a567a}{%
+           family={Neves},
+           familyi={N\bibinitperiod},
+           given={M\bibnamedelima Manuela},
+           giveni={M\bibinitperiod\bibinitdelim M\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{8a48ef0806ec7de3fc75dc3efd34272a}
+      \strng{fullhash}{8a48ef0806ec7de3fc75dc3efd34272a}
+      \strng{fullhashraw}{8a48ef0806ec7de3fc75dc3efd34272a}
+      \strng{bibnamehash}{8a48ef0806ec7de3fc75dc3efd34272a}
+      \strng{authorbibnamehash}{8a48ef0806ec7de3fc75dc3efd34272a}
+      \strng{authornamehash}{8a48ef0806ec7de3fc75dc3efd34272a}
+      \strng{authorfullhash}{8a48ef0806ec7de3fc75dc3efd34272a}
+      \strng{authorfullhashraw}{8a48ef0806ec7de3fc75dc3efd34272a}
+      \field{sortinit}{G}
+      \field{sortinithash}{32d67eca0634bf53703493fb1090a2e8}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Extremes}
+      \field{number}{4}
+      \field{title}{Adaptive estimation of heavy right tails: the bootstrap methodology in action}
+      \field{volume}{15}
+      \field{year}{2012}
+      \field{pages}{463\bibrangedash 489}
+      \range{pages}{27}
+    \endentry
+    \entry{huang2023propagation}{article}{}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=52be2543b32412660f12406bf0390afd}{%
+           family={Huang},
+           familyi={H\bibinitperiod},
+           given={Zhiyuan},
+           giveni={Z\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d340b86c16232c474c78843c66549746}{%
+           family={Lam},
+           familyi={L\bibinitperiod},
+           given={Henry},
+           giveni={H\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=db09354ff6d13bdbc1d3f1503b882b0f}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Zhenyuan},
+           giveni={Z\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{3a7c3de399affb5e771ee99ceddf6b46}
+      \strng{fullhash}{3a7c3de399affb5e771ee99ceddf6b46}
+      \strng{fullhashraw}{3a7c3de399affb5e771ee99ceddf6b46}
+      \strng{bibnamehash}{3a7c3de399affb5e771ee99ceddf6b46}
+      \strng{authorbibnamehash}{3a7c3de399affb5e771ee99ceddf6b46}
+      \strng{authornamehash}{3a7c3de399affb5e771ee99ceddf6b46}
+      \strng{authorfullhash}{3a7c3de399affb5e771ee99ceddf6b46}
+      \strng{authorfullhashraw}{3a7c3de399affb5e771ee99ceddf6b46}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2401.00172}
+      \field{title}{Propagation of Input Tail Uncertainty in Rare-Event Estimation: A Light versus Heavy Tail Dichotomy}
+      \field{year}{2023}
+    \endentry
+    \entry{madhar2025spectral}{article}{}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=cf385e33b74e3ac717dce10e84846665}{%
+           family={Madhar},
+           familyi={M\bibinitperiod},
+           given={Nisrine},
+           giveni={N\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=362172d9c67109efbb335bad570f1390}{%
+           family={Legrand},
+           familyi={L\bibinitperiod},
+           given={Juliette},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=dde94f035ccbdcfb1d4b1a56fd713fbf}{%
+           family={Thomas},
+           familyi={T\bibinitperiod},
+           given={Maud},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{d889484df7bfd333093f7cd21f1f6f8d}
+      \strng{fullhash}{d889484df7bfd333093f7cd21f1f6f8d}
+      \strng{fullhashraw}{d889484df7bfd333093f7cd21f1f6f8d}
+      \strng{bibnamehash}{d889484df7bfd333093f7cd21f1f6f8d}
+      \strng{authorbibnamehash}{d889484df7bfd333093f7cd21f1f6f8d}
+      \strng{authornamehash}{d889484df7bfd333093f7cd21f1f6f8d}
+      \strng{authorfullhash}{d889484df7bfd333093f7cd21f1f6f8d}
+      \strng{authorfullhashraw}{d889484df7bfd333093f7cd21f1f6f8d}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2509.26451}
+      \field{title}{Spectral Bootstrap for Non-Parametric Simulation of Multivariate Extreme Events}
+      \field{year}{2025}
+    \endentry
+    \entry{mcneil2000estimation}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=231761997efdbb6990d66a96c3623423}{%
+           family={McNeil},
+           familyi={M\bibinitperiod},
+           given={Alexander\bibnamedelima J},
+           giveni={A\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=f1fff0c159b27e10b5aac97a148b11f4}{%
+           family={Frey},
+           familyi={F\bibinitperiod},
+           given={Rüdiger},
+           giveni={R\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{425e8707b11b00260e9c4a68073774b0}
+      \strng{fullhash}{425e8707b11b00260e9c4a68073774b0}
+      \strng{fullhashraw}{425e8707b11b00260e9c4a68073774b0}
+      \strng{bibnamehash}{425e8707b11b00260e9c4a68073774b0}
+      \strng{authorbibnamehash}{425e8707b11b00260e9c4a68073774b0}
+      \strng{authornamehash}{425e8707b11b00260e9c4a68073774b0}
+      \strng{authorfullhash}{425e8707b11b00260e9c4a68073774b0}
+      \strng{authorfullhashraw}{425e8707b11b00260e9c4a68073774b0}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of empirical finance}
+      \field{number}{3-4}
+      \field{title}{Estimation of tail-related risk measures for heteroscedastic financial time series: an extreme value approach}
+      \field{volume}{7}
+      \field{year}{2000}
+      \field{pages}{271\bibrangedash 300}
+      \range{pages}{30}
+    \endentry
+    \entry{nemeth2020regression}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=0da3067fbebfedda816e2a786bb44f12}{%
+           family={Németh},
+           familyi={N\bibinitperiod},
+           given={László},
+           giveni={L\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=231396433312bec007427e30fe44baff}{%
+           family={Zempléni},
+           familyi={Z\bibinitperiod},
+           given={András},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{68f78044547e69e5e235a5b2a804fb7e}
+      \strng{fullhash}{68f78044547e69e5e235a5b2a804fb7e}
+      \strng{fullhashraw}{68f78044547e69e5e235a5b2a804fb7e}
+      \strng{bibnamehash}{68f78044547e69e5e235a5b2a804fb7e}
+      \strng{authorbibnamehash}{68f78044547e69e5e235a5b2a804fb7e}
+      \strng{authornamehash}{68f78044547e69e5e235a5b2a804fb7e}
+      \strng{authorfullhash}{68f78044547e69e5e235a5b2a804fb7e}
+      \strng{authorfullhashraw}{68f78044547e69e5e235a5b2a804fb7e}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Statistical Theory and Practice}
+      \field{number}{3}
+      \field{title}{Regression estimator for the tail index}
+      \field{volume}{14}
+      \field{year}{2020}
+      \field{pages}{48}
+      \range{pages}{1}
+    \endentry
+    \entry{qi2008bootstrap}{article}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=e76bfd9be928b9cc0c216a9ae9c68968}{%
+           family={Qi},
+           familyi={Q\bibinitperiod},
+           given={Yongcheng},
+           giveni={Y\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{e76bfd9be928b9cc0c216a9ae9c68968}
+      \strng{fullhash}{e76bfd9be928b9cc0c216a9ae9c68968}
+      \strng{fullhashraw}{e76bfd9be928b9cc0c216a9ae9c68968}
+      \strng{bibnamehash}{e76bfd9be928b9cc0c216a9ae9c68968}
+      \strng{authorbibnamehash}{e76bfd9be928b9cc0c216a9ae9c68968}
+      \strng{authornamehash}{e76bfd9be928b9cc0c216a9ae9c68968}
+      \strng{authorfullhash}{e76bfd9be928b9cc0c216a9ae9c68968}
+      \strng{authorfullhashraw}{e76bfd9be928b9cc0c216a9ae9c68968}
+      \field{sortinit}{Q}
+      \field{sortinithash}{ce69a400a872ddd02ee7fdb3b38c6abd}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Extremes}
+      \field{number}{1}
+      \field{title}{Bootstrap and empirical likelihood methods in extremes}
+      \field{volume}{11}
+      \field{year}{2008}
+      \field{pages}{81\bibrangedash 97}
+      \range{pages}{17}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
