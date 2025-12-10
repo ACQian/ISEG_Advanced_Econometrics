@@ -1,2 +1,155 @@
 \setchapter{10}{GARCH Models}
 \ChapterHeading
+
+The \Term{volatility} of an investment is a measure of its \Emph{risk}.
+Usually defined as the \Emph{variance of the returns} on the investment.
+Daily financial returns exhibit \Term{volatility clustering} which forms the basis of the Autoregressive-Conditional Heteroskedasticity model (Engle) and Generalized Autoregressive-Conditional Heteroskedasticity model (Bollerslev).
+
+\section{ARCH (q)}
+
+We begin with an $AR(1)$ model $Y_t = c + \phi Y_{t-1} + \epsilon_t$.
+Assuming $\epsilon_t$ is a martinglae difference sequence and $E_{t-1}(R_t) = 0$.
+In this case 
+\begin{gather*}
+    \Var(R_t|F_{t-1}) = E[(R_t - E_{t-1}[R_t])^2]|F_{t-1} = E[R_t^2|F_{t-1}] = E_{t-1}[R_t^2]\\
+    \Updownarrow\\
+    \sigma^2_t = E_{t-1}[R_t^2] = \omega + \alpha R^2_{t-1}\\
+    \because R_t = \mu_t + u_t,\; E_{t-1}(u_t) = 0\\
+    \Downarrow\\
+    \sigma^2_t = \Var_{t-1}(R_t) = E_{t-1}[u_t^2] = \omega + \alpha u^2_{t-1}\to AR(1) \text{ for }u_t^2
+\end{gather*}
+For \Emph{stationary}, \KeyIdea{$ 0\leq \alpha < 1$} is a necessary condition.
+The variance is then 
+\begin{gather*}
+    \sigma^2 = \Var(u_t) = \frac{\omega}{1 - \alpha}\\
+    \text{define }\eta_t = u^2_t - \sigma_t^2\\
+    \Downarrow\\
+    u^2_t = \omega + \alpha u^2_{t-1} + \eta_t\quad E_{t-1}[\eta] = 0 = E_t[\eta]\quad Cov(\eta_t,\eta_{t-l}) = 0, l\geq 1
+\end{gather*}
+The generalization to a $ARCH(q)$ model is then 
+\begin{gather*}
+    \sigma_t^2 = \omega + \alpha_1 u^2_{t-1} + \cdots + \alpha_q u^2_{t-q} \to ARCH(q)\\
+    \Updownarrow\\
+    u^2_t = \omega + \alpha_1 u^2_{t-1} + \cdots + \alpha_q u^2_{t-q} + \eta_t \to AR(q)
+\end{gather*}
+The sufficient condition for \Emph{positive variance} is \KeyIdea{$\omega > 0$} and \KeyIdea{$\alpha_i\geq 0, i=1,\ldots,q$}.
+A necessary and sufficient condition for \Emph{stationarity} of $u_t$ is \KeyIdea{$\sum_{i=1}^{q}\alpha_i < 1$} and the conditions mentioned above.
+For \Emph{stationarity} of $u^2_t$, the roots of $A(z) = 1 - \alpha_1 z - \alpha_2 z^2 -\ldots - \alpha_q z^q$ must be \KeyIdea{outside the unit circle}.
+To \Emph{identify the model}, check the ACF and PACF of $u^2_t$.
+
+\section{GARCH(q, s)}
+
+A simpler structure for $ARCH(q)$ is the $GARCH(1,1)$
+\begin{gather*}
+    \sigma^2_t = \omega + \alpha u^2_{t-1} + \beta \sigma^2_{t-1}\quad \omega>0, \alpha\geq 0, \beta\geq 0\\
+    \text{for }\beta<0\\
+    \Downarrow\\
+    \sigma^2_t = \frac{\omega}{1 - \beta} + \sum_{j=0}^{\infty} \beta^j \alpha u^2_{t-1-j}
+\end{gather*}
+Key advantage is we have \KeyIdea{less parameters to estimate}.
+
+For \Emph{stationarity} of $GARCH(1,1)$, we need \KeyIdea{$\alpha + \beta < 1$} and \KeyIdea{ $\omega > 0, \alpha\geq 0, \beta \geq 0$}.
+Thus we have 
+\begin{gather*}
+    \sigma^2 = \frac{\omega}{1 - \alpha - \beta}\\
+    \Downarrow\\
+    u^2_{t} = \omega + (\alpha + \beta)u^2_{t-1} + \eta_t - \beta \eta^2_{t-1} \to ARMA(1,1)
+\end{gather*}
+For \Emph{stationarity} of the model, ACF and PACF of $u^2_t$ should be \KeyIdea{exponentially decaying, no cut-off points}.
+With generalization of the model to $GARCH(q,s)$, we have 
+\begin{equation*}
+    \sigma^2_t = \omega + \sum_{l=1}^{q}\alpha_l u^2_{t-l} + \sum_{j=1}^{s} \beta_j \sigma^2_{t-j}\quad \omega>0, \alpha_l\geq 0, \beta_j\geq 0
+\end{equation*}
+The model is \Emph{stationary} if \KeyIdea{$\sum_{l=1}^{q}\alpha_l + \sum_{j=1}^{s} \beta_j < 1$} plus the above conditions.
+The ACF and PACF should be \KeyIdea{exponentially decaying, no cut-off points}.
+If \Emph{with unit root}, then use \KeyIdea{Integrated GARCH} with infinite variance and no mean-reversion in volatility.
+
+Let $\sigma_t = \sqrt{\sigma^2_t}$, from \Term{standardized returns},
+\begin{gather*}
+    \epsilon_t = \frac{R_t - \mu_t}{\sigma_t} = \frac{R_t - E_{t-1}[R_t]}{\sqrt{\Var_{t-1}(R_t)}}\\
+    \text{satisfying }E_{t-1}[\epsilon_t] = 0 \quad \Var(\epsilon_t) = 1\\
+    \Downarrow\\
+    R_t = \mu_t + u_t = \mu_t + \sigma_t \epsilon_t \to \text{\Info{can construct conditional likelihood function}}\\
+    \sigma^2_t = \omega + \alpha u^2_{t-1} + \beta \sigma^2_{t-1}
+\end{gather*} 
+It is often assumed that $\epsilon_t$ are iid distributed as $N(0,1)$.
+
+Financial data often displays more kurtosis than that permitted under the assumption of normality $\to$ fat tails.
+Thus if $\epsilon_t \sim N(0,1)\; k_u\geq 3$, even if $\epsilon_t \sim N(0,1)$, varying $\sigma_t$ implies that $R_t$ has \Emph{non-normal} distribution with higher kurtosis.
+
+\subsection{Estimation}
+
+Estimation is done using \KeyIdea{conditonal maximum likelihood}
+\begin{gather*}
+    R_t = \mu_t(\phi) + \underbrace{\sigma_t(\phi,\psi)\epsilon_t}_{u_t}\quad \epsilon_t iid\\
+    \Downarrow\\
+    f(R_T,\ldots,R_{m+1}|F_m) = \left(\prod_{t=m+1}^{T}f(R_t|F_{t-1})\right)\\
+    \Downarrow\\
+    \mcL^*(\gamma|F_m) = \sum_{t=m+1}^{T} l_t(\gamma)\quad l_t(\gamma) = \log f(R_t|F_{t-1})\quad \gamma = (\phi',\psi')'
+\end{gather*}
+
+Under \Emph{stationarity and existence of moments},
+\begin{gather*}
+    \sqrt{T}(\hat{\gamma}_{CML} - \gamma_0) \xrightarrow{d} N(0, A_0^{-1})\quad A_0 = E\left[-\frac{\partial^2 l_t(\gamma_0)}{\partial\gamma\partial\gamma'}\right]\text{ if Gaussian}\\
+    \text{if unsure Gaussian} \Downarrow \text{QML}\\
+    \sqrt{T}(\hat{\gamma}_{QML} - \gamma_0) \xrightarrow{d} N(0, V)\quad V = A_0^{-1} B_0 A_0^{-1}\quad B_0 = E\left[\frac{\partial l_t(\gamma_0)}{\partial\gamma}\frac{\partial l_t(\gamma_0)}{\partial\gamma'}\right]
+\end{gather*}
+\Emph{Standard errors} of $\hat{\gamma}_{CML}$ is estimated as 
+\begin{gather*}
+    \hat{V} = \hat{A}_0^{-1} \hat{B}_0 \hat{A}_0^{-1}\xrightarrow{p} V\\
+    \hat{A}_0 = \frac{1}{T} \sum_{t=m+1}^{T} \left[-\frac{\partial^2 l_t(\hat{\gamma}_{CML})}{\partial\theta\partial\theta'}\right]\\
+    \hat{B}_0 = \frac{1}{T} \sum_{t=m+1}^{T} \left[\frac{\partial l_t(\hat{\gamma}_{CML})}{\partial\theta}\frac{\partial l_t(\hat{\gamma}_{CML})}{\partial\theta'}\right]
+\end{gather*}
+this can be used to construct \KeyIdea{t-tests}.
+This method is known as the \Term{Bollerslev-Woodridge standard errors}.
+
+\subsection{Specification test}
+
+To test that there are \Emph{no ARCH effect}, consider the model 
+\begin{gather*}
+    E_{t-1}[u^2_t] = \gamma_0 + \gamma_1 u^2_{t-1}+\cdots+\gamma_m u^2_{t-m}\\
+    H_0: \gamma_1 = \cdots = \gamma_m = 0 \to \text{ no ARCH effect}\\
+    \hat{u}^2_t = \hat{\gamma}_0 + \hat{\gamma}_1\hat{u}^2_{t-1}+\cdots + \hat{\gamma}_m\hat{u}^2_{t-m} + e_t\\
+    LM = T\cdot R^2 \xrightarrow{d} \chi^2(m)
+\end{gather*}
+
+To test if the \Emph{model is well specified}, test for \KeyIdea{serial correlation} using \KeyIdea{Q statistics} or \KeyIdea{Lagrange Multiplier test} for the standardized residuals $\hat{\epsilon}^2_t = \frac{\hat{u}_t}{\hat{\sigma}_t}$.
+If there is no serial correlation, $\mu_t$ and $\sigma_t$ are correctly specified.
+To test if the model assumed for the \Emph{conditional variance is well specified}, $H_0 : E_{t-1}[u^2_t] = \sigma^2_t$ which is equivalent to $E_{t-1}[\epsilon^2_t-1] = 0$.
+
+It is standard practice to apply the tests for ARCH effects, though they are not valid after the estimation of the GARCH model.
+\Info{The specification test for ARMA models are not valid for GARCH models $\to$ need to adjust and run with additional variables to do the test.}
+Consider the model 
+\begin{gather*}
+    E_{t-1}[\epsilon^2_t] = \gamma_0 + \gamma_1 \epsilon^2_{t-1}+\cdots+\gamma_m \epsilon^2_{t-m}\\
+    H_0: \gamma_1 = \cdots = \gamma_m = 0 \to \text{ no ARCH effect}\\
+    \hat{\epsilon}^2_t = \gamma_0 + \gamma_1\hat{\epsilon}^2_{t-1}+\cdots + \gamma_m\hat{\epsilon}^2_{t-m} + \delta' x_t + e_t\quad x_t = \frac{1}{\hat{\sigma}^2_t}\frac{\partial\hat{\sigma}^2_t}{\partial\psi'}\\
+    LM = T\cdot R^2 \xrightarrow{d} \chi^2(m)
+\end{gather*}
+
+\subsection{Volatility forecasting}
+For \Emph{h-step} forecasting
+\begin{equation*}
+    \sigma^2_h(l) = \Var(u_{h+l}|F_h) = E[u^2_{h+l}|F_h] = E[\sigma^2_{h+l}|F_h]
+\end{equation*}
+If $\alpha + \beta <1$,
+\begin{equation*}
+    \sigma^2_h(l) = \sigma^2 + (\alpha + \beta)^{l-1} (\sigma^2_h(1) - \sigma^2) \to \sigma^2 \text{ as } l\to\infty
+\end{equation*}
+If $\alpha + \beta =1\to IGARCH$,
+\begin{equation*}
+    \sigma^2_h(l) =\sigma^2_h(1) + \omega(l-1)
+\end{equation*}
+\Info{Explodes as $l\to\infty$, does not converge.}
+
+
+% \begin{definition}
+% \begin{theorem}
+% \begin{lemma}
+% \begin{Example}
+% \begin{proof}
+%\newcommand{\KeyIdea}  % 关键想法：浅绿底
+%\newcommand{\Term}     % 专业名词：品牌深绿字
+%\newcommand{\Emph}     % 强调词汇：红
+%\newcommand{\Confuse}    % 不懂/存疑处
+%\newcommand{\Info}     % 说明或注解
