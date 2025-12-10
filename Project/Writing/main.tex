@@ -217,28 +217,116 @@ The model is correctly simulating the fat tails specific to meme coins.
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{Image/7_sim_exp.png}
-    \caption{Simulated vs. Underlying Returns}
+    \caption{Simulated Returns}
     \label{fig:CompareReturns}
 \end{figure}
 
-The simulated data are transformed back to its original scale using the inverse transformation $X^*_j = F_j^{-1}\left(1 - \exp(Z^*_j + u^E_j)\right)$, for $j = 1,\ldots,d$.
-Figure~\ref{fig:SimulatedReturns} shows the simulated returns after the inverse transformation against the historical returns from the sample.
-In all three scatter plots, the red simulated points overlap heavily with the black historical crosses in the center of the distribution. 
-This indicates that the simulation correctly models typical market conditions where returns are small.
-The simulated data extend significantly further into the negative quadrants than the positive ones, particularly for DOG. 
-This correctly reflects the asymmetric nature of crypto risk where crashes are more severe than rallies.
-The red simulated points for DOG extend down to nearly -1.5, showing that the model is generating potential crash scenarios far worse than anything in the historical record.
+Figure~\ref{fig:SimulatedReturns} shows the comparison between the simulated data and the historical returns in exponential scale.
+In all three scatter plots, the red simulated points overlap with the black historical data points especially in the upper right quadrant, indicating the procedure's ability to replciate the tail behavior of the assets.
+But observing more closely to the BIT vs. BNB plot, the simulated data are heavily infleunced by the volatility causing it to have a poorer coverage of the data clustering around moderate returns.
+The simulated data extend significantly further into the positive quadrants than the negative ones.
+This indicates the model is successfully generating Black Swan scenarios that are consistent with the portfolio's history but are more severe than anything actually observed.
 In conclusion, the back-transformed simulation data provides a realistic and robust set of scenarios that capture both the day-to-day behavior of the market and the joint tail risks that are statistically possible but historically unobserved.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{Image/8_sim_original.png}
-    \caption{Simulated Returns}
+    \caption{Simulated vs. Historical Returns}
     \label{fig:SimulatedReturns}
 \end{figure}
 
+The simulated data are transformed back to its original scale using the inverse transformation $X^*_j = F_j^{-1}\left(1 - \exp(Z^*_j + u^E_j)\right)$, for $j = 1,\ldots,d$.
+After transformation, the data are used for TRM estimation both from one-shot estimation and with iterations of 1000 runs for ES, MMES, and DCTE.
+ES is the expectation of observations larger than VaR and is defined as 
+\begin{equation}
+    ES_{\alpha}(X) = E\left[X|X>VaR_{\alpha}(X)\right]
+\end{equation}
+The MMES is the risk associated with the target asset conditioned on a joint extreme event involving all other assets excluding the target asset, and is defined as 
+\begin{equation}
+    MMES_{\alpha}(X_j;X) = E\left[X_j|X_{-j} \geq v^{\alpha}_{-j}\right]
+\end{equation}
+where $v^{\alpha}_{-j} = (VaR_{\alpha}(X_1),\ldots,VaR_{\alpha}(X_d)) \in \bbR^d$.
+The DCTE is the risk associated with the target asset conditioned on all assets expereince an extreme event, and is defined as 
+\begin{equation}
+    DCTE_{\alpha}(X_j;X) = E\left[X_j|X \geq v^{\alpha}\right]
+\end{equation}
+
+Table~\ref{tab:oneshot-results} shows the one-shot estimation result.
+Empirical estimates returned NA due to the scarcity of historical observations exceeding the 99.75\% threshold.
+The SB procedure demonstrates its ability to artificially populate the dataset with black swan data, allowing for the quantification of all risk measures even there is insufficient historical data.
+The one-shot simulation establishes a clear hierarchy of risk among the assets, with DOG being the most volatile, which is aligned with the historical performance of DOG and the characteristics of meme coins.
+Table~\ref{tab:iteration-results} shows the statistics of the estimation results of 1000 iteraitons, demonstrating the robustness and the uncertainty of the estiamtes.
+The Mean values from 1000 iterations align closely with the one-shot simulated results especially for BIT.
+But looking at the assets separately, DOG shows highly uncertain estimates with a standard deviation of 0.969 for DCTE.
+While we can be fairly confident in the risk estimates for BIT, the true tail risk for meme coins such as DOG fluctuates wildly.
+
+\begin{table}[htbp]
+\centering
+\caption{One-Shot Simulation Results}
+\label{tab:oneshot-results}
+\begin{tabular}{l l c c}
+\toprule
+Stock & Metric & Empirical & Simulated \\
+\midrule
+\multirow{3}{*}{BIT} & ES   &    (NA)    & 0.522 \\
+                     & MMES &    (NA)    & 0.593 \\
+                     & DCTE &    (NA)    & 0.640 \\
+\hdashline
+\multirow{3}{*}{BNB} & ES   &    (NA)    & 1.378 \\
+                     & MMES &    (NA)    & 1.517 \\
+                     & DCTE &    (NA)    & 1.665 \\
+\hdashline
+\multirow{3}{*}{DOG} & ES   &    (NA)    & 3.359 \\
+                     & MMES &    (NA)    & 3.625 \\
+                     & DCTE &    (NA)    & 4.195 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{1000 Iterations Simulation Results}
+\label{tab:iteration-results}
+\begin{tabular}{l l c c}
+\toprule
+Stock & Metric & Mean & Std.\ Dev. \\
+\midrule
+
+\multirow{3}{*}{BIT} 
+    & ES   & 0.522 & 0.024 \\
+    & MMES & 0.586 & 0.042 \\
+    & DCTE & 0.625 & 0.045 \\
+\hdashline
+
+\multirow{3}{*}{BNB} 
+    & ES   & 1.201 & 0.146 \\
+    & MMES & 1.325 & 0.214 \\
+    & DCTE & 1.472 & 0.247 \\
+\hdashline
+
+\multirow{3}{*}{DOG} 
+    & ES   & 3.013 & 0.613 \\
+    & MMES & 3.119 & 0.739 \\
+    & DCTE & 3.773 & 0.969 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Discussion}
-xx
+
+Overall, the SB procedures demonstrates its ability to artificially populate extreme data while preserving the multivariate tail dependency between assets.
+Its ability to faciliate the estimation of TRMs given lack of historical data especially in the multivariate setting provides means for risk management of asset portfolios.
+However, it is also important to point out the key assumptions underlying this bootstrapping method and how portfolios including high volatility stocks such as cryptocurrencies could influence the bias and consistency of the procedure.
+
+The key assumption of tail dependency is a necessary condition for the procedure to work, thus, the correlation between the assets need to be tested before entering the procedure.
+If the portfolio contains highly diversified assets that do not exihibit joint behaviors during crashes then it does not make sense to use this approach.
+Although the cryptocurrencies chosen for this simulation are of different profiles, i.e. they are different risk providers, within the digital assets category, they are still under similar regimes and regulations, thus joint market crashes is not a surprise.
+The second assumption is that the $Z$ vectors are iid, which might not be the case for high volatile assets such as cryptocurrencies.
+A GARCH model may need to be fitted first before entering the procedure to ensure the validity of the assumption.
+The third assumption is the student-t marginal assumption.
+Although this assumption is often true for traditional financial assets, highly volatile stocks often exhibit tail behaviors that are not symmetrical.
+This assumption should be questioned and potentially a skewed student-t distribution or semi-parametric appraoch should be considered before the transformation to the exponential scale.
+If not, it could distort the input to the bootstrap, potentially biasing the TRMs.
 
 \newpage
 
