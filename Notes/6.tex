@@ -1,5 +1,244 @@
-\setchapter{6}{Multivariate Time Series Modelling}
+\setchapter{6}{Multivariate Time Series Models}
 \ChapterHeading
+
+Multivariate time series models allow for investigation of dynamic relationships between a set of variables without imposing endogeneity or exogeneiety restrictions.
+The generalization of the \Term{Autoregressive Moving Average Model} to the multivariate case is the \Term{Vector Autoregressive Moving Average Model} (VARMA).
+A special case of the VARMA is the \Term{Vector Autoregressive Model} (VAR).
+It is used to capture the evolution and the interdependencies between multiple time series.
+All the variables are treated symmetrically by including for each variable an equation explaining its evolution based on its own lags and the lags of all other variables in the model.
+
+\section{Stationary multivariate time series}
+
+Let $X_t = (X_{1,t}, \ldots,X_{k,t})'$ be a $k$ dimensional vector time series.
+We can define the \Emph{mean} as
+\begin{equation*}
+    \mu_t = \left[\begin{array}{c}
+        E[X_{1,t}]\\
+        \vdots\\
+        E[X_{k,t}]
+    \end{array}\right]
+\end{equation*}
+the \Emph{variance matrix} as 
+\begin{equation*}
+    \Gamma_{t,t} = \left[\begin{array}{cccc}
+        \Var(X_{1,t}) & COV(X_{1,t}, X_{2,t}) & \cdots & COV(X_{1,t}, X_{k,t})\\
+        COV(X_{2,t}, X_{1,t}) & \Var(X_{2,t}) & \cdots & COV(X_{2,t}, X_{k,t})\\
+        \vdots & \vdots & \ddots & \cdots\\
+        COV(X_{k,t}, X_{1,t}) & COV(X_{2,t}, X_{k,t}) & \cdots & \Var(X_{k,t})
+    \end{array}\right]
+\end{equation*}
+and the \Emph{autocovariance matrix} as 
+\begin{equation*}
+    \Gamma_{t,t-l} = \left[\begin{array}{cccc}
+        COV(X_{1,t},, X_{1,t-l}) & COV(X_{1,t}, X_{2,t-l}) & \cdots & COV(X_{1,t}, X_{k,t-l})\\
+        COV(X_{2,t}, X_{1,t-l}) & COV(X_{2,t}, , X_{2,t-l}) & \cdots & COV(X_{2,t}, X_{k,t-l})\\
+        \vdots & \vdots & \ddots & \cdots\\
+        COV(X_{k,t}, X_{1,t-l}) & COV(X_{k,t}, X_{2,t-l}) & \cdots & COV(X_{k,t}, X_{k,t-l})
+    \end{array}\right]
+\end{equation*}
+note this is not symmetric.
+\begin{definition}
+    $X_t$ is \Term{weakly stationary} if for all $t$ and $l$
+    \begin{itemize}
+        \item $\mu_t = \mu$
+        \item $\Gamma_{t,t-l} = \Gamma_l = \Gamma'_{-l}$
+    \end{itemize}
+\end{definition}
+We define the \Emph{cross correlation} as 
+\begin{gather*}
+    \rho_{ij}(l) = Corr[X_{it}, X_{j,t-l}] = \frac{\Gamma_{ij}(l)}{\sqrt{\Gamma_{ii}(0)\Gamma_{jj}(0)}}\\
+    \Downarrow\text{ collecting cross-correlations from matrix}\\
+    \rho_l = D^{-1}\Gamma_l D^{-1}\qquad D = \text{diag} \{\sqrt{\Gamma_{11}(0)},\ldots,\sqrt{\Gamma_{kk}(0)}\}
+\end{gather*}
+\Emph{Stationarity} implies \KeyIdea{$\rho_l = \rho'_{-l}$}. The \Emph{ACF} of $X_{kt}$ are the diagonal elements of $\rho_l$.
+\begin{definition}
+    \Term{Multivariate White Noise} $\epsilon_t$ is a stionary process with 
+    \begin{itemize}
+        \item $E[\epsilon_t] = \vec{0}$
+        \item $\Var(\epsilon_t) = E[\epsilon_t \epsilon'_t] = \Omega \to \text{ a constant variance-covariance matrix}$
+        \item $Cov(\epsilon_t, \epsilon_s) = E[\epsilon_t \epsilon'_s] = 0 \text{ for } s\neq t\to\text{ uncorrelated}$
+    \end{itemize}
+\end{definition}
+
+Under the assumption of \Emph{multivariate iid} thus $\rho_l = 0, \;\forall l\neq 0$ we have \KeyIdea{$\sqrt{T}\hat{\rho}_{ij}(l)\xrightarrow{d}N(0,1)$}
+\begin{gather*}
+    H_0: X_t \text{ is } iid \quad H_1 : X_t \text{ not } iid\\
+    Q_k(m) \xrightarrow{d} \chi^2(k^2 m)
+\end{gather*}
+
+\begin{theorem}
+    \Term{Multivariate Wold Decomposition Theorem}: If the k-variate $X_t$ time series process is weakly stationary, then it has the representation
+    \begin{equation*}
+        X_t = \sum_{s=0}^{\infty} \Lambda_s \epsilon_{t-s} + W_t
+    \end{equation*}
+    where the $k\times k$ matrices $\Lambda_s$ are such that $\Lambda_0 = I_k$, $\sum_{s=0}^{\infty} \Lambda_s \Lambda'_s$ converges, the process $\epsilon_t$ is a k variate white noise process and 
+    $W_t\in\bbR^k$ is a linear deterministic process, that there exists a k vector $x_0$ and $k\times k$ matrices $C_s$ such that $W_t = c_0 + \sum_{s=0}^{\infty} C_s W_{t-s}$ and $E[\epsilon_t W_{t-m}] = 0$ for $m = 0,\pm 1, \pm 2,\ldots$
+\end{theorem}
+Similar to the univariate case, \Emph{inversion} of polynomials in L means
+\begin{gather*}
+    H(L) = I - \sum_{i=1}^{p}H_i L^i \Leftrightarrow H(L)^{-1}H(L) = I \Rightarrow H(L)^{-1} = \sum_{i=0}^{\infty} B_i L^i\\
+    \text{suppose } H(L) = I - \Pi L \Rightarrow H(L)^{-1} = \sum_{i=0}^{\infty} \Pi^i L^i
+\end{gather*}
+The coefficients of the infinite order polynomial $H(L)^{-1} = \sum_{i=0}^{\infty} B_i L^i$ are \Emph{absolutely summable} if \KeyIdea{$\sum_{i=0}^{\infty}|b_{kli}|<\infty$}.
+The necessary and sufficient condition for \Emph{stationarity} in the multivariate case
+\begin{itemize}
+    \item If the roots of the characteristic equation
+    \begin{equation*}
+        \left|I\lambda^p - \sum_{l=1}^{p}H_l\lambda^{p-l}\right| = 0
+    \end{equation*}
+    are \KeyIdea{inside the unit circle}.
+    \item equivalently if all values of $z$ satisfying
+    \begin{equation*}
+        \left|I - \sum_{l=1}^{p}H_l z^l\right| = 0
+    \end{equation*}
+    are \KeyIdea{outside the unit circle}.
+\end{itemize}
+
+\section{Vector Autoregressive models}
+
+Any $k$ the Vector autoregressive model of order $p$, \Term{VAR(p)}, is defined as
+\begin{equation*}
+    X_t = \phi_0 + \sum_{l=1}^{p} \Phi_l X_{t-l} + \epsilon_t
+\end{equation*}
+which can also be written as a system of equations
+\begin{gather*}
+    X_{1,t} = \phi_{10} + \sum_{l=1}^{p} \sum_{j=1}^{k} \Phi_{1j}(l) X_{j,t-l} + \epsilon_{1t}\\
+    X_{2,t} = \phi_{20} + \sum_{l=1}^{p} \sum_{j=1}^{k} \Phi_{2j}(l) X_{j,t-l} + \epsilon_{2t}\\
+    \vdots\\
+    X_{k,t} = \phi_{k0} + \sum_{l=1}^{p} \sum_{j=1}^{k} \Phi_{kj}(l) X_{j,t-l} + \epsilon_{kt}\\
+\end{gather*}
+Notice that
+\begin{align*}
+    X_t & = \phi_0 + (\sum_{l=1}^{p} \Phi_l L^l) X_{t} + \epsilon_t\\
+    (I_k - \sum_{l=1}^{p} \Phi_l L^l) X_t & = \phi_0 + \epsilon_t\\
+    \Phi(L) X_t & = \phi_0 + \epsilon_t\\
+    & \Downarrow \text{ stationary}\\
+    X_t & = \Phi(L)^{-1} (\phi_0 + \epsilon_t)\\
+    & = (\sum_{j=0}^{\infty}\Psi_j L^j)(\phi_0 + \epsilon_t)\\
+    & = \sum_{j=0}^{\infty}\Psi_j \phi_0 + \sum_{j=0}^{\infty}\Psi_j \epsilon_{t-j} \to \text{Vector Moving Average}
+\end{align*}
+
+\subsection{Impulse response functions}
+
+Consider the $MA(\infty)$ representation of the $VAR(p)$ process
+\begin{equation*}
+    X_t = c + \sum_{r=0}^{\infty} \Psi_r \epsilon_{t-r}\qquad c = \sum_{r=0}^{\infty} \Psi_r\phi_0
+\end{equation*}
+Notice that 
+\begin{equation*}
+    \frac{\partial X_{t+l}}{\partial \epsilon'_t} = \Psi_l \Rightarrow \frac{\partial X_{i,t+l}}{\partial \epsilon_{j,t}} = \Psi_{i,j}(l)
+\end{equation*}
+\begin{definition}
+    The \Term{impulse response function} describes the response of $X_{i,t+l}$ to a one-time unit change in $\epsilon_{j,t}$.
+\end{definition}
+Usually we \KeyIdea{multiply $\Psi_{i,j}(l)$ by the standard deviation of $\epsilon_{j,t}$} so we obtain the response of $X_{i,t+l}$ to a one-time change in $\epsilon_{j,t}$ of $\Var(\epsilon_{j,t})^{1/2}$ unit.
+
+\subsection{Estimation}
+
+Assume 
+\begin{equation*}
+    X_t = \phi_0 + \sum_{l=1}^{p}\Phi_l X_{t-l} + \epsilon_t,\; t=1,\ldots,T\quad \epsilon_t\sim iid\; N(0,\Omega)
+\end{equation*}
+We shall \Emph{condition on the p first observations} and \KeyIdea{derive the conditional likelihood function} for $X_1,\ldots,X_T$.
+Rewriting the equation
+\begin{gather*}
+    X_t = B'Z_t + \epsilon_t,\; t=p+1,\ldots,T\\
+    Z_t = (1,X'_{t-1},\ldots,X'_{t-p})'\quad B' = [\phi_0,\Phi_1,\ldots,\Phi_p]\quad Z^*_t = (X'_{t},\ldots,X'_{t-p})',\; t\geq p+1\\
+    \Downarrow\\
+    X_t | Z^*_t \sim N(B'Z_t,\Omega)\\
+    \Downarrow\text{ conditional MLE}\\
+    \hat{B} = \left[\sum_{t=p+1}^{T} x_t z'_t\right]\left[\sum_{t=p+1}^{T}z_t z'_t\right]^{-1}\\
+    \hat{\Omega} = \frac{1}{T}\sum_{t=p+1}^{T} \hat{\epsilon}_t \hat{\epsilon}'_t\quad \hat{\epsilon}_t = x_t - \hat{B}' z_t
+\end{gather*}
+The conditional MLE of $\hat{B}$ is obtained by \Emph{applying OLS separately to each equation}.\\
+
+We can show that \KeyIdea{$\sqrt{T}(\hat{b} - b)\xrightarrow{d} N(0, \Sigma\otimes E[z_t z'_t])$}.
+Thus the \Emph{likelihood ratio} to test restrictions is
+\begin{gather*}
+    H_0 : r(\theta)=0\qquad H_1: r(\theta)\neq 0\\
+    LR = T(\log |\hat{\Omega}_r| - \log|\hat{\Omega}) \xrightarrow{d} \chi^2(h)\quad h = \text{dim}[r(\theta)]
+\end{gather*}
+
+\subsection{Bivariate Granger causality}
+
+A scaler variable $X$ \Term{Granger causes} another scaler variable $Y$ if $Y$ can be \Emph{better predicted} using the historires of both $X$ and $Y$ than it can using the history of $Y$ alone.
+
+\begin{definition}
+    $X$ \Term{fails to Granger cause} $Y$ if 
+    \begin{equation*}
+        MSE[\hat{E}[Y_{t+s}|Y_t, Y_{t-1},\ldots]] = MSE[\hat{E}[Y_{t+s}|X_t,X_{t-1},\ldots,Y_t,Y_{t-1},\ldots]]
+    \end{equation*}
+    where $MSE$ is the mean square error of prediction: $MSE(\hat{E}(\cdot)) = E[(Y_{t+s}-\hat{E}[\cdot])^2]$
+\end{definition}
+
+Let
+\begin{equation*}
+    y_t = c + \sum_{i=1}^{p} [\alpha_i x_{t-i} + \beta_i y_{t-i}] + u_t
+\end{equation*}
+under the assumptions that
+\begin{itemize}
+    \item regressors are contemporaneously exogenous
+    \item regressors are contemporaneously homoskedastic
+    \item no autocorrelation between the erro terms
+\end{itemize}
+\Emph{$x$ fails to Granger cause $y$} if 
+\begin{gather*}
+    H_0: \alpha_i = 0,\; i= 1,\ldots,p\\
+    S = \frac{T(RRS_0 - RRS_1)}{RRS_1}\xrightarrow{d}\chi^2(p)\\
+    \begin{cases}
+        RRS_0 \to y_t = c + \sum_{i=1}^{p} \beta_i y_{t-i} + u_t\\
+        RRS_1 \to y_t = c + \sum_{i=1}^{p} [\alpha_i x_{t-i} + \beta_i y_{t-i}] + u_t
+    \end{cases}\\
+    S > c_{\alpha} \to \text{Reject }H_0 \to x\text{ Granger causes }y
+\end{gather*}
+
+\subsection{Specification tests}
+
+\begin{itemize}
+    \item For \Emph{misspeicification} the \Emph{Multivariate Q-statistic} can be applied to the residuals with asymptotic \\\KeyIdea{$\chi^2(k^2(m-p))$} distribution
+    \item For \Emph{serial correlation} we can apply the \KeyIdea{vector LM tests}
+    \item To select the \Emph{lag length}, we can use the \KeyIdea{information criterion}. Choose the one based on minimization.
+\end{itemize}
+
+\subsection{Special case : Structural VAR}
+
+\Term{Structural VAR} (SVAR) allows \Emph{contemporaneous relationships} between elements of $X_t$.
+\begin{gather*}
+    B_0 X_t = c_0 + B_1 X_{t-1} + B_2 X_{t-2} + \cdots + B_p X_{t-p} + U_t\\
+    B_0 X_t = c_0 + \sum_{l=1}^{p} B_l X_{t-l} + U_t\\
+    \Downarrow \text{ if invertable}\\
+    X_t = \phi_0 + \sum_{l=1}^{p} \Phi_l X_{t-l} + \epsilon_t \to \text{reduced form of VAR}\\
+    \phi_0 = B_0^{-1} c_0 \quad \Phi_l = B_0^{-1}B_l \quad \epsilon_t = B_0^{-1}U_t
+\end{gather*}
+
+The SVAR has $k^2$ more parameters than the VAR model so we need \Emph{$k^2$ more restrictions} in order to identify the parameters of the SVAR.
+\Info{This is why we don't want so many parameters.}
+Essentially a \Emph{necessary condition for identifiction} requires $B_0$ and $D$ to have \KeyIdea{no more unknwon elements than $\Omega$} which is $\frac{k(k+1)}{2}$.
+This condition is the \Term{order condition} for identification.
+\begin{itemize}
+    \item \Term{Normization restrictions}: assign the coefficient of 1 to $X_{it}$ in each equation (k)
+    \item \Term{Covariance matrix restrictions}: specifying $D$ to be diagonal (k)
+    \item \Term{Cholesky Decomposition}: $B_0$ is lower triangular.
+    \begin{definition}
+        Based on a \Term{Cholesky type decomposition} of a positive definite matrix.
+        Any symmetric positive definite matrix A can be decomposed as $A = LGL'$ where $G$ is a diagonal matrix and $L$ is a lower triangular matrix with 1's in the diagonal.
+    \end{definition}
+    \item Impose restrictions based on economic theory
+\end{itemize}
+
+\subsection{Forecasting}
+Begin with a VAR(p) model,
+\begin{align*}
+    X_t & = \phi_0 + \sum_{i=1}^{p} \Phi_i X_{t-i} + \epsilon_t \to \text{ stationary}\\
+    X_{h+l} & = \phi_0 + \sum_{i=1}^{p} \Phi_i X_{h+l-i} + \epsilon_{h+l}\\
+    E_h[X_{h+l}] & = E_h\left[\phi_0 + \sum_{i=1}^{p} \Phi_i X_{h+l-i} + \epsilon_{h+l}\right]\\
+    & = \phi_0 + \sum_{i=1}^{p} \Phi_i E_h[X_{h+l-i}] + \underbrace{E_h[\epsilon_{h+l}]}_{=0,\text{ tower property}}\\
+    X_h(l) & = \phi_0 + \sum_{i=1}^{p} \Phi_i X_h(l-i)
+\end{align*}
+The \Emph{variance} of the forecasting error is given by 
+\begin{equation*}
+    \Var(e_h(l)) = \sum_{j=0}^{l-1} \Psi_j\Omega\Psi'_j
+\end{equation*}
 
 
 

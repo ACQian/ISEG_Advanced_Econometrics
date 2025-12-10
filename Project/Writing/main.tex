@@ -1,6 +1,6 @@
-\documentclass[a4paper,12pt]{article}
-\input{letterfonts_report.tex}
-\input{format_report.tex}
+\documentclass[a4paper,11pt]{article}
+\input{letterfonts_report}
+\input{format_report}
 
 \begin{document}
 
@@ -14,35 +14,126 @@
 \setcounter{page}{1}  % Start counting from 1
 
 
-% 1. Objective or Summary
 \section{Introduction}
-xx
 
-% 2. Problem Description
+Throughout the years, cryptocurrencies have continued to gain traction from not only experienced investors but also inexperienced investors that are only there for the hype.
+The massive trade volume of cryptocurrencies has introduced a new asset class characterized by extreme volatility and frequent "black swan" events.
+For risk management purposes, the modeling of extreme events, espeically extreme losses is critical.
+Traditional statistical methods, which rely on Gaussain assumptions, fail to capture the heavy-tail aspect of the financial returns, leading to underestimation of risk during crashes.
+This is even more true for financial assets such as cryptocurrencies which exhibits even heavier tail behavior compared to traditional financial assets.
+While Extreme Value Theory (EVT) provides a rigorous framework for modeling these rare events, the main issue lies in the lack of extreme observations, making inference inconsistent.
+
+To address the challenge of data scarcity issue, bootstrapping techniques are often used to artificially increase sample sizes.
+However, standard bootstrap methods cannot be applied directly to EVT because the empirical distribution does not satisfy extreme value conditions.
+This creates a gap for when one tries to simulate stress scenarios for portfolio of assets that are both volatile and correlated.
+This is the motivation to apply the Multivariate Extreme Spectral Bootstrap (SB) procedure, recently proposed by Madhar, Legrand, and Thomas (2025).
+Relying on the spectral representation of Multivariate Generalized Pareto (MGP) distributions, it allows for the generation of synthetic extreme data that preserves the joint tail behavior of the original dataset.
+
+This novel methodology is applied to a diversified cryptocurrency portfolio consisting of Bitcoin (BIT), Binance Coin (BNB), and Dogecoin (DOG).
+While the SB procedure has been demonstrated on traditional banking stocks, its application to the hyper-volatile crypto market presents a unique test of its robustness.
+The SB algorithm is applied to facilitate the estimation of key Tail Risk Metrics (TRM), specifically the Expected Shortfall (ES), Multivariate Marginal Expected Shortfall (MMES), and the Dependent Conditional Tail Expectation (DCTE).
+
+The paper is structured as follows: 
+After a short literature review on different methodologies and techniques developed on both bootstrapping and statistical methods for heavy tailed distributions,
+section 3 briefly introduces the methodology for generating synthetic data through the SB procedure with a discussion on the underlying assumptions, as well as a description of the data used for the portfolio construction.
+Section 4 shows the simulation results utilizing the SB procedure with the crypto portfolio. 
+Followed by a discussion on the performance and potential improvements subject to digital assets in section 5.
+
 \section{Literature Review}
-xx
+
+To address the challenges of estimating the TRM of heavy-tailed distributions, which is critical for financial data, 
+both traditional statistical methods relying on EVT as well as optimized bootstrapping procedures are explored.
+A persistent challenge across the literature is the scarcity of data in the tails, which complicates the estimation of the Extreme Value Index, high quantiles, and rare-event probabilities.
+The reviewed literature addresses these challenges through advanced resampling techniques with bootstrapping, bias-reduction strategies, and dynamic modeling for dependent time series.
+The main issues addressed in the papers can be categorized into four main areas: 
+1) bias-variance tradeoff and optimal order statistic selection \cite{gomes2012adaptive,gomes2016bootstrap,qi2008bootstrap,nemeth2020regression} (Gomes et al., 2010; Gomes et al., 2014; Qi, 2007; Németh et al., 2020), 
+2) serial dependence and heteroscedasticity in time series data due to volatility clustering thus violating the iid assumption (McNeil et al., 2000; Bee et al., 2018; Davis et al., 2018),
+3) data scarcity especially in the multivariate setting when joint extreme observations are rare (Madhar et al., 2025), 
+and 4) the uncertainty in estimates due to the lack of tail information in the input model (Huang et al., 2023).
+
+For bias correction, Gomes et al. (2010) and Gomes et al. (2014) focused on using second order parameters to reduce asymptotic bias without increasing the variance for the Classical-Variance Reduced-Biase estimators (CVRB).
+Németh et al. (2020) proposed to use boostrap samples and fitting a Generalized Extreme Value (GEV) distribution to the estimates then using linear regression to correct the bias of the Hill estimator.
+Qi (2007) studied how emperical likelihood and data tilting methods can be used to construct confidence intervals for tail indices and high quantiles.
+
+On the topic of volatility clustering, methodologies focus mainly on data transformation and conditional modeling.
+McNeil et al. (2000) proposed a two-stage approach by first fitting a GARCH model then applying EVT specifically the Generalized Pareto Distribution (GPD) on the tails of the residuals.
+Bee et al. (2018) reviewed several approaches including using quantile regression or allowing Peaks over Threshold parameters to vary over time based on autoregressive structures.
+
+Although the approaches mentioned above address the difficulties in estimations and modeling of financial data in the extremes,
+the main issue of data scarcity in the tails that can be leveraged for model fitting and inference cannot be solved with the traditional statistical approaches alone.
+Bootstrapping is the main methodology used for addressing the lack of extreme data and the selection of optimal parameters.
+Both Qi (2007) and Gomes et al. (2010) focused on using double bootstrapping method for threshold selection to minimize the Asymptotic Mean Square Error (AMSE) of the Hill estimator.
+Davis et al. (2018) focused on block boostrapping for time series with serial dependence to construct confidence intervals for the spectral tail process.
+Madhar et al. (2025) proposed a nonparametric spectral bootstrap procedure to create synthetic extreme data that preserves the asymptotic dependence structure of the underlying data in a multivariate case.
+Huang et al. (2023) discusses how heavy-tailed distributions are more vulnerable to truncation of the tails which would result in severe underestimation of rate-event probabilities.
+Standard bootstrap fails to quantify uncertainty in heavy-tailed inputs. However, bootstrapping assisted by GPD improves coverage.
+
+The goal of this project is to extend the work done by Madhar et al. (2025) by applying the Multivariate Extreme Spectral Bootstrapping (SB) procedure to a more extreme case of the financial market, cryptocurrencies.
+Currently, Madhar et al. (2025) has demonstrated the consistency of their approach through simulated data and with market data with traditional bank stocks which are more stable.
+With the tail index $\xi$ being between 0.4 to 0.6 for cryptocurrencies while traditional bank stocks with $\xi \approx 0.2$, the robustness of the SB procedure is tested. 
+
 
 % 3. Methodology/Design Procedures
+
 \section{Methodology}
-xx
-\subsection{Theoretical Approach}
+
+This section first discusses the theoretical framework behind the SB procedure and its underlying assumptions.
+Then a description of the underlying data used for the simulation and the rationale behind the choices is discussed.
+
+\subsection{Theoretical Framework}
+
+The SB procedure is a non-parametric joint simulation algorithm based on the spectral respresentation of Multivariate Generalized Pareto (MGP) vectors to generate samples from a MGP distribution.
+The algorithm requires $n$ i.i.d. vectors, $Z_1, \ldots, Z_n$, of standard MGP distribution in $\bbR^d$ where $Z$ is defined as 
+\begin{equation}
+    Z = E + T - \underset{1\leq k\leq d}{\max} T_k
+\end{equation}
+$E$ is the unit exponential variable and $T = (T_1,\ldots,T_d)$ is the spectral random vectors defined by Rootzén et al. (2018).
+
+For each $Z_{i,j}$ vector, $\Delta_{i,j}$ is calculated, which is defined as 
+\begin{equation}
+    \Delta_j = Z_j - \underset{1\leq k\leq d}{\max} Z_k
+\end{equation}
+Equation (1) can then be rewritten as 
+\begin{equation}
+    Z = E + \Delta
+\end{equation}
+where $\Delta = (\Delta_1,\ldots,\Delta_d)$.
+
+$E_1,\ldots,E_m\overset{iid}{\sim} Exp(1)$ are generated independetly of $\Delta$ from historical data.
+And the bootstrapping is performed on $\Delta$ where $m$ samples of $\Delta^*_1,\ldots,\Delta^*_m$ are generated from $\Delta_1,\ldots,\Delta_n$.
+The output of the algorithm is $m\in\bbN$ new i.i.d. copies of $Z$, denoted as $Z^*_1,\ldots, Z^*_m$.
+
+The SB procedure, in theory, should be even more suitable for cryptocurrencies than for traditional financial assets as it resolves the historical ceiling problem.
+This is critical for cryptocurrencies since record-breaking crashes is viewed more of a common feature rather than a market surprise.
+Cryptocurrencies also often crash together as they are closely tied to market regulations and exhibit high correlation during market downturns.
+However, the SB procedure requires the standardization of the historical data to exponential margins first, as can be seen from Equation (3).
+This is done under the assumption of a student-t distribution for the data.
+This assumption could be violated under the crypto context due to the fact that cryptocurrencies often exhibit skewed tails as crashes are often more severe than rallies.
+This could lead to a biased transformed data which would then lead to high error in the simulation.
+The underlying assumption of tail dependence, though theoretically true for cryptocurrencies, may still be violated as volatility of cryptocurrencies are also highly dependent on the "hype" of the coin itself.
+This is especially true if meme-coins are included in the investment portfolio.
+
 \subsection{Data Used}
 
-% 4. Measurement/Testing Results
-\section{Results}
-xx
+The portfolio for simulation consists of three cryptocurrencies: Bitcoin (BIT), Binance Coin (BNB), and Dogecoin (DOG).
+Five years of historical weekly prices from December 2020 to December 2025 are used for the simulation.
 
-% 5. Analysis and Discussion
-\section{Analysis}
-xx
+These three assets are purposefully chosen to ensure the critical assumption of tail dependence for the SB procedure.
+While they are often not correlated during bull runs, i.e. DOG spikes in price because of the hype from a tweet while BNB remains flat,
+they are highly correlated during bearish market conditions.
+The portfolio is also constructed in a way to mimic real behaviors of a crypto investor through the inclusion of both well known cryptos with high trading volume, such as BIT and BNB, as well as meme coins that are randomly thrown into a portfolio due to unexpected hype on the internet, such as DOG.
+More formally, these assets are selected to represent distinct risk factors within the digital assets ecosystem: the market leader (BIT), exchange-utility tokens (BNB), and speculative meme assets (DOG).
 
-% 6. Recommendations/Conclusions
-\section{Conclusions}
+\section{Simulation Results}
+
+
+
+\section{Discussion}
 xx
 
 \newpage
-% Bibliography (if required)
+
 \bibliographystyle{plain}
-\bibliography{reference}  % Add a .bib file if you have references
+\bibliography{reference}
 
 \end{document}
