@@ -20,7 +20,7 @@
 
 Throughout the years, cryptocurrencies have continued to gain traction from not only experienced investors but also inexperienced investors that are only there for the hype.
 The massive trade volume of cryptocurrencies has introduced a new asset class characterized by extreme volatility and frequent black swan events.
-For risk management purposes, the modeling of extreme events, espeically extreme losses is critical.
+For risk management purposes, the modeling of extreme events, espeically extreme losses, is critical.
 Traditional statistical methods, which rely on Gaussain assumptions, fail to capture the heavy-tail aspect of the financial returns, leading to underestimation of risk during crashes.
 This is even more true for financial assets such as cryptocurrencies which exhibits even heavier tail behavior compared to traditional financial assets.
 While Extreme Value Theory (EVT) provides a rigorous framework for modeling these rare events, the main issue lies in the lack of extreme observations, making inference inconsistent.
@@ -51,8 +51,7 @@ The main issues addressed in the papers can be categorized into four main areas:
 1) bias-variance tradeoff and optimal order statistic selection\parencite{gomes2012adaptive,gomes2016bootstrap,qi2008bootstrap,nemeth2020regression}, 
 2) serial dependence and heteroscedasticity in time series data due to volatility clustering thus violating the iid assumption \parencite{mcneil2000estimation,bee2018estimating,davis2018inference},
 3) data scarcity especially in the multivariate setting when joint extreme observations are rare \parencite{madhar2025spectral}, 
-and 4) the uncertainty in estimates due to the lack of tail infor
-mation in the input model \parencite{huang2023propagation}.
+and 4) the uncertainty in estimates due to the lack of tail information in the input model \parencite{huang2023propagation}.
 
 For bias correction, \textcite{gomes2012adaptive} and \textcite{gomes2016bootstrap} focused on using second order parameters to reduce asymptotic bias without increasing the variance for the Classical-Variance Reduced-Biase estimators (CVRB).
 \textcite{nemeth2020regression} proposed to use boostrap samples and fitting a Generalized Extreme Value (GEV) distribution to the estimates then using linear regression to correct the bias of the Hill estimator.
@@ -68,11 +67,11 @@ Bootstrapping is the main methodology used for addressing the lack of extreme da
 Both \textcite{qi2008bootstrap} and \textcite{gomes2012adaptive} focused on using double bootstrapping method for threshold selection to minimize the Asymptotic Mean Square Error (AMSE) of the Hill estimator.
 \textcite{davis2018inference} focused on block boostrapping for time series with serial dependence to construct confidence intervals for the spectral tail process.
 \textcite{madhar2025spectral} proposed a nonparametric spectral bootstrap procedure to create synthetic extreme data that preserves the asymptotic dependence structure of the underlying data in a multivariate case.
-\textcite{huang2023propagation} discusses how heavy-tailed distributions are more vulnerable to truncation of the tails which would result in severe underestimation of rate-event probabilities.
+\textcite{huang2023propagation} discussed how heavy-tailed distributions are more vulnerable to truncation of the tails which would result in severe underestimation of rate-event probabilities.
 Standard bootstrap fails to quantify uncertainty in heavy-tailed inputs. However, bootstrapping assisted by GPD improves coverage.
 
-The goal of this project is to extend the work done by Madhar et al. (2025) by applying the Multivariate Extreme Spectral Bootstrapping (SB) procedure to a more extreme case of the financial market, cryptocurrencies.
-Currently, \textcite{madhar2025spectral} has demonstrated the consistency of their approach through simulated data and with market data with traditional bank stocks which are more stable.
+The goal of this project is to extend the work done by \textcite{madhar2025spectral} by applying the Multivariate Extreme Spectral Bootstrapping (SB) procedure to a more extreme case of the financial market, cryptocurrencies.
+Currently, \textcite{madhar2025spectral} have demonstrated the consistency of their approach through simulated data and with market data with traditional bank stocks which are more stable.
 With the tail index $\xi$ being between 0.4 to 0.6 for cryptocurrencies while traditional bank stocks with $\xi \approx 0.2$, the robustness of the SB procedure is tested. 
 
 \section{Methodology}
@@ -246,19 +245,19 @@ The MMES is the risk associated with the target asset conditioned on a joint ext
     MMES_{\alpha}(X_j;X) = E\left[X_j|X_{-j} \geq v^{\alpha}_{-j}\right]
 \end{equation}
 where $v^{\alpha}_{-j} = (VaR_{\alpha}(X_1),\ldots,VaR_{\alpha}(X_d)) \in \bbR^d$.
-The DCTE is the risk associated with the target asset conditioned on all assets expereince an extreme event, and is defined as 
+The DCTE is the risk associated with the target asset conditioned on all assets expereincing an extreme event, and is defined as 
 \begin{equation}
     DCTE_{\alpha}(X_j;X) = E\left[X_j|X \geq v^{\alpha}\right]
 \end{equation}
 
 Table~\ref{tab:oneshot-results} shows the one-shot estimation result.
 Empirical estimates returned NA due to the scarcity of historical observations exceeding the 99.75\% threshold.
-The SB procedure demonstrates its ability to artificially populate the dataset with black swan data, allowing for the quantification of all risk measures even there is insufficient historical data.
+The SB procedure demonstrates its ability to artificially populate the dataset with black swan data, allowing for the quantification of all risk measures even when there is insufficient historical data.
 The one-shot simulation establishes a clear hierarchy of risk among the assets, with DOG being the most volatile, which is aligned with the historical performance of DOG and the characteristics of meme coins.
 Table~\ref{tab:iteration-results} shows the statistics of the estimation results of 1000 iteraitons, demonstrating the robustness and the uncertainty of the estiamtes.
-The Mean values from 1000 iterations align closely with the one-shot simulated results especially for BIT.
+The mean values from 1000 iterations align closely with the one-shot simulated results especially for BIT.
 But looking at the assets separately, DOG shows highly uncertain estimates with a standard deviation of 0.969 for DCTE.
-While we can be fairly confident in the risk estimates for BIT, the true tail risk for meme coins such as DOG fluctuates wildly.
+While we can be fairly confident in the risk estimates for BIT, the true tail risk for meme coins such as DOG fluctuates wildly and remains questionable.
 
 \begin{table}[htbp]
 \centering
@@ -319,13 +318,13 @@ Its ability to faciliate the estimation of TRMs given lack of historical data es
 However, it is also important to point out the key assumptions underlying this bootstrapping method and how portfolios including high volatility stocks such as cryptocurrencies could influence the bias and consistency of the procedure.
 
 The key assumption of tail dependency is a necessary condition for the procedure to work, thus, the correlation between the assets need to be tested before entering the procedure.
-If the portfolio contains highly diversified assets that do not exihibit joint behaviors during crashes then it does not make sense to use this approach.
-Although the cryptocurrencies chosen for this simulation are of different profiles, i.e. they are different risk providers, within the digital assets category, they are still under similar regimes and regulations, thus joint market crashes is not a surprise.
+If the portfolio contains highly diversified assets that do not exihibit joint behaviors during crashes, then it does not make sense to use this approach.
+Although the cryptocurrencies chosen for this simulation are of different profiles, i.e. they are different risk providers, within the same digital assets category, they are still under similar regimes and regulations, thus joint market crashes is not a surprise.
 The second assumption is that the $Z$ vectors are iid, which might not be the case for high volatile assets such as cryptocurrencies.
 A GARCH model may need to be fitted first before entering the procedure to ensure the validity of the assumption.
 The third assumption is the student-t marginal assumption.
 Although this assumption is often true for traditional financial assets, highly volatile stocks often exhibit tail behaviors that are not symmetrical.
-This assumption should be questioned and potentially a skewed student-t distribution or semi-parametric appraoch should be considered before the transformation to the exponential scale.
+This assumption should be questioned and potentially a skewed student-t distribution or a semi-parametric approach should be considered before the transformation to the exponential scale.
 If not, it could distort the input to the bootstrap, potentially biasing the TRMs.
 
 \newpage
